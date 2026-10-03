@@ -2847,6 +2847,26 @@ async function exportToODS() {
         const td = document.createElement('td'); td.textContent = t; tr.appendChild(td);
       });
       const td = document.createElement('td');
+      const b_name = document.createElement('button');
+      b_name.className = 'btn btn-light'; b_name.style.cssText = 'border:1px solid #cbd5e1; padding:0.2rem 0.4rem; font-size:0.75rem; margin-right:4px;';
+      b_name.textContent = '修改姓名';
+      b_name.onclick = () => {
+        const newName = prompt(`修改帳號「${a.username}」的姓名：`, a.name || '');
+        if (newName === null) return;
+        const trimmed = newName.trim();
+        if (!trimmed) { alert('姓名不能為空！'); return; }
+        const oldName = a.name;
+        a.name = trimmed;
+        saveAccounts(list);
+        if (session && session.username === a.username) {
+          session.name = trimmed;
+          try { localStorage.setItem(USER_KEY, JSON.stringify(session)); } catch(e){}
+          updateUserBar();
+        }
+        window.__openAcct();
+        logAction({ action: '修改同仁姓名', target: trimmed, result: '成功', detail: `帳號 ${a.username} 姓名自「${oldName}」變更為「${trimmed}」` });
+      };
+      td.appendChild(b_name);
       const b1 = document.createElement('button');
       b1.className = 'btn btn-light'; b1.style.cssText = 'border:1px solid #cbd5e1; padding:0.2rem 0.4rem; font-size:0.75rem;';
       b1.textContent = '重設密碼';
