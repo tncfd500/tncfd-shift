@@ -780,7 +780,7 @@
   <div id="instructions-box" style="background: #ffffff; border: 1.5px solid var(--border); border-radius: 0.6rem; padding: 1rem 1.4rem; font-size: 0.83rem; line-height: 1.7; color: #334155; margin-top: 0.75rem; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
     <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1.5px solid #e2e8f0; padding-bottom:0.5rem; margin-bottom:0.75rem;">
       <strong style="font-size:0.95rem; color:#991b1b;">💡 臺南市政府消防局第五大隊 勤二休二排班系統操作指南與填假規範</strong>
-      <span style="font-size:0.78rem; color:#64748b;">適用基準：做二休二輪休制 ｜ 系統版本：v1.0.18</span>
+      <span style="font-size:0.78rem; color:#64748b;">適用基準：做二休二輪休制 ｜ 系統版本：v1.0.19</span>
     </div>
 
     <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1rem;">
@@ -1933,6 +1933,7 @@
         alert('人員座號、姓名與權限已成功更新（已保留現有排班與請假紀錄）！');
       }
       updateSafetyOfficerGuide();
+      if (window.__syncAccountsFromStaffList) window.__syncAccountsFromStaffList();
       closeModal('modal-staff');
     }
 
@@ -3117,6 +3118,43 @@ async function exportToODS() {
     localStorage.setItem(ACCTS_KEY, JSON.stringify(list));
   }
 
+  // 自動將「人員名冊與班別分配 (A/B/C/D 班)」姓名同步至登入帳號資料庫
+  window.__syncAccountsFromStaffList = function () {
+    if (typeof staffList === 'undefined' || !Array.isArray(staffList)) return;
+    const list = getAccounts();
+    let changed = false;
+    staffList.forEach(st => {
+      const uStr = String(st.id);
+      const found = list.find(a => String(a.username) === uStr);
+      if (found) {
+        if (found.name !== st.name) {
+          found.name = st.name;
+          changed = true;
+        }
+      } else {
+        list.push({
+          username: uStr,
+          name: st.name,
+          role: "user",
+          password: "123"
+        });
+        changed = true;
+      }
+    });
+    if (changed) {
+      saveAccounts(list);
+      populateQuickSelect();
+      if (session && session.username && session.username !== 'admin' && session.username !== 'guest') {
+        const myAcct = list.find(a => String(a.username) === String(session.username));
+        if (myAcct) {
+          session.name = myAcct.name;
+          localStorage.setItem(USER_KEY, JSON.stringify(session));
+          updateUserBar();
+        }
+      }
+    }
+  };
+
   // ---------- 審核紀錄寫入 ----------
   function logAction(p) {
     const entry = {
@@ -3579,6 +3617,7 @@ async function exportToODS() {
       session = { username: "admin", name: "管理者 (預設)", role: "admin" };
     }
     updateUserBar();
+    if (window.__syncAccountsFromStaffList) window.__syncAccountsFromStaffList();
   }
 
   if (document.readyState === 'loading') {
