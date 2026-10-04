@@ -780,7 +780,7 @@
   <div id="instructions-box" style="background: #ffffff; border: 1.5px solid var(--border); border-radius: 0.6rem; padding: 1rem 1.4rem; font-size: 0.83rem; line-height: 1.7; color: #334155; margin-top: 0.75rem; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
     <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1.5px solid #e2e8f0; padding-bottom:0.5rem; margin-bottom:0.75rem;">
       <strong style="font-size:0.95rem; color:#991b1b;">💡 臺南市政府消防局第五大隊 勤二休二排班系統操作指南與填假規範</strong>
-      <span style="font-size:0.78rem; color:#64748b;">適用基準：做二休二輪休制 ｜ 系統版本：v1.0.16</span>
+      <span style="font-size:0.78rem; color:#64748b;">適用基準：做二休二輪休制 ｜ 系統版本：v1.0.17</span>
     </div>
 
     <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1rem;">
@@ -831,7 +831,7 @@
         <ul style="margin:0; padding-left:1.2rem; font-size:0.8rem; line-height:1.5;">
           <li><strong>全大隊最低 4 人在勤底限（主管授權鎖定）</strong>：每日全大隊上班人數底限為 <strong>4 人</strong>。若填假後將導致該日在勤人數低於 4 人，系統將觸發<strong>防呆安全鎖定</strong>，必須輸入主管授權密碼始可破例放行，若密碼錯誤或取消則自動駁回。</li>
           <li><strong>大隊幕僚最低在勤人數（3 人）</strong>：每日大隊幕僚（座號 4~14 號）上班人數底限為 <strong>3 人</strong>；每日下方「可填假人數」計算公式為：<code>可填假人數 = 幕僚在勤人數 - 3</code>。</li>
-          <li><strong>安全官防呆警戒（至少 1 人在勤）</strong>：每日上班名單中必須至少有 1 位合格安全官（曾志方、蔡宗憲、謝振國、鄭國甫、翁吉賢）在勤。若當日無任何安全官，系統將亮起 <span class="badge badge-red">⚠️ 當日無合格安全官！</span> 紅色警報並阻擋該日請假。</li>
+          <li><strong>安全官防呆警戒（至少 1 人在勤）</strong>：每日上班名單中必須至少有 1 位合格安全官（對照人員名冊「身分/職稱」之安全官設定，目前為：<span id="guide-safety-staff-list" style="color:#b91c1c; font-weight:700;">曾志方、蔡宗憲、謝振國、鄭國甫、翁吉賢</span>）在勤。若當日無任何安全官，系統將亮起 <span class="badge badge-red">⚠️ 當日無合格安全官！</span> 紅色警報並阻擋該日請假。</li>
         </ul>
       </div>
 
@@ -1120,11 +1120,11 @@
       { id: 1, name: "1.陳坤宗", role: "指揮官", isOfficer: false, isSafety: false, defaultShift: "D" },
       { id: 2, name: "2.蘇偉誠", role: "指揮官", isOfficer: false, isSafety: false, defaultShift: "B" },
       { id: 3, name: "3.李博閔", role: "指揮官", isOfficer: false, isSafety: false, defaultShift: "C" },
-      { id: 4, name: "4.曾志方", role: "大隊幕僚", isOfficer: true, isSafety: true, defaultShift: "A" },
-      { id: 5, name: "5.蔡宗憲", role: "大隊幕僚", isOfficer: true, isSafety: true, defaultShift: "B" },
-      { id: 6, name: "6.謝振國", role: "大隊幕僚", isOfficer: true, isSafety: true, defaultShift: "C" },
-      { id: 7, name: "7.鄭國甫", role: "大隊幕僚", isOfficer: true, isSafety: true, defaultShift: "D" },
-      { id: 8, name: "8.翁吉賢", role: "大隊幕僚", isOfficer: true, isSafety: true, defaultShift: "A" },
+      { id: 4, name: "4.曾志方", role: "安全官", isOfficer: true, isSafety: true, defaultShift: "A" },
+      { id: 5, name: "5.蔡宗憲", role: "安全官", isOfficer: true, isSafety: true, defaultShift: "B" },
+      { id: 6, name: "6.謝振國", role: "安全官", isOfficer: true, isSafety: true, defaultShift: "C" },
+      { id: 7, name: "7.鄭國甫", role: "安全官", isOfficer: true, isSafety: true, defaultShift: "D" },
+      { id: 8, name: "8.翁吉賢", role: "安全官", isOfficer: true, isSafety: true, defaultShift: "A" },
       { id: 9, name: "9.羅澤欣", role: "大隊幕僚", isOfficer: true, isSafety: false, defaultShift: "C" },
       { id: 10, name: "10.陳家豪", role: "大隊幕僚", isOfficer: true, isSafety: false, defaultShift: "C" },
       { id: 11, name: "11.蔡辰英", role: "大隊幕僚", isOfficer: true, isSafety: false, defaultShift: "B" },
@@ -1132,6 +1132,26 @@
       { id: 13, name: "13.邱智輝", role: "大隊幕僚", isOfficer: true, isSafety: false, defaultShift: "A" },
       { id: 14, name: "14.王宇玄", role: "大隊幕僚", isOfficer: true, isSafety: false, defaultShift: "B" }
     ];
+
+    // Safety Officer & Staff Qualification Helpers
+    function isStaffSafetyOfficer(s) {
+      if (!s) return false;
+      return Boolean(s.role === '安全官' || s.isSafety);
+    }
+
+    function isStaffOfficer(s) {
+      if (!s) return false;
+      return Boolean(s.role === '大隊幕僚' || s.role === '安全官' || s.isOfficer);
+    }
+
+    function updateSafetyOfficerGuide() {
+      const elem = document.getElementById('guide-safety-staff-list');
+      if (!elem) return;
+      const safetyStaff = staffList
+        .filter(isStaffSafetyOfficer)
+        .map(s => (s.name || '').replace(/^\d+[\.、\s]*/, ''));
+      elem.textContent = safetyStaff.length > 0 ? safetyStaff.join('、') : '目前尚未設定安全官';
+    }
 
     // Official 2026 Holidays (DGPA)
     const HOLIDAYS_DB = [
@@ -1279,7 +1299,14 @@
       if (saved) {
         try {
           const parsed = JSON.parse(saved);
-          if (parsed.staffList) staffList = parsed.staffList;
+          if (parsed.staffList) {
+            staffList = parsed.staffList.map(st => {
+              if (st.isSafety && st.role === '大隊幕僚') {
+                st.role = '安全官';
+              }
+              return st;
+            });
+          }
           if (parsed.scheduleGrid) scheduleGrid = parsed.scheduleGrid;
           if (parsed.leaveRequests) leaveRequests = parsed.leaveRequests;
         } catch(e) {
@@ -1519,8 +1546,8 @@
       });
 
       // Section 2: 大隊幕僚
-      html += `<tr class="section-header"><td colspan="${totalDays + 3}" style="text-align:left; padding-left:0.5rem; background:#e0e7ff; color:#3730a3; font-size:0.8rem;">【大隊幕僚】（安全官 4、5、6、7、8 號；幕僚 9、10、11、12、13、14 號）</td></tr>`;
-      staffList.filter(s => s.role === '大隊幕僚').forEach(st => {
+      html += `<tr class="section-header"><td colspan="${totalDays + 3}" style="text-align:left; padding-left:0.5rem; background:#e0e7ff; color:#3730a3; font-size:0.8rem;">【大隊幕僚】（安全官與幕僚同仁）</td></tr>`;
+      staffList.filter(isStaffOfficer).forEach(st => {
         html += renderStaffRow(st, totalDays);
       });
 
@@ -1529,7 +1556,7 @@
       html += `<tr class="summary-row" style="background:#fffbeb;"><td class="col-name" style="color:#b45309;">可填假人數</td><td class="col-shift">-</td>`;
       for (let d = 1; d <= totalDays; d++) {
         let staffOnDuty = 0;
-        staffList.filter(s => s.role === '大隊幕僚').forEach(st => {
+        staffList.filter(isStaffOfficer).forEach(st => {
           const val = scheduleGrid[`${st.id}_${d}`] || "";
           if (val === "") staffOnDuty++;
         });
@@ -1544,7 +1571,7 @@
       html += `<tr class="summary-row" style="background:#f0fdf4;"><td class="col-name" style="color:#15803d;">安全官在勤</td><td class="col-shift">-</td>`;
       for (let d = 1; d <= totalDays; d++) {
         let safetyCount = 0;
-        staffList.filter(s => s.isSafety).forEach(st => {
+        staffList.filter(isStaffSafetyOfficer).forEach(st => {
           const val = scheduleGrid[`${st.id}_${d}`] || "";
           if (val === "") safetyCount++;
         });
@@ -1571,6 +1598,7 @@
       html += `</tr></tbody>`;
 
       table.innerHTML = html;
+      updateSafetyOfficerGuide();
     }
 
     function isDayLocked(day) {
@@ -1586,7 +1614,7 @@
       const sColor = shiftColors[st.defaultShift] || '#64748b';
       let r = `<tr>
         <td class="col-name" title="${st.name}">
-          <span>${st.name}</span>${st.isSafety ? '<span title="安全官" style="font-size:0.75rem; margin-left:2px;">🛡️</span>' : ''}
+          <span>${st.name}</span>${isStaffSafetyOfficer(st) ? '<span title="安全官" style="font-size:0.75rem; margin-left:2px;">🛡️</span>' : ''}
         </td>
         <td class="col-shift">
           <span style="display:inline-block; padding:1px 3px; border-radius:3px; background:${sColor}20; color:${sColor}; font-weight:800; font-size:0.75rem;">${st.defaultShift}</span>
@@ -1811,12 +1839,31 @@
     }
 
     // Modal: Staff Configuration
+    function onStaffModalRoleChange(idx, val) {
+      const chk = document.getElementById(`chk-safety-${idx}`);
+      if (chk) {
+        chk.checked = (val === '安全官');
+      }
+    }
+
+    function onStaffModalSafetyCheck(idx, checked) {
+      const sel = document.getElementById(`sel-role-${idx}`);
+      if (sel) {
+        if (checked && sel.value !== '安全官') {
+          sel.value = '安全官';
+        } else if (!checked && sel.value === '安全官') {
+          sel.value = '大隊幕僚';
+        }
+      }
+    }
+
     function renderStaffModalTable() {
       const tbody = document.getElementById('staff-table-body');
       tbody.innerHTML = '';
       staffList.forEach((st, idx) => {
         // Parse pure name without prefix number
         const pureName = (st.name || '').replace(/^\d+[\.、\s]*/, '') || st.name;
+        const isSafe = isStaffSafetyOfficer(st);
         tbody.innerHTML += `
           <tr>
             <td style="padding:0.4rem; border:1px solid #cbd5e1; text-align:center;">
@@ -1826,13 +1873,14 @@
               <input type="text" id="txt-name-${idx}" value="${pureName}" placeholder="請輸入姓名" style="width:120px; font-weight:700; padding:0.25rem;">
             </td>
             <td style="padding:0.4rem; border:1px solid #cbd5e1;">
-              <select id="sel-role-${idx}" style="font-size:0.8rem;">
+              <select id="sel-role-${idx}" onchange="onStaffModalRoleChange(${idx}, this.value)" style="font-size:0.8rem; font-weight:700;">
                 <option value="指揮官" ${st.role === '指揮官' ? 'selected' : ''}>指揮官</option>
-                <option value="大隊幕僚" ${st.role === '大隊幕僚' ? 'selected' : ''}>大隊幕僚</option>
+                <option value="安全官" ${(st.role === '安全官' || (isSafe && st.role !== '指揮官')) ? 'selected' : ''}>🛡️ 安全官</option>
+                <option value="大隊幕僚" ${(st.role === '大隊幕僚' && !isSafe) ? 'selected' : ''}>大隊幕僚</option>
               </select>
             </td>
             <td style="padding:0.4rem; border:1px solid #cbd5e1; text-align:center;">
-              <input type="checkbox" id="chk-safety-${idx}" ${st.isSafety ? 'checked' : ''} title="勾選具備安全官資格">
+              <input type="checkbox" id="chk-safety-${idx}" ${isSafe ? 'checked' : ''} onchange="onStaffModalSafetyCheck(${idx}, this.checked)" title="勾選具備安全官資格">
             </td>
             <td style="padding:0.4rem; border:1px solid #cbd5e1;">
               <select id="sel-shift-${idx}" style="font-weight:700;">
@@ -1852,7 +1900,8 @@
         const newId = parseInt(document.getElementById(`txt-id-${idx}`).value) || (idx + 1);
         const rawName = document.getElementById(`txt-name-${idx}`).value.trim() || `人員${newId}`;
         const newRole = document.getElementById(`sel-role-${idx}`).value;
-        const newSafety = document.getElementById(`chk-safety-${idx}`).checked;
+        const newSafety = (newRole === '安全官') || document.getElementById(`chk-safety-${idx}`).checked;
+        const isOfficer = (newRole === '大隊幕僚' || newRole === '安全官');
         const newShift = document.getElementById(`sel-shift-${idx}`).value;
 
         // If ID changed, migrate scheduleGrid keys if needed
@@ -1871,6 +1920,7 @@
         st.name = `${newId}.${rawName}`;
         st.role = newRole;
         st.isSafety = newSafety;
+        st.isOfficer = isOfficer;
         st.defaultShift = newShift;
       });
 
@@ -1882,6 +1932,7 @@
         renderTable();
         alert('人員座號、姓名與權限已成功更新（已保留現有排班與請假紀錄）！');
       }
+      updateSafetyOfficerGuide();
       closeModal('modal-staff');
     }
 
@@ -1991,7 +2042,7 @@
       staffList.forEach(s => {
         if ((scheduleGrid[`${s.id}_${d1}`] || "") === "") origC1++;
         if ((scheduleGrid[`${s.id}_${d2}`] || "") === "") origC2++;
-        if (s.isSafety) {
+        if (isStaffSafetyOfficer(s)) {
           if ((scheduleGrid[`${s.id}_${d1}`] || "") === "") origSafe1++;
           if ((scheduleGrid[`${s.id}_${d2}`] || "") === "") origSafe2++;
         }
@@ -2022,7 +2073,7 @@
       staffList.forEach(s => {
         if ((tempGrid[`${s.id}_${d1}`] || "") === "") newC1++;
         if ((tempGrid[`${s.id}_${d2}`] || "") === "") newC2++;
-        if (s.isSafety) {
+        if (isStaffSafetyOfficer(s)) {
           if ((tempGrid[`${s.id}_${d1}`] || "") === "") newSafe1++;
           if ((tempGrid[`${s.id}_${d2}`] || "") === "") newSafe2++;
         }
@@ -2218,9 +2269,9 @@
           }
 
           // 檢核 4：大隊幕僚在勤門檻（大隊幕僚需 >= 3 人）
-          if (st.role === '大隊幕僚') {
+          if (isStaffOfficer(st)) {
             let staffOnDuty = 0;
-            staffList.filter(s => s.role === '大隊幕僚').forEach(other => {
+            staffList.filter(isStaffOfficer).forEach(other => {
               const v = (other.id === st.id) ? req.type : (tempGrid[`${other.id}_${day}`] || "");
               if (v === "") staffOnDuty++;
             });
@@ -2234,9 +2285,9 @@
           }
 
           // 檢核 5：合格安全官在勤覆蓋（安全官需 >= 1 人）
-          if (st.isSafety) {
+          if (isStaffSafetyOfficer(st)) {
             let safetyCount = 0;
-            staffList.filter(s => s.isSafety).forEach(other => {
+            staffList.filter(isStaffSafetyOfficer).forEach(other => {
               const v = (other.id === st.id) ? req.type : (tempGrid[`${other.id}_${day}`] || "");
               if (v === "") safetyCount++;
             });
@@ -2422,9 +2473,9 @@
         if (dutyCount < 4) return false;
 
         // 2. 大隊幕僚在勤 >= 3
-        if (st.role === '大隊幕僚') {
+        if (isStaffOfficer(st)) {
           let staffDuty = 0;
-          staffList.filter(s => s.role === '大隊幕僚').forEach(s => {
+          staffList.filter(isStaffOfficer).forEach(s => {
             const v = (s.id === staffId) ? "C" : (grid[`${s.id}_${day}`] || "");
             if (v === "") staffDuty++;
           });
@@ -2432,9 +2483,9 @@
         }
 
         // 3. 安全官在勤 >= 1
-        if (st.isSafety) {
+        if (isStaffSafetyOfficer(st)) {
           let safetyDuty = 0;
-          staffList.filter(s => s.isSafety).forEach(s => {
+          staffList.filter(isStaffSafetyOfficer).forEach(s => {
             const v = (s.id === staffId) ? "C" : (grid[`${s.id}_${day}`] || "");
             if (v === "") safetyDuty++;
           });
