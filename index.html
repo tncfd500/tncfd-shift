@@ -783,15 +783,16 @@
     <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1rem;">
       <!-- 區塊 1：基礎假別與填假操作 -->
       <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:0.45rem; padding:0.75rem;">
-        <strong style="color:#1e3a8a; display:block; margin-bottom:0.35rem;">📌 一、基礎假別與填假操作規範</strong>
-        <ul style="margin:0; padding-left:1.2rem; font-size:0.8rem;">
+        <strong style="color:#1e3a8a; display:block; margin-bottom:0.35rem;">📌 一、基礎假別與排假圖例說明</strong>
+        <ul style="margin:0; padding-left:1.2rem; font-size:0.8rem; line-height:1.5;">
           <li><strong>做兩天休兩天（勤二休二）</strong>：採 4 班循環（A/B/C/D 班），每位同仁全月表定約 15~16 天輪休【A】。</li>
-          <li><strong>表定輪休【A】防誤觸保護</strong>：表格中紅色粗體【A】為系統自動排定之輪休，<strong>禁止直接改假</strong>，游標維持箭頭樣式且不彈出選單。</li>
+          <li><strong>表定輪休【A】防誤觸保護</strong>：紅色粗體【A】為系統自動推算排定，<strong>禁止直接改假</strong>，游標維持箭頭且不彈出選單。</li>
           <li><strong>上班日填假方式</strong>：點擊非【A】之空格儲存格，即彈出<strong>浮動排假選單</strong>，支援下拉選單挑選或彩色按鈕快選：
-            <div style="margin:0.25rem 0; display:flex; gap:0.25rem; flex-wrap:wrap;">
-              <span class="badge" style="background:#f1f5f9; border:1px solid #cbd5e1; color:#0f172a;">[空格] 上班</span>
-              <span class="badge" style="background:#eff6ff; color:#1d4ed8; border:1px solid #bfdbfe;">【C】補休</span>
-              <span class="badge" style="background:#ecfdf5; color:#059669; border:1px solid #a7f3d0;">【G】加休</span>
+            <div style="margin:0.3rem 0; display:flex; gap:0.3rem; flex-wrap:wrap;">
+              <span class="badge" style="background:#ffffff; border:1px solid #cbd5e1; color:#0f172a;">[空格] 上班</span>
+              <span class="badge" style="background:#fee2e2; color:#dc2626; border:1px solid #fca5a5; font-weight:800;">【A】輪休</span>
+              <span class="badge" style="background:#eff6ff; color:#1d4ed8; border:1px solid #bfdbfe; font-weight:800;">【C】超勤補休</span>
+              <span class="badge" style="background:#ecfdf5; color:#059669; border:1px solid #a7f3d0; font-weight:800;">【G】加休(應3天)</span>
               <span class="badge" style="background:#eff6ff; color:#2563eb; border:1px solid #bfdbfe;">【休】特休</span>
               <span class="badge" style="background:#f5f3ff; color:#7c3aed; border:1px solid #ddd6fe;">【公】公假</span>
               <span class="badge" style="background:#fffbeb; color:#d97706; border:1px solid #fde68a;">【事】事假</span>
@@ -799,45 +800,67 @@
               <span class="badge" style="background:#fdf2f8; color:#db2777; border:1px solid #fbcfe8;">【婚】婚假</span>
               <span class="badge" style="background:#f8fafc; color:#475569; border:1px solid #cbd5e1;">【喪】喪假</span>
             </div>
-            （選單已全面剔除「A 輪休」選項，杜絕以假別沖抵表定輪休之邏輯衝突）。
           </li>
           <li><strong>紅底白字日期</strong>：自動套用行政院人事行政總處行事曆塗紅（含例假日、國定紀念日及連續假期）。</li>
         </ul>
       </div>
 
-      <!-- 區塊 2：勤務防呆與主管授權 -->
+      <!-- 區塊 2：每人每月3天G（加休）規範與提醒機制 -->
       <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:0.45rem; padding:0.75rem;">
-        <strong style="color:#b91c1c; display:block; margin-bottom:0.35rem;">🛡️ 二、勤務安全門檻與防呆鎖定規範</strong>
-        <ul style="margin:0; padding-left:1.2rem; font-size:0.8rem;">
-          <li><strong>全大隊最低 4 人在勤底限（主管授權鎖定）</strong>：每日全大隊上班人數底限為 <strong>4 人</strong>。若填假後將導致該日在勤人數低於 4 人，系統將觸發<strong>防呆安全鎖定</strong>，必須輸入主管授權密碼 <code>501520</code> 始可破例放行，若密碼錯誤或取消則自動駁回。</li>
-          <li><strong>大隊幕僚最低在勤人數（3 人）</strong>：每日大隊幕僚（座號 4~14 號）上班人數底限為 <strong>3 人</strong>；每日下方「可填假人數」計算公式為：<code>可填假人數 = 幕僚在勤人數 - 3</code>。</li>
-          <li><strong>安全官防呆警戒（至少 1 人在勤）</strong>：每日上班名單中必須至少有 1 位合格安全官（曾志方、蔡宗憲、謝振國、鄭國甫、翁吉賢）在勤。若當日無任何安全官，系統將亮起 <span class="badge badge-red">⚠️ 缺安全官</span> 紅色警報並阻擋該日請假。</li>
-        </ul>
-      </div>
-
-      <!-- 區塊 3：S 型蛇行輪次演算法 -->
-      <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:0.45rem; padding:0.75rem;">
-        <strong style="color:#7c3aed; display:block; margin-bottom:0.35rem;">⚡ 三、雙層智慧排假仲裁規範（S 型蛇行輪次演算法）</strong>
-        <ul style="margin:0; padding-left:1.2rem; font-size:0.8rem;">
-          <li><strong>S 型蛇行輪次原則（Snake Draft）</strong>：避免單一優先權同仁連續占滿多個熱門休假日，仲裁系統依同仁登記之請假志願順序（志願 1、志願 2、志願 3...）採雙向交替分配：
+        <strong style="color:#059669; display:block; margin-bottom:0.35rem;">🟢 二、每人每月 3 天【G】（加休）規則與即時提醒</strong>
+        <ul style="margin:0; padding-left:1.2rem; font-size:0.8rem; line-height:1.5;">
+          <li><strong>每月必填 3 天加休</strong>：全體同仁（含指揮官與大隊幕僚）每月<strong>每人均須排定 3 天【G】（加休）</strong>。</li>
+          <li><strong>個人自主選填原則</strong>：同仁在排定之休假中，由個人自行挑選其中 3 天填為【G】；系統<strong>不代同仁強制填 G</strong>，維持同仁排休自主性。</li>
+          <li><strong>四重即時檢核與警報提醒</strong>：
             <div style="margin:0.25rem 0; line-height:1.5;">
-              🔹 <strong>第 1 輪【順向】</strong>：由第 1 個到最後一個，依序審查各同仁之「第 1 志願」。<br>
-              🔹 <strong>第 2 輪【逆向】</strong>：由最後一個到第 1 個，反向審查各同仁之「第 2 志願」。<br>
-              🔹 <strong>第 3 輪【順向】</strong>：由第 1 個到最後一個，順向審查各同仁之「第 3 志願」。<br>
-              🔹 <strong>第 4 輪【逆向】</strong>：由最後一個到第 1 個，反向審查各同仁之「第 4 志願」...依此類推。
+              1️⃣ <strong>班表最右側統計欄</strong>：即時統計各員當月已填 G 天數，達標顯示 <span class="badge-g-ok">✅ 3天</span>，未達標顯示 <span class="badge-g-warn">⚠️ X/3天</span>（列印時自動隱藏不擠壓 A4 版面）。<br>
+              2️⃣ <strong>頂部狀態列動態徽章</strong>：顯示未達標人數，點擊徽章可直接彈出「未排滿 G 假之同仁缺額名冊」。<br>
+              3️⃣ <strong>浮動填假彈窗即時進度</strong>：點選儲存格時，彈窗上方直接提示該同仁目前 G 假進度（如「⚠️ 尚缺 2 天」）。<br>
+              4️⃣ <strong>列印與匯出防呆確認</strong>：執行「🖨️ 列印班表」、「📥 匯出 ODS」或「📥 匯出 CSV」時，若尚有同仁未滿 3 天 G，系統主動跳出提醒對話框列出缺額名單，經確認後始可放行。
             </div>
           </li>
-          <li><strong>輪數動態自適應</strong>：演算法總輪數依同仁登記之最大志願數動態決定，無寫死上限（實務上班日約 15~16 天）。</li>
-          <li><strong>逐輪嚴格安全驗證</strong>：每一輪次逐筆檢驗「原為 A 則略過」、「在勤 ≥ 4 人」、「幕僚 ≥ 3 人」與「合格安全官 ≥ 1 人」，仲裁結果彈窗按輪次清楚標記順向/逆向及核准理由。</li>
         </ul>
       </div>
 
-      <!-- 區塊 4：調班、帳號管理與匯出 -->
+      <!-- 區塊 3：勤務安全門檻與防呆鎖定規範 -->
       <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:0.45rem; padding:0.75rem;">
-        <strong style="color:#0f766e; display:block; margin-bottom:0.35rem;">📊 四、互調班、操作紀錄 Excel 與公文匯出規範</strong>
-        <ul style="margin:0; padding-left:1.2rem; font-size:0.8rem;">
+        <strong style="color:#b91c1c; display:block; margin-bottom:0.35rem;">🛡️ 三、勤務安全門檻與防呆鎖定規範</strong>
+        <ul style="margin:0; padding-left:1.2rem; font-size:0.8rem; line-height:1.5;">
+          <li><strong>全大隊最低 4 人在勤底限（主管授權鎖定）</strong>：每日全大隊上班人數底限為 <strong>4 人</strong>。若填假後將導致該日在勤人數低於 4 人，系統將觸發<strong>防呆安全鎖定</strong>，必須輸入主管授權密碼 <code>501520</code> 始可破例放行，若密碼錯誤或取消則自動駁回。</li>
+          <li><strong>大隊幕僚最低在勤人數（3 人）</strong>：每日大隊幕僚（座號 4~14 號）上班人數底限為 <strong>3 人</strong>；每日下方「可填假人數」計算公式為：<code>可填假人數 = 幕僚在勤人數 - 3</code>。</li>
+          <li><strong>安全官防呆警戒（至少 1 人在勤）</strong>：每日上班名單中必須至少有 1 位合格安全官（曾志方、蔡宗憲、謝振國、鄭國甫、翁吉賢）在勤。若當日無任何安全官，系統將亮起 <span class="badge badge-red">⚠️ 當日無合格安全官！</span> 紅色警報並阻擋該日請假。</li>
+        </ul>
+      </div>
+
+      <!-- 區塊 4：雙層智慧排假與隨機最大化平衡分攤 -->
+      <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:0.45rem; padding:0.75rem;">
+        <strong style="color:#7c3aed; display:block; margin-bottom:0.35rem;">⚡ 四、雙層智慧排假仲裁與隨機最大化平衡分攤</strong>
+        <ul style="margin:0; padding-left:1.2rem; font-size:0.8rem; line-height:1.5;">
+          <li><strong>S 型蛇行輪次原則（Snake Draft）</strong>：避免單一優先權同仁連續占滿多個熱門休假日，仲裁系統依同仁登記之請假志願順序（志願 1、志願 2、志願 3...）採雙向交替分配：
+            <div style="margin:0.2rem 0; line-height:1.4;">
+              🔹 第 1 輪【順向】：第 1 個到最後一個，審查「第 1 志願」<br>
+              🔹 第 2 輪【逆向】：最後一個到第 1 個，反向審查「第 2 志願」<br>
+              🔹 第 3 輪【順向】：第 1 個到最後一個，順向審查「第 3 志願」...依此類推。
+            </div>
+          </li>
+          <li><strong>剩餘空格隨機最大化與平假日均衡機制</strong>：
+            <div style="margin:0.2rem 0; line-height:1.4;">
+              🎲 志願排定後，勾選「自動隨機填滿最大化」時，系統會在不違反安全底線（在勤 4 人/幕僚 3 人/安全官 1 人）下自動補填【C 超勤加班補休】至名額全滿。<br>
+              ⚖️ <strong>兩大公平平衡指標</strong>：<br>
+              &nbsp;&nbsp;• <strong>假日平衡</strong>：有餘額的週六、日與國定假日，優先隨機指派給「目前假日休假數最少」之同仁。<br>
+              &nbsp;&nbsp;• <strong>平日平衡</strong>：有餘額的平日，優先隨機指派給「全月總休假數最少」之同仁。<br>
+              &nbsp;&nbsp;• 成果面板呈現「平日休/假日休/總休天數」平衡報表，確保人人休假天數均衡相當。
+            </div>
+          </li>
+        </ul>
+      </div>
+
+      <!-- 區塊 5：調班、帳號管理與匯出 -->
+      <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:0.45rem; padding:0.75rem;">
+        <strong style="color:#0f766e; display:block; margin-bottom:0.35rem;">📊 五、互調班、同仁帳號管理與公文匯出規範</strong>
+        <ul style="margin:0; padding-left:1.2rem; font-size:0.8rem; line-height:1.5;">
           <li><strong>互調班精靈</strong>：支援同仁間「A 與 A 互調」或「上班與休假對調」，系統自動交換班別並檢核連續服勤安全與安全官配置。</li>
-          <li><strong>同仁帳號登入與切換</strong>：支援 14 位同仁名冊與管理者下拉快選登入，亦支援訪客模式無障礙直接進入。</li>
+          <li><strong>帳號管理與姓名修改</strong>：支援 14 位同仁名冊與管理者登入；管理者在「👥 帳號管理」中可直接點擊「✏️ 修改姓名」修正同仁姓名，並即時同步至班表與 Firebase 雲端。</li>
           <li><strong>操作紀錄 Excel 匯出</strong>：所有填假（含主管破例授權紀錄）、調班、仲裁、匯出與列印動作皆即時記錄；點擊「📊 匯出操作紀錄 (Excel)」即可下載包含「總表」與「各同仁專屬工作表分頁」之標準 Excel 活頁簿。</li>
           <li><strong>大隊標準 ODS 匯出與 A4 單頁列印</strong>：支援一鍵下載符合大隊 1151003.ods 範本之工作表；點擊「🖨️ 列印班表」版面精準填滿 A4 橫向單頁（Page Count: 1），底部自動附上承辦人、審核、大隊長之官方簽章欄。</li>
         </ul>
