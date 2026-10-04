@@ -780,7 +780,7 @@
   <div id="instructions-box" style="background: #ffffff; border: 1.5px solid var(--border); border-radius: 0.6rem; padding: 1rem 1.4rem; font-size: 0.83rem; line-height: 1.7; color: #334155; margin-top: 0.75rem; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
     <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1.5px solid #e2e8f0; padding-bottom:0.5rem; margin-bottom:0.75rem;">
       <strong style="font-size:0.95rem; color:#991b1b;">💡 臺南市政府消防局第五大隊 勤二休二排班系統操作指南與填假規範</strong>
-      <span style="font-size:0.78rem; color:#64748b;">適用基準：做二休二輪休制 ｜ 系統版本：v1.0.17</span>
+      <span style="font-size:0.78rem; color:#64748b;">適用基準：做二休二輪休制 ｜ 系統版本：v1.0.18</span>
     </div>
 
     <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1rem;">
@@ -3278,7 +3278,8 @@ async function exportToODS() {
     const adminBtn = $('ub-admin-btn');
     if (!textSpan) return;
     if (session) {
-      textSpan.textContent = `${session.name}（${session.role === 'admin' ? '管理者' : (session.role === 'user' ? '隊員' : '訪客')}）`;
+      const roleTag = session.role === 'admin' ? '（管理者）' : (session.role === 'guest' ? '（訪客）' : '');
+      textSpan.textContent = `${session.name}${roleTag}`;
       if (adminBtn) adminBtn.style.display = (session.role === 'admin') ? 'inline-block' : 'none';
     } else {
       textSpan.textContent = '訪客 / 未登入';
@@ -3294,7 +3295,7 @@ async function exportToODS() {
     accounts.forEach(a => {
       const opt = document.createElement('option');
       opt.value = a.username;
-      opt.textContent = `${a.name}（${a.role === 'admin' ? '管理者' : '隊員'}）`;
+      opt.textContent = a.role === 'admin' ? `${a.name}（管理者）` : a.name;
       sel.appendChild(opt);
     });
   }
