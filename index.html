@@ -306,10 +306,10 @@
       color: #dc2626;
       font-weight: 800;
       background-color: rgba(220, 38, 38, 0.04);
-      cursor: default !important;
+      cursor: pointer;
     }
     td.cell-shift.val-A:hover {
-      background-color: rgba(220, 38, 38, 0.08) !important;
+      background-color: rgba(220, 38, 38, 0.12) !important;
     }
     .val-blank {
       color: #94a3b8;
@@ -786,7 +786,7 @@
         <strong style="color:#1e3a8a; display:block; margin-bottom:0.35rem;">📌 一、基礎假別與排假圖例說明</strong>
         <ul style="margin:0; padding-left:1.2rem; font-size:0.8rem; line-height:1.5;">
           <li><strong>做兩天休兩天（勤二休二）</strong>：採 4 班循環（A/B/C/D 班），每位同仁全月表定約 15~16 天輪休【A】。</li>
-          <li><strong>表定輪休【A】防誤觸保護</strong>：紅色粗體【A】為系統自動推算排定，<strong>禁止直接改假</strong>，游標維持箭頭且不彈出選單。</li>
+          <li><strong>表定輪休【A】防誤觸保護</strong>：表格中紅色粗體【A】為系統自動排定之輪休，禁止直接改假。如需修改，請輸入管理人密碼，管理人密碼為 <code>501520</code>。</li>
           <li><strong>上班日填假方式</strong>：點擊非【A】之空格儲存格，即彈出<strong>浮動排假選單</strong>，支援下拉選單挑選或彩色按鈕快選：
             <div style="margin:0.3rem 0; display:flex; gap:0.3rem; flex-wrap:wrap;">
               <span class="badge" style="background:#ffffff; border:1px solid #cbd5e1; color:#0f172a;">[空格] 上班</span>
@@ -881,6 +881,7 @@
       <label style="font-weight:700; font-size:0.8rem; color:#475569;">選擇假別（下拉選單）：</label>
       <select id="popover-select" class="popover-select" onchange="applyLeaveSelection(this.value)">
         <option value="">🏢 [空格] 上班 (表定服勤)</option>
+        <option value="A">🔴 【A】輪休 (表定輪休)</option>
         <option value="C">🔵 【C】超勤加班補休</option>
         <option value="G">🟢 【G】加休</option>
         <option value="休">🟦 【休】特休</option>
@@ -894,6 +895,7 @@
     <div style="font-weight:700; font-size:0.75rem; color:#64748b; margin-bottom:0.25rem;">或點擊快速選取：</div>
     <div class="quick-badges">
       <button class="quick-btn" onclick="applyLeaveSelection('')">🏢 上班(空格)</button>
+      <button class="quick-btn" style="color:#dc2626; font-weight:800;" onclick="applyLeaveSelection('A')">🔴 A 輪休</button>
       <button class="quick-btn" style="color:#1d4ed8;" onclick="applyLeaveSelection('C')">🔵 C 超勤補休</button>
       <button class="quick-btn" style="color:#059669;" onclick="applyLeaveSelection('G')">🟢 G 加休</button>
       <button class="quick-btn" style="color:#2563eb;" onclick="applyLeaveSelection('休')">🟦 休 特休</button>
@@ -1145,9 +1147,10 @@
     let scheduleGrid = {}; // key: `staffId_day` -> value ("A", "", "C", "G", etc.)
     let leaveRequests = []; // [{ staffId, day, type }]
 
-    // Storage Keys
+    // Storage Keys & Security
     const STORAGE_KEY = "TNCFD_SHIFT_SYSTEM_1151003";
     const FIREBASE_CONFIG_KEY = "TNCFD_FIREBASE_CONFIG";
+    const SUPERVISOR_PASSWORD = "501520";
 
     // Firebase Realtime Engine
     let firestoreDb = null;
@@ -1593,8 +1596,8 @@
 
         if (val === "A") {
           valClass = "val-A";
-          clickAttr = ""; // 當天為 A (輪休) 時，移除下拉式選單功能
-          cellTitle = `${st.name} ${currentMonth}/${d}：表定輪休(A)`;
+          clickAttr = `onclick="openLeaveDropdown(event, ${st.id}, ${d})"`;
+          cellTitle = `${st.name} ${currentMonth}/${d}：表定輪休(A)（受保護，如需修改請輸入管理人密碼 501520）`;
         } else if (val === "C" || val === "休" || val === "公" || val === "病" || val === "事") {
           valClass = "val-leave";
         } else if (val === "G") {
@@ -1622,7 +1625,20 @@
     function openLeaveDropdown(event, staffId, day) {
       event.stopPropagation();
       const curVal = scheduleGrid[`${staffId}_${day}`] || "";
-      if (curVal === "A") return; // 雙重防護：當天為 A 時不開啟下拉選單
+      if (curVal === "A") {
+        const inputPwd = prompt(
+          `🔒【表定輪休(A)防誤觸保護】\n\n` +
+          `表格中紅色粗體【A】為系統自動排定之輪休，禁止直接改假。\n` +
+          `如需修改，請輸入管理人密碼：`
+        );
+        if (inputPwd === null) {
+          return; // 使用者按取消
+        }
+        if (inputPwd.trim() !== SUPERVISOR_PASSWORD) {
+          alert("❌ 管理人密碼錯誤！無法修改表定輪休【A】。");
+          return;
+        }
+      }
 
       const popover = document.getElementById('leave-popover');
       const targetCell = event.currentTarget;
@@ -1633,8 +1649,8 @@
 
       const st = staffList.find(s => s.id === staffId);
 
-      document.getElementById('popover-title').textContent = `${st ? st.name : '該員'} (${currentMonth}/${day})${curVal === 'A' ? ' [目前：輪休]' : ''}`;
-      document.getElementById('popover-select').value = curVal === 'A' ? '' : curVal;
+      document.getElementById('popover-title').textContent = `${st ? st.name : '該員'} (${currentMonth}/${day})${curVal === 'A' ? ' [目前：輪休(A)]' : ''}`;
+      document.getElementById('popover-select').value = curVal;
 
       // Update G quota status in popover
       const gInfoElem = document.getElementById('popover-g-info');
@@ -1732,8 +1748,7 @@
       }
     });
 
-    // Password for overriding the 4-person on-duty lock
-    const SUPERVISOR_PASSWORD = "501520";
+    // Supervisor authorization password already defined globally above (SUPERVISOR_PASSWORD = "501520")
 
     // Toggle Cell Value on Click with 4-person Lock Protection
     function cycleCell(staffId, day) {
