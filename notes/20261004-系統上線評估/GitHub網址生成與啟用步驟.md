@@ -10,16 +10,16 @@
 
 ---
 
-## 二、如何一鍵發布並啟用網址？
+## 二、上線狀態驗證：🎉 已全面開通正式上線！
 
-我已經在專案資料夾內為您建立好 **`發布到GitHub.bat`** 一鍵推送腳本：
+經連線 HTTP 狀態與內容檢驗：
+- **HTTP 狀態碼**：`200 OK`（正常運作中）
+- **網頁標題驗證**：臺南市政府消防局第五救災救護大隊 勤二休二排班與智慧填假系統（✅ 通過）
+- **雲端同步功能**：Firebase 即時同步與操作紀錄匯出功能（✅ 正常掛載）
 
-1. **雙擊執行發布**：
-   - 在資料夾內雙擊執行 **[`發布到GitHub.bat`](file:///C:/Users/TNCFD/Desktop/勤務系統/發布到GitHub.bat)**。
-   - 終端機若彈出瀏覽器授權畫面，點選 **Authorize** 授權您的 GitHub 登入。
-2. **在 GitHub 啟用 Pages 網址**：
-   - 前往 [https://github.com/tncfd500/tncfd-shift/settings/pages](https://github.com/tncfd500/tncfd-shift/settings/pages)
-   - 在 **Branch** 選取 `main` / `/(root)`，點擊 **Save**。
-   - 等待約 1 分鐘，網址即可公開連線存取！
+👉 **您的正式公開上線網址**：
+**https://tncfd500.github.io/tncfd-shift/**
+
+
 
 
