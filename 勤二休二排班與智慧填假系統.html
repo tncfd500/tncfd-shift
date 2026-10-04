@@ -780,7 +780,7 @@
   <div id="instructions-box" style="background: #ffffff; border: 1.5px solid var(--border); border-radius: 0.6rem; padding: 1rem 1.4rem; font-size: 0.83rem; line-height: 1.7; color: #334155; margin-top: 0.75rem; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
     <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1.5px solid #e2e8f0; padding-bottom:0.5rem; margin-bottom:0.75rem;">
       <strong style="font-size:0.95rem; color:#991b1b;">💡 臺南市政府消防局第五大隊 勤二休二排班系統操作指南與填假規範</strong>
-      <span style="font-size:0.78rem; color:#64748b;">適用基準：做二休二輪休制 ｜ 系統版本：v1.0.19</span>
+      <span style="font-size:0.78rem; color:#64748b;">適用基準：做二休二輪休制 ｜ 系統版本：v1.0.20</span>
     </div>
 
     <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1rem;">
@@ -855,6 +855,7 @@
               &nbsp;&nbsp;• 成果面板呈現「平日休/假日休/總休天數」平衡報表，確保人人休假天數均衡相當。
             </div>
           </li>
+          <li><strong>志願登記 A 輪休防呆保護</strong>：同仁登記請假志願時，系統自動檢核該員當月排班；若選取之日期原先即為表定【A】輪休，該日期自動於選單中鎖定停用（標示 <code>🚫 表定A輪休，不可選</code>），禁止重複登記請假以避免浪費志願名額。</li>
         </ul>
       </div>
 
@@ -1003,7 +1004,7 @@
         <div>
           <label style="font-weight:700; font-size:0.9rem;">第 2 層：同仁請假志願登記</label>
           <div style="display:flex; gap:0.5rem; margin-top:0.4rem; align-items:center; flex-wrap:wrap;">
-            <select id="req-staff"></select>
+            <select id="req-staff" onchange="updateReqDayOptions()"></select>
             <select id="req-day"></select>
             <select id="req-type">
               <option value="C">超勤加班補休【C】</option>
@@ -2128,26 +2129,80 @@
     }
 
     // Modal: Auto Schedule Arbitration (雙層智慧排假)
-    function initAutoScheduleModal() {
+    function updateReqDayOptions() {
       const sSel = document.getElementById('req-staff');
       const dSel = document.getElementById('req-day');
-      sSel.innerHTML = ''; dSel.innerHTML = '';
+      if (!sSel || !dSel) return;
+      const staffId = parseInt(sSel.value);
+      const st = staffList.find(s => s.id === staffId);
+      if (!st) return;
+
+      const totalDays = getDaysInMonth(currentYear, currentMonth);
+      const prevVal = parseInt(dSel.value);
+      dSel.innerHTML = '';
+
+      let firstValidDay = null;
+      for (let d = 1; d <= totalDays; d++) {
+        const val = scheduleGrid[`${staffId}_${d}`] || (st.defaultShift ? getBaseShiftState(st.defaultShift, currentYear, currentMonth, d) : "");
+        const isA = (val === "A");
+        if (isA) {
+          dSel.innerHTML += `<option value="${d}" disabled style="color:#94a3b8; background:#f1f5f9;">${currentMonth}/${d} 🚫 (表定A輪休，不可選)</option>`;
+        } else {
+          dSel.innerHTML += `<option value="${d}">${currentMonth}/${d} (上班服勤日)</option>`;
+          if (firstValidDay === null) firstValidDay = d;
+        }
+      }
+
+      // 若原選取日期非 A 輪休且在範圍內則保留，否則自動定位至第一個可選之服勤上班日
+      const curSelectedVal = scheduleGrid[`${staffId}_${prevVal}`] || "";
+      if (prevVal && curSelectedVal !== "A" && prevVal <= totalDays) {
+        dSel.value = prevVal;
+      } else if (firstValidDay !== null) {
+        dSel.value = firstValidDay;
+      }
+    }
+
+    function initAutoScheduleModal() {
+      const sSel = document.getElementById('req-staff');
+      if (!sSel) return;
+      sSel.innerHTML = '';
 
       staffList.forEach(s => {
         sSel.innerHTML += `<option value="${s.id}">${s.name}</option>`;
       });
 
-      const totalDays = getDaysInMonth(currentYear, currentMonth);
-      for (let d = 1; d <= totalDays; d++) {
-        dSel.innerHTML += `<option value="${d}">${currentMonth}/${d}</option>`;
-      }
+      sSel.onchange = updateReqDayOptions;
+      updateReqDayOptions();
       renderRequestList();
     }
 
     function addLeaveRequest() {
-      const staffId = parseInt(document.getElementById('req-staff').value);
-      const day = parseInt(document.getElementById('req-day').value);
+      const sSel = document.getElementById('req-staff');
+      const dSel = document.getElementById('req-day');
+      const staffId = parseInt(sSel.value);
+      const day = parseInt(dSel.value);
       const type = document.getElementById('req-type').value;
+
+      if (!staffId || !day) {
+        alert('請選擇有效的人員與請假日期！');
+        return;
+      }
+
+      const st = staffList.find(s => s.id === staffId);
+      const cur = scheduleGrid[`${staffId}_${day}`] || (st && st.defaultShift ? getBaseShiftState(st.defaultShift, currentYear, currentMonth, day) : "");
+
+      // 防呆機制：若點選當天該員原本即為【A】輪休，阻擋登記
+      if (cur === "A") {
+        alert(`🔒【請假志願防呆機制】\n\n${st ? st.name : '該同仁'} 在 ${currentMonth}/${day} 當天原本即為排定之【A】輪休！\n系統已啟動防呆保護，禁止重複登記請假志願。`);
+        return;
+      }
+
+      // 防呆機制：檢查是否重複登記同日
+      const duplicate = leaveRequests.find(r => r.staffId === staffId && r.day === day);
+      if (duplicate) {
+        alert(`⚠️【重複志願防呆】\n\n${st ? st.name : '該同仁'} 在 ${currentMonth}/${day} 已經登記過志願【${duplicate.type}】，請勿重複登記！`);
+        return;
+      }
 
       leaveRequests.push({ staffId, day, type });
       saveState();
