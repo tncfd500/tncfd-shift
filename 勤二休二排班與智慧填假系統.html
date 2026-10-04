@@ -998,6 +998,21 @@
           </div>
         </div>
 
+        <!-- 剩餘空格隨機最大化與平假日平衡選項 -->
+        <div style="background:#ecfdf5; border:1.5px solid #a7f3d0; border-radius:0.45rem; padding:0.75rem; margin-top:0.6rem;">
+          <label style="display:flex; align-items:flex-start; gap:0.5rem; cursor:pointer;">
+            <input type="checkbox" id="chk-auto-maximize" style="margin-top:0.25rem; transform:scale(1.2);" checked>
+            <div>
+              <strong style="color:#065f46; font-size:0.9rem;">🎲 志願排定後，剩餘可請假空格自動隨機填滿最大化（兼顧每人平假日休假均衡）</strong>
+              <div style="font-size:0.78rem; color:#047857; margin-top:0.2rem; line-height:1.4;">
+                • <strong>平假日雙重平衡</strong>：系統優先平衡例假日（六、日、國定假日）之補填機會，再平衡平日，讓每人全月休假總天數及平假日比例盡可能一致。<br>
+                • <strong>不強制代填 G</strong>：自動補填一律指派【C 超勤加班補休】。排定後由每位同仁自行挑選其中 3 天填為【G】（系統維持提醒檢核）。<br>
+                • <strong>嚴格遵守防呆</strong>：恪守勤二休二 (A)、全大隊最低 4 人、大隊幕僚最低 3 人與安全官每日至少 1 人在勤底線。
+              </div>
+            </div>
+          </label>
+        </div>
+
         <div id="arbitration-result-box" style="display:none; padding:0.75rem; border-radius:0.375rem; font-size:0.85rem; line-height:1.5;"></div>
       </div>
       <div class="modal-footer">
@@ -2214,6 +2229,13 @@
         return isFwd ? '順向' : '逆向';
       }
 
+      // 5. 隨機最大化與平假日平衡分攤機制 (當使用者勾選自動填滿時執行)
+      const doMaximize = document.getElementById('chk-auto-maximize') && document.getElementById('chk-auto-maximize').checked;
+      let maximizeStats = null;
+      if (doMaximize) {
+        maximizeStats = maximizeRemainingLeaves(tempGrid);
+      }
+
       // 套用至主要班表格子
       scheduleGrid = tempGrid;
       saveState();
@@ -2260,15 +2282,226 @@
         resHtml += `</ul></div>`;
       });
 
+      // 如果有執行最大化補假，呈顯補假統計成果與平假日分攤表
+      if (maximizeStats) {
+        resHtml += `
+          <div style="margin-top:0.75rem; background:#ecfdf5; border:1.5px solid #a7f3d0; border-radius:0.35rem; padding:0.6rem 0.75rem;">
+            <div style="font-weight:800; color:#065f46; font-size:0.9rem; margin-bottom:0.35rem; display:flex; justify-content:space-between; align-items:center;">
+              <span>🎲 剩餘空格隨機最大化與平假日平衡成果</span>
+              <span class="badge badge-green">已補填 ${maximizeStats.totalAdded} 天【C】</span>
+            </div>
+            <div style="font-size:0.8rem; color:#047857; margin-bottom:0.5rem; line-height:1.5;">
+              • 補填原則：在不違反最低4人、幕僚3人及安全官1人下，優先平衡假日休假，再平衡平日休假，填滿至最大化。<br>
+              • <strong>G 假提醒</strong>：補填假別均為【C】（超勤補休），請同仁於排定休假中<strong>各自挑選 3 天改填【G】加休</strong>（目前進度請參考下方表格）。
+            </div>
+            <div style="max-height:220px; overflow-y:auto; border:1px solid #cbd5e1; border-radius:0.25rem;">
+              <table style="width:100%; border-collapse:collapse; font-size:0.78rem; text-align:center; background:#ffffff;">
+                <thead style="background:#f1f5f9; color:#334155; position:sticky; top:0;">
+                  <tr>
+                    <th style="padding:0.3rem 0.4rem; text-align:left;">姓名</th>
+                    <th style="padding:0.3rem 0.4rem;">假日休</th>
+                    <th style="padding:0.3rem 0.4rem;">平日休</th>
+                    <th style="padding:0.3rem 0.4rem; font-weight:800;">總休天數</th>
+                    <th style="padding:0.3rem 0.4rem;">本次補填</th>
+                    <th style="padding:0.3rem 0.4rem;">G假進度</th>
+                  </tr>
+                </thead>
+                <tbody>
+        `;
+        maximizeStats.staffSummary.forEach(row => {
+          const gOk = row.gCount >= 3;
+          resHtml += `
+            <tr style="border-bottom:1px solid #f1f5f9;">
+              <td style="padding:0.35rem 0.4rem; text-align:left; font-weight:700;">${row.name}</td>
+              <td style="padding:0.35rem 0.4rem; color:#dc2626; font-weight:700;">${row.holidaysOff} 天</td>
+              <td style="padding:0.35rem 0.4rem; color:#2563eb;">${row.workdaysOff} 天</td>
+              <td style="padding:0.35rem 0.4rem; font-weight:800; color:#0f172a;">${row.totalOff} 天</td>
+              <td style="padding:0.35rem 0.4rem; color:#059669; font-weight:700;">+${row.addedCount}</td>
+              <td style="padding:0.35rem 0.4rem;">
+                <span class="${gOk ? 'badge-g-ok' : 'badge-g-warn'}">${gOk ? '✅ 已排3天' : '⚠️ 缺' + (3 - row.gCount) + '天'}</span>
+              </td>
+            </tr>
+          `;
+        });
+        resHtml += `
+                </tbody>
+              </table>
+            </div>
+          </div>
+        `;
+      }
+
       resHtml += `
         <div style="font-size:0.82rem; color:#166534; font-weight:700; text-align:right; margin-top:0.4rem;">
-          🎉 S型仲裁完成！共成功核准 ${totalApproved} 筆請假志願，班表已同步更新並詳細記錄至操作紀錄中。
+          🎉 仲裁與排假完成！共成功核准 ${totalApproved} 筆請假志願${maximizeStats ? `，並隨機平衡補填 ${maximizeStats.totalAdded} 天休假` : ''}，班表已同步更新。
         </div>
       `;
       resBox.innerHTML = resHtml;
     }
 
-    
+    // 核心演算法：剩餘可請假空格隨機最大化與平假日平衡分攤
+    function maximizeRemainingLeaves(grid) {
+      const totalDays = getDaysInMonth(currentYear, currentMonth);
+
+      // 輔助函式：計算某同仁在當前 grid 中的休假統計
+      function getStaffStat(staffId) {
+        let holidaysOff = 0;
+        let workdaysOff = 0;
+        let totalOff = 0;
+        let gCount = 0;
+        for (let d = 1; d <= totalDays; d++) {
+          const v = grid[`${staffId}_${d}`] || "";
+          if (v !== "") { // A, C, G, 休, etc. 均為休假
+            totalOff++;
+            if (isHoliday(currentYear, currentMonth, d)) {
+              holidaysOff++;
+            } else {
+              workdaysOff++;
+            }
+            if (v === "G") gCount++;
+          }
+        }
+        return { holidaysOff, workdaysOff, totalOff, gCount };
+      }
+
+      // 檢查某同仁在第 d 天能否請假【C】（遵守全大隊4人、幕僚3人、安全官1人）
+      function canTakeLeave(staffId, day) {
+        const curVal = grid[`${staffId}_${day}`] || "";
+        if (curVal !== "") return false; // 當天已有排假或已是輪休 A，略過
+
+        const st = staffList.find(s => s.id === staffId);
+        if (!st) return false;
+
+        // 1. 全大隊上班在勤 >= 4
+        let dutyCount = 0;
+        staffList.forEach(s => {
+          const v = (s.id === staffId) ? "C" : (grid[`${s.id}_${day}`] || "");
+          if (v === "") dutyCount++;
+        });
+        if (dutyCount < 4) return false;
+
+        // 2. 大隊幕僚在勤 >= 3
+        if (st.role === '大隊幕僚') {
+          let staffDuty = 0;
+          staffList.filter(s => s.role === '大隊幕僚').forEach(s => {
+            const v = (s.id === staffId) ? "C" : (grid[`${s.id}_${day}`] || "");
+            if (v === "") staffDuty++;
+          });
+          if (staffDuty < 3) return false;
+        }
+
+        // 3. 安全官在勤 >= 1
+        if (st.isSafety) {
+          let safetyDuty = 0;
+          staffList.filter(s => s.isSafety).forEach(s => {
+            const v = (s.id === staffId) ? "C" : (grid[`${s.id}_${day}`] || "");
+            if (v === "") safetyDuty++;
+          });
+          if (safetyDuty < 1) return false;
+        }
+
+        return true;
+      }
+
+      // 洗牌工具（確保條件相同時完全隨機抽籤）
+      function shuffleArray(arr) {
+        for (let i = arr.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [arr[i], arr[j]] = [arr[j], arr[i]];
+        }
+        return arr;
+      }
+
+      // 記錄每位同仁本次補填天數
+      const addedByStaff = {};
+      staffList.forEach(s => { addedByStaff[s.id] = 0; });
+      let totalAdded = 0;
+
+      // 區分例假日與平常日
+      const holidayDays = [];
+      const workdayDays = [];
+      for (let d = 1; d <= totalDays; d++) {
+        if (isHoliday(currentYear, currentMonth, d)) {
+          holidayDays.push(d);
+        } else {
+          workdayDays.push(d);
+        }
+      }
+
+      // 階段 1：例假日優先平衡補填（目標：假日休假數越少者越優先，若相同則隨機）
+      shuffleArray(holidayDays);
+      let holidayProgress = true;
+      while (holidayProgress) {
+        holidayProgress = false;
+        holidayDays.forEach(d => {
+          // 找出當天所有可請假同仁
+          let candidates = staffList.filter(s => canTakeLeave(s.id, d));
+          if (candidates.length === 0) return;
+
+          // 評分排序：假日休假數最少 -> 總休假數最少 -> 隨機
+          shuffleArray(candidates);
+          candidates.sort((a, b) => {
+            const statA = getStaffStat(a.id);
+            const statB = getStaffStat(b.id);
+            if (statA.holidaysOff !== statB.holidaysOff) {
+              return statA.holidaysOff - statB.holidaysOff;
+            }
+            return statA.totalOff - statB.totalOff;
+          });
+
+          const chosen = candidates[0];
+          grid[`${chosen.id}_${d}`] = "C";
+          addedByStaff[chosen.id]++;
+          totalAdded++;
+          holidayProgress = true;
+        });
+      }
+
+      // 階段 2：平常日接續平衡補填（目標：總休假數越少者越優先，若相同則平日休假少者優先，若再相同則隨機）
+      shuffleArray(workdayDays);
+      let workdayProgress = true;
+      while (workdayProgress) {
+        workdayProgress = false;
+        workdayDays.forEach(d => {
+          let candidates = staffList.filter(s => canTakeLeave(s.id, d));
+          if (candidates.length === 0) return;
+
+          shuffleArray(candidates);
+          candidates.sort((a, b) => {
+            const statA = getStaffStat(a.id);
+            const statB = getStaffStat(b.id);
+            if (statA.totalOff !== statB.totalOff) {
+              return statA.totalOff - statB.totalOff;
+            }
+            return statA.workdaysOff - statB.workdaysOff;
+          });
+
+          const chosen = candidates[0];
+          grid[`${chosen.id}_${d}`] = "C";
+          addedByStaff[chosen.id]++;
+          totalAdded++;
+          workdayProgress = true;
+        });
+      }
+
+      // 彙整每位同仁之最終分攤統計
+      const staffSummary = staffList.map(s => {
+        const stat = getStaffStat(s.id);
+        return {
+          id: s.id,
+          name: s.name,
+          role: s.role,
+          holidaysOff: stat.holidaysOff,
+          workdaysOff: stat.workdaysOff,
+          totalOff: stat.totalOff,
+          gCount: stat.gCount,
+          addedCount: addedByStaff[s.id]
+        };
+      });
+
+      return { totalAdded, staffSummary };
+    }
+
 // Embedded JSZip library
 /*!
 
