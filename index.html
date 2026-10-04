@@ -780,7 +780,7 @@
   <div id="instructions-box" style="background: #ffffff; border: 1.5px solid var(--border); border-radius: 0.6rem; padding: 1rem 1.4rem; font-size: 0.83rem; line-height: 1.7; color: #334155; margin-top: 0.75rem; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
     <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1.5px solid #e2e8f0; padding-bottom:0.5rem; margin-bottom:0.75rem;">
       <strong style="font-size:0.95rem; color:#991b1b;">💡 臺南市政府消防局第五大隊 勤二休二排班系統操作指南與填假規範</strong>
-      <span style="font-size:0.78rem; color:#64748b;">適用基準：做二休二輪休制 ｜ 系統版本：v1.0.15</span>
+      <span style="font-size:0.78rem; color:#64748b;">適用基準：做二休二輪休制 ｜ 系統版本：v1.0.16</span>
     </div>
 
     <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1rem;">
@@ -789,7 +789,7 @@
         <strong style="color:#1e3a8a; display:block; margin-bottom:0.35rem;">📌 一、基礎假別與排假圖例說明</strong>
         <ul style="margin:0; padding-left:1.2rem; font-size:0.8rem; line-height:1.5;">
           <li><strong>做兩天休兩天（勤二休二）</strong>：採 4 班循環（A/B/C/D 班），每位同仁全月表定約 15~16 天輪休【A】。</li>
-          <li><strong>表定輪休【A】防誤觸保護</strong>：表格中紅色粗體【A】為系統自動排定之輪休，禁止直接改假。如需修改，請輸入管理人密碼，管理人密碼為 <code>501520</code>。</li>
+          <li><strong>表定輪休【A】防誤觸保護</strong>：表格中紅色粗體【A】為系統自動排定之輪休，禁止直接改假。如需修改，請輸入管理人密碼。</li>
           <li><strong>上班日填假方式</strong>：點擊非【A】之空格儲存格，即彈出<strong>浮動排假選單</strong>，支援下拉選單挑選或彩色按鈕快選：
             <div style="margin:0.3rem 0; display:flex; gap:0.3rem; flex-wrap:wrap;">
               <span class="badge" style="background:#ffffff; border:1px solid #cbd5e1; color:#0f172a;">[空格] 上班</span>
@@ -829,7 +829,7 @@
       <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:0.45rem; padding:0.75rem;">
         <strong style="color:#b91c1c; display:block; margin-bottom:0.35rem;">🛡️ 三、勤務安全門檻與防呆鎖定規範</strong>
         <ul style="margin:0; padding-left:1.2rem; font-size:0.8rem; line-height:1.5;">
-          <li><strong>全大隊最低 4 人在勤底限（主管授權鎖定）</strong>：每日全大隊上班人數底限為 <strong>4 人</strong>。若填假後將導致該日在勤人數低於 4 人，系統將觸發<strong>防呆安全鎖定</strong>，必須輸入主管授權密碼 <code>501520</code> 始可破例放行，若密碼錯誤或取消則自動駁回。</li>
+          <li><strong>全大隊最低 4 人在勤底限（主管授權鎖定）</strong>：每日全大隊上班人數底限為 <strong>4 人</strong>。若填假後將導致該日在勤人數低於 4 人，系統將觸發<strong>防呆安全鎖定</strong>，必須輸入主管授權密碼始可破例放行，若密碼錯誤或取消則自動駁回。</li>
           <li><strong>大隊幕僚最低在勤人數（3 人）</strong>：每日大隊幕僚（座號 4~14 號）上班人數底限為 <strong>3 人</strong>；每日下方「可填假人數」計算公式為：<code>可填假人數 = 幕僚在勤人數 - 3</code>。</li>
           <li><strong>安全官防呆警戒（至少 1 人在勤）</strong>：每日上班名單中必須至少有 1 位合格安全官（曾志方、蔡宗憲、謝振國、鄭國甫、翁吉賢）在勤。若當日無任何安全官，系統將亮起 <span class="badge badge-red">⚠️ 當日無合格安全官！</span> 紅色警報並阻擋該日請假。</li>
         </ul>
@@ -1600,7 +1600,7 @@
         if (val === "A") {
           valClass = "val-A";
           clickAttr = `onclick="openLeaveDropdown(event, ${st.id}, ${d})"`;
-          cellTitle = `${st.name} ${currentMonth}/${d}：表定輪休(A)（受保護，如需修改請輸入管理人密碼 501520）`;
+          cellTitle = `${st.name} ${currentMonth}/${d}：表定輪休(A)（受保護，如需修改請輸入管理人密碼）`;
         } else if (val === "C" || val === "休" || val === "公" || val === "病" || val === "事") {
           valClass = "val-leave";
         } else if (val === "G") {
@@ -2211,7 +2211,7 @@
           });
 
           if (totalDutyAfterLeave < 4) {
-            const item = { st, req, wishNo: round, status: "🔒 鎖定駁回", reason: `當日全大隊上班在勤僅餘 ${totalDutyAfterLeave} 人，低於最低門檻 4 人（需密碼 501520 授權）` };
+            const item = { st, req, wishNo: round, status: "🔒 鎖定駁回", reason: `當日全大隊上班在勤僅餘 ${totalDutyAfterLeave} 人，低於最低門檻 4 人（需主管密碼授權）` };
             roundItems.push(item);
             overallAuditList.push(`[第${round}輪 ${itDirection(isForward)}] ${st.name} ${currentMonth}/${day} ${req.type}：鎖定駁回(在勤僅${totalDutyAfterLeave}人)`);
             return;
