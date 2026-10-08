@@ -781,7 +781,7 @@
   <div id="instructions-box" style="background: #ffffff; border: 1.5px solid var(--border); border-radius: 0.6rem; padding: 1rem 1.4rem; font-size: 0.83rem; line-height: 1.7; color: #334155; margin-top: 0.75rem; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
     <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1.5px solid #e2e8f0; padding-bottom:0.5rem; margin-bottom:0.75rem;">
       <strong style="font-size:0.95rem; color:#991b1b;">💡 臺南市政府消防局第五大隊 勤二休二排班系統操作指南與填假規範</strong>
-      <span style="font-size:0.78rem; color:#64748b;">適用基準：做二休二輪休制 ｜ 系統版本：v1.0.22</span>
+      <span style="font-size:0.78rem; color:#64748b;">適用基準：做二休二輪休制 ｜ 系統版本：v1.0.23</span>
     </div>
 
     <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1rem;">
@@ -2330,13 +2330,34 @@
 
       if (summaryElem) {
         const uniqueStaff = new Set(leaveRequests.map(r => r.staffId)).size;
-        summaryElem.textContent = `共 ${uniqueStaff} 位同仁 ｜ 登記 ${leaveRequests.length} 筆志願`;
+        summaryElem.textContent = `共 ${uniqueStaff} 位同仁 ｜ 登記 ${leaveRequests.length} 筆志願（依座號及志願排序）`;
       }
 
+      // 1. 計算每位同仁的志願登記順序序號（第1志願、第2志願...）
       const counts = {};
-      const rowsHtml = leaveRequests.map((req, idx) => {
+      const itemsWithMeta = leaveRequests.map((req, origIdx) => {
         counts[req.staffId] = (counts[req.staffId] || 0) + 1;
         const wishNo = counts[req.staffId];
+        const staffIndex = staffList.findIndex(s => s.id === req.staffId);
+        return {
+          req,
+          origIdx,
+          wishNo,
+          staffId: req.staffId,
+          staffOrder: (staffIndex !== -1 ? staffIndex : 999)
+        };
+      });
+
+      // 2. 依座號順序（staffId 或名冊順序）及志願順序（wishNo）進行雙重排序
+      itemsWithMeta.sort((a, b) => {
+        if (a.staffId !== b.staffId) {
+          return a.staffId - b.staffId; // 座號由小到大 (1, 2, 3...)
+        }
+        return a.wishNo - b.wishNo; // 該同仁的第 1 志願、第 2 志願、第 3 志願...
+      });
+
+      const rowsHtml = itemsWithMeta.map((item, displayIdx) => {
+        const { req, origIdx, wishNo } = item;
         const st = staffList.find(s => s.id === req.staffId);
         const staffName = st ? st.name : `編號 ${req.staffId}`;
         const staffGroup = st ? (st.group || '—') : '—';
@@ -2349,12 +2370,15 @@
         const isHol = isHoliday(currentYear, currentMonth, req.day);
         const dateStyle = isHol ? 'color:#dc2626; font-weight:700;' : 'color:#1e293b;';
         
-        const isCurrentEditing = (idx === editIdx);
-        const rowBg = isCurrentEditing ? 'background:#fef3c7; border:2px solid #f59e0b;' : (idx % 2 === 0 ? 'background:#ffffff;' : 'background:#f8fafc;');
+        const isCurrentEditing = (origIdx === editIdx);
+        const rowBg = isCurrentEditing ? 'background:#fef3c7; border:2px solid #f59e0b;' : (displayIdx % 2 === 0 ? 'background:#ffffff;' : 'background:#f8fafc;');
 
         return `
           <tr style="${rowBg} border-bottom:1px solid #e2e8f0; transition:background 0.2s;">
-            <td style="padding:0.4rem 0.5rem; text-align:center; font-weight:700; color:#475569;">${idx + 1}</td>
+            <td style="padding:0.4rem 0.5rem; text-align:center; font-weight:700; color:#475569;">${displayIdx + 1}</td>
+            <td style="padding:0.4rem 0.5rem; text-align:center; font-weight:700; color:#1e40af;">
+              座號 ${req.staffId}
+            </td>
             <td style="padding:0.4rem 0.5rem; text-align:center;">
               <span class="badge badge-blue" style="font-size:0.75rem; padding:0.15rem 0.45rem;">第 ${wishNo} 志願</span>
             </td>
@@ -2372,9 +2396,9 @@
             <td style="padding:0.4rem 0.5rem; text-align:center; white-space:nowrap;">
               ${isCurrentEditing ? 
                 `<button class="btn btn-outline" style="color:#d97706; font-size:0.75rem; padding:0.15rem 0.4rem; margin-right:0.25rem;" onclick="cancelEditLeaveRequest()">取消</button>` :
-                `<button class="btn btn-light" style="color:#2563eb; font-size:0.75rem; padding:0.15rem 0.45rem; margin-right:0.25rem;" onclick="editLeaveRequest(${idx})" title="修改此筆志願">✏️ 修改</button>`
+                `<button class="btn btn-light" style="color:#2563eb; font-size:0.75rem; padding:0.15rem 0.45rem; margin-right:0.25rem;" onclick="editLeaveRequest(${origIdx})" title="修改此筆志願">✏️ 修改</button>`
               }
-              <button class="btn btn-light" style="color:#dc2626; font-size:0.75rem; padding:0.15rem 0.45rem;" onclick="removeLeaveRequest(${idx})" title="刪除此筆志願">🗑️ 刪除</button>
+              <button class="btn btn-light" style="color:#dc2626; font-size:0.75rem; padding:0.15rem 0.45rem;" onclick="removeLeaveRequest(${origIdx})" title="刪除此筆志願">🗑️ 刪除</button>
             </td>
           </tr>
         `;
@@ -2385,6 +2409,7 @@
           <thead>
             <tr style="background:#edf2f7; color:#334155; border-bottom:1.5px solid #cbd5e1; font-weight:700;">
               <th style="padding:0.4rem 0.5rem; text-align:center; width:45px;">序號</th>
+              <th style="padding:0.4rem 0.5rem; text-align:center; width:65px;">座號</th>
               <th style="padding:0.4rem 0.5rem; text-align:center; width:85px;">志願順序</th>
               <th style="padding:0.4rem 0.5rem;">申請同仁 (組別/班別)</th>
               <th style="padding:0.4rem 0.5rem; text-align:center; width:120px;">申請日期</th>
