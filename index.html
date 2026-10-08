@@ -831,7 +831,7 @@
         <strong style="color:#b91c1c; display:block; margin-bottom:0.35rem;">🛡️ 三、勤務安全門檻與防呆鎖定規範</strong>
         <ul style="margin:0; padding-left:1.2rem; font-size:0.8rem; line-height:1.5;">
           <li><strong>全大隊最低 4 人在勤底限（主管授權鎖定）</strong>：每日全大隊上班人數底限為 <strong>4 人</strong>。若填假後將導致該日在勤人數低於 4 人，系統將觸發<strong>防呆安全鎖定</strong>，必須輸入主管授權密碼始可破例放行，若密碼錯誤或取消則自動駁回。</li>
-          <li><strong>大隊幕僚最低在勤人數（3 人）</strong>：每日大隊幕僚（座號 4~14 號）上班人數底限為 <strong>3 人</strong>；每日下方「可填假人數」計算公式為：<code>可填假人數 = 幕僚在勤人數 - 3</code>。</li>
+          <li><strong>大隊幕僚最低在勤人數（3 人）</strong>：每日大隊幕僚（代號 4~14 號）上班人數底限為 <strong>3 人</strong>；每日下方「可填假人數」計算公式為：<code>可填假人數 = 幕僚在勤人數 - 3</code>。</li>
           <li><strong>安全官防呆警戒（至少 1 人在勤）</strong>：每日上班名單中必須至少有 1 位合格安全官（對照人員名冊「身分/職稱」之安全官設定，目前為：<span id="guide-safety-staff-list" style="color:#b91c1c; font-weight:700;">曾志方、蔡宗憲、謝振國、鄭國甫、翁吉賢</span>）在勤。若當日無任何安全官，系統將亮起 <span class="badge badge-red">⚠️ 當日無合格安全官！</span> 紅色警報並阻擋該日請假。</li>
         </ul>
       </div>
@@ -927,7 +927,7 @@
           <table style="width:100%; border-collapse:collapse; font-size:0.85rem;">
             <thead>
               <tr style="background:#f1f5f9; text-align:left;">
-                <th style="padding:0.4rem; border:1px solid #cbd5e1; width:70px; text-align:center;">座號</th>
+                <th style="padding:0.4rem; border:1px solid #cbd5e1; width:70px; text-align:center;">代號</th>
                 <th style="padding:0.4rem; border:1px solid #cbd5e1;">姓名（可修改）</th>
                 <th style="padding:0.4rem; border:1px solid #cbd5e1;">身分 / 職稱</th>
                 <th style="padding:0.4rem; border:1px solid #cbd5e1; text-align:center;">安全官資格</th>
@@ -942,7 +942,7 @@
       </div>
       <div class="modal-footer">
         <button class="btn btn-outline" style="color:#0f172a;" onclick="closeModal('modal-staff')">取消</button>
-        <button class="btn btn-accent" onclick="saveStaffConfig(false)">💾 僅更新座號姓名（保留請假）</button>
+        <button class="btn btn-accent" onclick="saveStaffConfig(false)">💾 僅更新代號姓名（保留請假）</button>
         <button class="btn btn-primary" onclick="saveStaffConfig(true)">🔄 儲存並重產基礎班表</button>
       </div>
     </div>
@@ -1962,7 +1962,7 @@
       } else {
         saveState();
         renderTable();
-        alert('人員座號、姓名與權限已成功更新（已保留現有排班與請假紀錄）！');
+        alert('人員代號、姓名與權限已成功更新（已保留現有排班與請假紀錄）！');
       }
       updateSafetyOfficerGuide();
       if (window.__syncAccountsFromStaffList) window.__syncAccountsFromStaffList();
@@ -2330,7 +2330,7 @@
 
       if (summaryElem) {
         const uniqueStaff = new Set(leaveRequests.map(r => r.staffId)).size;
-        summaryElem.textContent = `共 ${uniqueStaff} 位同仁 ｜ 登記 ${leaveRequests.length} 筆志願（依座號及志願排序）`;
+        summaryElem.textContent = `共 ${uniqueStaff} 位同仁 ｜ 登記 ${leaveRequests.length} 筆志願（依代號及志願排序）`;
       }
 
       // 1. 計算每位同仁的志願登記順序序號（第1志願、第2志願...）
@@ -2348,10 +2348,10 @@
         };
       });
 
-      // 2. 依座號順序（staffId 或名冊順序）及志願順序（wishNo）進行雙重排序
+      // 2. 依代號順序（staffId 或名冊順序）及志願順序（wishNo）進行雙重排序
       itemsWithMeta.sort((a, b) => {
-        if (a.staffId !== b.staffId) {
-          return a.staffId - b.staffId; // 座號由小到大 (1, 2, 3...)
+        if (a.staffOrder !== b.staffOrder) {
+          return a.staffOrder - b.staffOrder; // 代號由小到大 (1, 2, 3...)
         }
         return a.wishNo - b.wishNo; // 該同仁的第 1 志願、第 2 志願、第 3 志願...
       });
@@ -2377,7 +2377,7 @@
           <tr style="${rowBg} border-bottom:1px solid #e2e8f0; transition:background 0.2s;">
             <td style="padding:0.4rem 0.5rem; text-align:center; font-weight:700; color:#475569;">${displayIdx + 1}</td>
             <td style="padding:0.4rem 0.5rem; text-align:center; font-weight:700; color:#1e40af;">
-              座號 ${req.staffId}
+              代號 ${item.staffOrder !== 999 ? item.staffOrder + 1 : req.staffId}
             </td>
             <td style="padding:0.4rem 0.5rem; text-align:center;">
               <span class="badge badge-blue" style="font-size:0.75rem; padding:0.15rem 0.45rem;">第 ${wishNo} 志願</span>
@@ -2409,7 +2409,7 @@
           <thead>
             <tr style="background:#edf2f7; color:#334155; border-bottom:1.5px solid #cbd5e1; font-weight:700;">
               <th style="padding:0.4rem 0.5rem; text-align:center; width:45px;">序號</th>
-              <th style="padding:0.4rem 0.5rem; text-align:center; width:65px;">座號</th>
+              <th style="padding:0.4rem 0.5rem; text-align:center; width:65px;">代號</th>
               <th style="padding:0.4rem 0.5rem; text-align:center; width:85px;">志願順序</th>
               <th style="padding:0.4rem 0.5rem;">申請同仁 (組別/班別)</th>
               <th style="padding:0.4rem 0.5rem; text-align:center; width:120px;">申請日期</th>
@@ -3274,7 +3274,7 @@ async function exportToODS() {
     </div>
 
     <div id="auth-form">
-      <label for="au">帳號 / 座號</label>
+      <label for="au">帳號 / 代號</label>
       <input id="au" type="text" placeholder="例如 admin 或 1~14" autocomplete="off">
       <label for="ap">密碼</label>
       <input id="ap" type="password" placeholder="預設密碼 123 或 admin" autocomplete="off">
@@ -3462,7 +3462,7 @@ async function exportToODS() {
       const oa = a.find((s) => s.id === nb.id) || a[b.indexOf(nb)];
       if (!oa) { out.push(`新增人員 ${nb.name}`); return; }
       if (oa.name !== nb.name) out.push(`姓名：${oa.name}→${nb.name}`);
-      if (oa.id !== nb.id) out.push(`座號：${oa.id}→${nb.id}`);
+      if (oa.id !== nb.id) out.push(`代號：${oa.id}→${nb.id}`);
       if (oa.defaultShift !== nb.defaultShift) out.push(`${nb.name} 班別：${oa.defaultShift}→${nb.defaultShift}`);
       if (!!oa.isSafety !== !!nb.isSafety) out.push(`${nb.name} 安全官：${oa.isSafety ? '是' : '否'}→${nb.isSafety ? '是' : '否'}`);
     });
@@ -3529,7 +3529,7 @@ async function exportToODS() {
       };
     }
 
-    wrapMutating('cycleCell', '循環切換儲存格', (a) => `座號${a[0]} ${currentMonth}/${a[1]}`);
+    wrapMutating('cycleCell', '循環切換儲存格', (a) => `代號${a[0]} ${currentMonth}/${a[1]}`);
     wrapMutating('generateBaseSchedule', '重建全月基礎輪休');
     wrapMutating('saveStaffConfig', '儲存人員與班別設定');
     wrapMutating('executeSwap', '互調班');
