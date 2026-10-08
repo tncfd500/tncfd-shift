@@ -1761,6 +1761,22 @@
       const day = activeDay;
       const cur = scheduleGrid[`${staffId}_${day}`] || "";
 
+      let authorized = false;
+
+      // 若選擇「A」輪休，需輸入密碼
+      if (newVal === "A" && cur !== "A") {
+        const inputPwd = prompt("🔒【主管授權鎖定】\n\n更改為「A輪休」需取得主管授權。\n請輸入授權密碼：");
+        if (inputPwd !== SUPERVISOR_PASSWORD) {
+          if (inputPwd !== null) {
+            alert("❌ 密碼錯誤！無法更改為 A 輪休。");
+          }
+          document.getElementById('popover-select').value = cur;
+          closeLeavePopover();
+          return;
+        }
+        authorized = true;
+      }
+
       // 4-Person Lock Check: If currently working (blank) and changing to leave
       if (cur === "" && newVal !== "") {
         let currentDutyCount = 0;
@@ -1768,7 +1784,7 @@
           if ((scheduleGrid[`${s.id}_${day}`] || "") === "") currentDutyCount++;
         });
 
-        if (currentDutyCount <= 4) {
+        if (currentDutyCount <= 4 && !authorized) {
           const stObj = staffList.find(s => s.id === staffId);
           const stName = stObj ? stObj.name : "該員";
           const inputPwd = prompt(
