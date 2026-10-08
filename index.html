@@ -747,7 +747,7 @@
     <div class="selector-group">
       <span class="badge badge-red" id="badge-holidays">例假日：0 天</span>
       <span class="badge badge-blue" id="badge-workdays">平常日：0 天</span>
-      <span class="badge badge-green">4班循環錨定：115/10/3 (A班上2、B班休2、C班上1、D班休1)</span>
+      <span class="badge badge-green" id="badge-anchor-status">4班循環錨定：115/10/3 (A班上2、B班休2、C班上1、D班休1)</span>
       <span class="badge badge-amber" id="badge-g-status" style="cursor:pointer;" onclick="showGDeficitModal()" title="點擊檢視未達3天G之同仁名單">🟢 G假檢核：計算中...</span>
     </div>
   </div>
@@ -1396,6 +1396,27 @@
     // B班: 輪休第2天 -> state = 3
     // C班: 上班第1天 -> state = 0
     // D班: 輪休第1天 -> state = 2
+    function getDetailedShiftState(shift, year, month, day) {
+      const targetDate = new Date(year, month - 1, day);
+      const anchorDate = new Date(2026, 9, 3); // 2026-10-03
+      const diffTime = targetDate.getTime() - anchorDate.getTime();
+      const diffDays = Math.round(diffTime / (1000 * 3600 * 24));
+
+      let anchorState = 0;
+      if (shift === 'A') anchorState = 1;
+      else if (shift === 'B') anchorState = 3;
+      else if (shift === 'C') anchorState = 0;
+      else if (shift === 'D') anchorState = 2;
+
+      let currentState = (anchorState + diffDays) % 4;
+      if (currentState < 0) currentState += 4;
+
+      if (currentState === 0) return "上1";
+      if (currentState === 1) return "上2";
+      if (currentState === 2) return "休1";
+      if (currentState === 3) return "休2";
+    }
+
     function getBaseShiftState(shift, year, month, day) {
       const targetDate = new Date(year, month - 1, day);
       const anchorDate = new Date(2026, 9, 3); // 2026-10-03
@@ -1568,6 +1589,18 @@
       // Update counters & G status badge
       document.getElementById('badge-holidays').textContent = `例假日：${holidayCount} 天`;
       document.getElementById('badge-workdays').textContent = `平常日：${workdayCount} 天`;
+
+      // Update 4-shift cycle status on the 3rd of selected month
+      const anchorBadge = document.getElementById('badge-anchor-status');
+      if (anchorBadge) {
+        const aStatus = getDetailedShiftState('A', currentYear, currentMonth, 3);
+        const bStatus = getDetailedShiftState('B', currentYear, currentMonth, 3);
+        const cStatus = getDetailedShiftState('C', currentYear, currentMonth, 3);
+        const dStatus = getDetailedShiftState('D', currentYear, currentMonth, 3);
+        anchorBadge.textContent = `當月3號各班排班提示：${rocYear}/${currentMonth}/3 (A班${aStatus}、B班${bStatus}、C班${cStatus}、D班${dStatus})`;
+        anchorBadge.title = `4班循環基準點永遠錨定於：115/10/3 (A班上2、B班休2、C班上1、D班休1)`;
+      }
+
       updateGStatusBadge();
 
       // Staff Rows
