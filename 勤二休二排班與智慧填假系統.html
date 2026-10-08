@@ -781,7 +781,7 @@
   <div id="instructions-box" style="background: #ffffff; border: 1.5px solid var(--border); border-radius: 0.6rem; padding: 1rem 1.4rem; font-size: 0.83rem; line-height: 1.7; color: #334155; margin-top: 0.75rem; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
     <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1.5px solid #e2e8f0; padding-bottom:0.5rem; margin-bottom:0.75rem;">
       <strong style="font-size:0.95rem; color:#991b1b;">💡 臺南市政府消防局第五大隊 勤二休二排班系統操作指南與填假規範</strong>
-      <span style="font-size:0.78rem; color:#64748b;">適用基準：做二休二輪休制 ｜ 系統版本：v1.0.21</span>
+      <span style="font-size:0.78rem; color:#64748b;">適用基準：做二休二輪休制 ｜ 系統版本：v1.0.22</span>
     </div>
 
     <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1rem;">
@@ -1005,6 +1005,7 @@
         <div>
           <label style="font-weight:700; font-size:0.9rem;">第 2 層：同仁請假志願登記</label>
           <div style="display:flex; gap:0.5rem; margin-top:0.4rem; align-items:center; flex-wrap:wrap;">
+            <input type="hidden" id="req-edit-index" value="-1">
             <select id="req-staff" onchange="updateReqDayOptions()"></select>
             <select id="req-day"></select>
             <select id="req-type">
@@ -1017,14 +1018,18 @@
               <option value="婚">婚假【婚】</option>
               <option value="喪">喪假【喪】</option>
             </select>
-            <button class="btn btn-accent" onclick="addLeaveRequest()">➕ 加入志願</button>
+            <button class="btn btn-accent" id="btn-add-request" onclick="addLeaveRequest()">➕ 加入志願</button>
+            <button class="btn btn-outline" id="btn-cancel-edit-request" style="display:none; color:#475569;" onclick="cancelEditLeaveRequest()">✕ 取消修改</button>
           </div>
         </div>
 
-        <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:0.375rem; padding:0.6rem; max-height:180px; overflow-y:auto;">
-          <div style="font-weight:700; font-size:0.8rem; color:#475569; margin-bottom:0.3rem;">已登記志願清單：</div>
-          <div id="request-list-container" style="display:flex; flex-direction:column; gap:0.3rem; font-size:0.82rem;">
-            <!-- Rendered by JS -->
+        <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:0.375rem; padding:0.6rem; max-height:260px; overflow-y:auto;">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.4rem;">
+            <div style="font-weight:700; font-size:0.82rem; color:#475569;">已登記志願清單表格：</div>
+            <div id="request-list-summary" style="font-size:0.75rem; color:#64748b;"></div>
+          </div>
+          <div id="request-list-container" style="font-size:0.82rem;">
+            <!-- Rendered as Table by JS -->
           </div>
         </div>
 
@@ -2203,6 +2208,9 @@
     }
 
     function addLeaveRequest() {
+      const editIdx = parseInt(document.getElementById('req-edit-index').value);
+      const isEditing = (!isNaN(editIdx) && editIdx >= 0 && editIdx < leaveRequests.length);
+
       const sSel = document.getElementById('req-staff');
       const dSel = document.getElementById('req-day');
       const staffId = parseInt(sSel.value);
@@ -2223,19 +2231,85 @@
         return;
       }
 
-      // 防呆機制：檢查是否重複登記同日
-      const duplicate = leaveRequests.find(r => r.staffId === staffId && r.day === day);
+      // 防呆機制：檢查是否重複登記同日（若處於修改狀態，排除正在修改的該筆志願）
+      const duplicate = leaveRequests.find((r, idx) => (!isEditing || idx !== editIdx) && r.staffId === staffId && r.day === day);
       if (duplicate) {
         alert(`⚠️【重複志願防呆】\n\n${st ? st.name : '該同仁'} 在 ${currentMonth}/${day} 已經登記過志願【${duplicate.type}】，請勿重複登記！`);
         return;
       }
 
-      leaveRequests.push({ staffId, day, type });
+      if (isEditing) {
+        leaveRequests[editIdx] = { staffId, day, type };
+        cancelEditLeaveRequest();
+      } else {
+        leaveRequests.push({ staffId, day, type });
+      }
       saveState();
       renderRequestList();
     }
 
+    function editLeaveRequest(idx) {
+      if (idx < 0 || idx >= leaveRequests.length) return;
+      const req = leaveRequests[idx];
+      document.getElementById('req-edit-index').value = idx;
+      
+      const sSel = document.getElementById('req-staff');
+      if (sSel) {
+        sSel.value = req.staffId;
+        updateReqDayOptions();
+      }
+      
+      const dSel = document.getElementById('req-day');
+      if (dSel) {
+        dSel.value = req.day;
+      }
+      
+      const tSel = document.getElementById('req-type');
+      if (tSel) {
+        tSel.value = req.type;
+      }
+
+      const btnAdd = document.getElementById('btn-add-request');
+      const btnCancel = document.getElementById('btn-cancel-edit-request');
+      if (btnAdd) {
+        btnAdd.innerHTML = '💾 儲存修改';
+        btnAdd.className = 'btn btn-primary';
+      }
+      if (btnCancel) {
+        btnCancel.style.display = 'inline-block';
+      }
+
+      // 重新渲染表格，以高亮顯示正在編輯的項目
+      renderRequestList();
+      
+      // 滾動至頂部選單方便操作
+      const sElem = document.getElementById('req-staff');
+      if (sElem && sElem.scrollIntoView) {
+        sElem.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }
+    }
+
+    function cancelEditLeaveRequest() {
+      document.getElementById('req-edit-index').value = -1;
+      const btnAdd = document.getElementById('btn-add-request');
+      const btnCancel = document.getElementById('btn-cancel-edit-request');
+      if (btnAdd) {
+        btnAdd.innerHTML = '➕ 加入志願';
+        btnAdd.className = 'btn btn-accent';
+      }
+      if (btnCancel) {
+        btnCancel.style.display = 'none';
+      }
+      renderRequestList();
+    }
+
     function removeLeaveRequest(idx) {
+      const editIdx = parseInt(document.getElementById('req-edit-index').value);
+      if (editIdx === idx) {
+        cancelEditLeaveRequest();
+      } else if (editIdx > idx) {
+        document.getElementById('req-edit-index').value = editIdx - 1;
+      }
       leaveRequests.splice(idx, 1);
       saveState();
       renderRequestList();
@@ -2243,23 +2317,86 @@
 
     function renderRequestList() {
       const container = document.getElementById('request-list-container');
+      const summaryElem = document.getElementById('request-list-summary');
+      if (!container) return;
+
+      const editIdx = parseInt(document.getElementById('req-edit-index').value);
+
       if (leaveRequests.length === 0) {
-        container.innerHTML = '<div style="color:#94a3b8;">目前尚無登記請假志願。</div>';
+        container.innerHTML = '<div style="color:#94a3b8; text-align:center; padding:1.2rem 0;">目前尚無登記請假志願。可於上方表單選取同仁、日期與假別後加入！</div>';
+        if (summaryElem) summaryElem.textContent = '總計 0 筆志願';
         return;
       }
-      container.innerHTML = '';
+
+      if (summaryElem) {
+        const uniqueStaff = new Set(leaveRequests.map(r => r.staffId)).size;
+        summaryElem.textContent = `共 ${uniqueStaff} 位同仁 ｜ 登記 ${leaveRequests.length} 筆志願`;
+      }
+
       const counts = {};
-      leaveRequests.forEach((req, idx) => {
+      const rowsHtml = leaveRequests.map((req, idx) => {
         counts[req.staffId] = (counts[req.staffId] || 0) + 1;
         const wishNo = counts[req.staffId];
         const st = staffList.find(s => s.id === req.staffId);
-        container.innerHTML += `
-          <div style="display:flex; justify-content:space-between; align-items:center; background:#ffffff; padding:0.25rem 0.5rem; border:1px solid #e2e8f0; border-radius:0.25rem;">
-            <span><span class="badge badge-blue" style="font-size:0.75rem; padding:0.1rem 0.4rem; margin-right:0.35rem;">志願 ${wishNo}</span><strong>${st ? st.name : req.staffId}</strong> 申請 <strong>${currentMonth}/${req.day}</strong> 【${req.type}】</span>
-            <button class="btn btn-close" style="color:#dc2626; font-size:0.9rem;" onclick="removeLeaveRequest(${idx})">🗑️</button>
-          </div>
+        const staffName = st ? st.name : `編號 ${req.staffId}`;
+        const staffGroup = st ? (st.group || '—') : '—';
+        const shiftBadge = st && st.defaultShift ? `<span class="badge badge-light" style="font-size:0.7rem; padding:0.1rem 0.3rem;">${st.defaultShift}班</span>` : '';
+        
+        // 判斷日期是星期幾
+        const dObj = new Date(currentYear, currentMonth - 1, req.day);
+        const dayOfWeek = dObj.getDay();
+        const weekNames = ['日', '一', '二', '三', '四', '五', '六'];
+        const isHol = isHoliday(currentYear, currentMonth, req.day);
+        const dateStyle = isHol ? 'color:#dc2626; font-weight:700;' : 'color:#1e293b;';
+        
+        const isCurrentEditing = (idx === editIdx);
+        const rowBg = isCurrentEditing ? 'background:#fef3c7; border:2px solid #f59e0b;' : (idx % 2 === 0 ? 'background:#ffffff;' : 'background:#f8fafc;');
+
+        return `
+          <tr style="${rowBg} border-bottom:1px solid #e2e8f0; transition:background 0.2s;">
+            <td style="padding:0.4rem 0.5rem; text-align:center; font-weight:700; color:#475569;">${idx + 1}</td>
+            <td style="padding:0.4rem 0.5rem; text-align:center;">
+              <span class="badge badge-blue" style="font-size:0.75rem; padding:0.15rem 0.45rem;">第 ${wishNo} 志願</span>
+            </td>
+            <td style="padding:0.4rem 0.5rem;">
+              <strong>${staffName}</strong> <span style="font-size:0.75rem; color:#64748b;">(${staffGroup})</span> ${shiftBadge}
+            </td>
+            <td style="padding:0.4rem 0.5rem; text-align:center; ${dateStyle}">
+              ${currentMonth}/${req.day} <span style="font-size:0.75rem;">(週${weekNames[dayOfWeek]}${isHol ? '休' : ''})</span>
+            </td>
+            <td style="padding:0.4rem 0.5rem; text-align:center;">
+              <span class="badge ${req.type === 'G' ? 'badge-yellow' : (req.type === 'C' ? 'badge-blue' : 'badge-light')}" style="font-size:0.8rem; font-weight:700; padding:0.15rem 0.5rem;">
+                【${req.type}】
+              </span>
+            </td>
+            <td style="padding:0.4rem 0.5rem; text-align:center; white-space:nowrap;">
+              ${isCurrentEditing ? 
+                `<button class="btn btn-outline" style="color:#d97706; font-size:0.75rem; padding:0.15rem 0.4rem; margin-right:0.25rem;" onclick="cancelEditLeaveRequest()">取消</button>` :
+                `<button class="btn btn-light" style="color:#2563eb; font-size:0.75rem; padding:0.15rem 0.45rem; margin-right:0.25rem;" onclick="editLeaveRequest(${idx})" title="修改此筆志願">✏️ 修改</button>`
+              }
+              <button class="btn btn-light" style="color:#dc2626; font-size:0.75rem; padding:0.15rem 0.45rem;" onclick="removeLeaveRequest(${idx})" title="刪除此筆志願">🗑️ 刪除</button>
+            </td>
+          </tr>
         `;
-      });
+      }).join('');
+
+      container.innerHTML = `
+        <table style="width:100%; border-collapse:collapse; text-align:left; font-size:0.8rem;">
+          <thead>
+            <tr style="background:#edf2f7; color:#334155; border-bottom:1.5px solid #cbd5e1; font-weight:700;">
+              <th style="padding:0.4rem 0.5rem; text-align:center; width:45px;">序號</th>
+              <th style="padding:0.4rem 0.5rem; text-align:center; width:85px;">志願順序</th>
+              <th style="padding:0.4rem 0.5rem;">申請同仁 (組別/班別)</th>
+              <th style="padding:0.4rem 0.5rem; text-align:center; width:120px;">申請日期</th>
+              <th style="padding:0.4rem 0.5rem; text-align:center; width:80px;">假別</th>
+              <th style="padding:0.4rem 0.5rem; text-align:center; width:110px;">操作</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${rowsHtml}
+          </tbody>
+        </table>
+      `;
     }
 
     // S型順序雙層智慧排假仲裁執行 (Snake Draft Order: Round 1 forward, Round 2 reverse, Round 3 forward...)
@@ -3373,8 +3510,15 @@ async function exportToODS() {
     wrapMutating('executeSwap', '互調班');
     wrapMutating('runArbitration', '智慧排假仲裁');
     wrapSimple('onYearMonthChange', '切換年月');
-    wrapSimple('addLeaveRequest', '登記請假志願', () => {
+    wrapSimple('addLeaveRequest', '登記或修改請假志願', () => {
       const q = leaveRequests[leaveRequests.length - 1];
+      if (!q) return '';
+      const s = staffList.find((x) => x.id === q.staffId);
+      return `${s ? s.name : q.staffId} ${currentMonth}/${q.day} ${q.type}`;
+    });
+    wrapSimple('editLeaveRequest', '啟動修改請假志願', (a) => {
+      const idx = a[0];
+      const q = leaveRequests[idx];
       if (!q) return '';
       const s = staffList.find((x) => x.id === q.staffId);
       return `${s ? s.name : q.staffId} ${currentMonth}/${q.day} ${q.type}`;
