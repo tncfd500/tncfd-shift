@@ -831,7 +831,7 @@
         <strong style="color:#b91c1c; display:block; margin-bottom:0.35rem;">🛡️ 三、勤務安全門檻與防呆鎖定規範</strong>
         <ul style="margin:0; padding-left:1.2rem; font-size:0.8rem; line-height:1.5;">
           <li><strong>全大隊最低 4 人在勤底限（主管授權鎖定）</strong>：每日全大隊上班人數底限為 <strong>4 人</strong>。若填假後將導致該日在勤人數低於 4 人，系統將觸發<strong>防呆安全鎖定</strong>，必須輸入主管授權密碼始可破例放行，若密碼錯誤或取消則自動駁回。</li>
-          <li><strong>大隊幕僚最低在勤人數（4 人）</strong>：每日大隊幕僚（代號 4~14 號）上班人數底限為 <strong>4 人</strong>；每日下方「可填假人數」計算公式為：<code>可填假人數 = 幕僚在勤人數 - 4</code>。</li>
+          <li><strong>大隊幕僚最低在勤人數（4 人）</strong>：每日大隊幕僚（代號 4~14 號）上班人數底限為 <strong>4 人</strong>；每日下方「可填假人數」計算公式為：<code>可填假人數 = 上班人數 - 4</code>。</li>
           <li><strong>安全官防呆警戒（至少 1 人在勤）</strong>：每日上班名單中必須至少有 1 位合格安全官（對照人員名冊「身分/職稱」之安全官設定，目前為：<span id="guide-safety-staff-list" style="color:#b91c1c; font-weight:700;">曾志方、蔡宗憲、謝振國、鄭國甫、翁吉賢</span>）在勤。若當日無任何安全官，系統將亮起 <span class="badge badge-red">⚠️ 當日無合格安全官！</span> 紅色警報並阻擋該日請假。</li>
         </ul>
       </div>
@@ -1617,15 +1617,15 @@
       });
 
       // Summary Statistics Rows
-      // Row 1: 可填假人數 (Staff on duty - 4)
+      // Row 1: 可填假人數 (上班人數減掉 4)
       html += `<tr class="summary-row" style="background:#fffbeb;"><td class="col-name" style="color:#b45309;">可填假人數</td><td class="col-shift">-</td>`;
       for (let d = 1; d <= totalDays; d++) {
-        let staffOnDuty = 0;
-        staffList.filter(isStaffOfficer).forEach(st => {
+        let dutyCount = 0;
+        staffList.forEach(st => {
           const val = scheduleGrid[`${st.id}_${d}`] || "";
-          if (val === "") staffOnDuty++;
+          if (val === "") dutyCount++;
         });
-        const quota = staffOnDuty - 4;
+        const quota = dutyCount - 4;
         const cls = quota < 0 ? 'danger-alert' : '';
         html += `<td class="col-date ${cls}" style="font-weight:700;">${quota}</td>`;
       }
