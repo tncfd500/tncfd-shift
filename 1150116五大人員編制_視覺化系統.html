@@ -1019,6 +1019,57 @@
             border-radius: 12px;
         }
 
+    
+        /* Prominent Save Button Styles */
+        .btn-save-main {
+            background: linear-gradient(135deg, #10b981, #059669) !important;
+            border: 1px solid #34d399 !important;
+            color: #ffffff !important;
+            font-size: 0.95rem !important;
+            font-weight: 700 !important;
+            padding: 8px 18px !important;
+            border-radius: var(--radius-sm) !important;
+            box-shadow: 0 4px 14px rgba(16, 185, 129, 0.4) !important;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
+            display: inline-flex !important;
+            align-items: center !important;
+            gap: 8px !important;
+        }
+
+        .btn-save-main:hover {
+            background: linear-gradient(135deg, #34d399, #10b981) !important;
+            box-shadow: 0 6px 20px rgba(16, 185, 129, 0.6) !important;
+            transform: translateY(-2px) scale(1.02) !important;
+        }
+
+        .btn-save-main:active {
+            transform: translateY(0) scale(0.98) !important;
+        }
+
+        .save-time-badge {
+            font-size: 0.75rem;
+            color: #cbd5e1;
+            background: rgba(15, 23, 42, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            padding: 4px 10px;
+            border-radius: 14px;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .save-snapshot-item {
+            background: rgba(15, 23, 42, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 10px 14px;
+            border-radius: 6px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+            font-size: 0.85rem;
+        }
+
     </style>
 
     <!-- Firebase App & Firestore SDK (Modular CDN) -->
@@ -1064,6 +1115,20 @@
             </div>
         </div>
         <div class="header-actions">
+
+            <!-- Prominent Save Button -->
+            <button class="btn btn-save-main" id="btnManualSave" onclick="manualSave()" title="手動儲存存檔 (快捷鍵: Ctrl+S)">
+                <span id="saveBtnIcon">💾</span>
+                <span id="saveBtnText">儲存存檔</span>
+            </button>
+            <div class="save-time-badge" id="saveTimeBadge" title="最近一次存檔時間">
+                <span>🕒</span>
+                <span id="lastSavedTimeDisplay">尚未存檔</span>
+            </div>
+            <button class="btn" onclick="openHistoryModal()" style="font-size:0.8rem; padding:6px 10px;" title="查看歷史存檔紀錄與還原">
+                <span>📜</span> 存檔紀錄
+            </button>
+
             <a href="index.html" class="btn" style="text-decoration:none; border-color:rgba(239,68,68,0.5); color:#fca5a5;">
                 <span>📅</span> 勤二休二排班系統
             </a>
@@ -2236,6 +2301,28 @@
         </div>
     </div>
 
+
+    <!-- Save History Snapshots Modal -->
+    <div class="modal-overlay" id="historyModal">
+        <div class="modal-content" style="max-width:500px;">
+            <div class="modal-header">
+                <div class="modal-title">📜 歷史存檔紀錄與版本還原</div>
+                <button class="modal-close" onclick="closeModal('historyModal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div style="font-size:0.85rem; color:#cbd5e1; margin-bottom:12px;">
+                    每次點擊「儲存存檔」都會自動在此保留一份存檔快照，若不慎改錯可隨時點擊還原：
+                </div>
+                <div id="snapshotListContainer" style="max-height:300px; overflow-y:auto;">
+                    <!-- Populated by JS -->
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn" onclick="closeModal('historyModal')">關閉</button>
+            </div>
+        </div>
+    </div>
+
 </body>
                 </html>
             `;
@@ -2295,6 +2382,127 @@
         }
 
         // Run Init
+        
+        // Manual Save & History Snapshots Logic
+        const SNAPSHOT_KEY = 'TNCFD_SAVE_SNAPSHOTS_1150116';
+        let lastSaveTimestamp = localStorage.getItem('TNCFD_LAST_SAVE_TIME') || '';
+
+        function updateLastSavedDisplay() {
+            const el = document.getElementById('lastSavedTimeDisplay');
+            if (el) {
+                el.innerText = lastSaveTimestamp ? '存檔於 ' + lastSaveTimestamp : '尚未手動存檔';
+            }
+        }
+
+        // Main Manual Save Action
+        function manualSave() {
+            const btn = document.getElementById('btnManualSave');
+            const icon = document.getElementById('saveBtnIcon');
+            const text = document.getElementById('saveBtnText');
+
+            // Button loading animation
+            if (btn) {
+                btn.style.opacity = '0.8';
+                icon.innerText = '⏳';
+                text.innerText = '儲存中...';
+            }
+
+            // Save to LocalStorage
+            saveData();
+
+            // Record Timestamp
+            const now = new Date();
+            const timeStr = now.toLocaleDateString('zh-TW') + ' ' + now.toLocaleTimeString('zh-TW');
+            lastSaveTimestamp = timeStr;
+            localStorage.setItem('TNCFD_LAST_SAVE_TIME', timeStr);
+            updateLastSavedDisplay();
+
+            // Record History Snapshot (Keep up to 10 snapshots)
+            try {
+                let snapshots = JSON.parse(localStorage.getItem(SNAPSHOT_KEY) || '[]');
+                snapshots.unshift({
+                    time: timeStr,
+                    data: JSON.parse(JSON.stringify(appData)),
+                    note: (appData.notes || '無附註說明').slice(0, 30)
+                });
+                if (snapshots.length > 10) snapshots = snapshots.slice(0, 10);
+                localStorage.setItem(SNAPSHOT_KEY, JSON.stringify(snapshots));
+            } catch(e) {
+                console.warn('Snapshot save warning:', e);
+            }
+
+            // Restore button with success state
+            setTimeout(() => {
+                if (btn) {
+                    btn.style.opacity = '1';
+                    icon.innerText = '✅';
+                    text.innerText = '存檔成功！';
+                }
+                showToast('💾 編制資料已成功存檔！（' + timeStr + '）');
+
+                setTimeout(() => {
+                    if (btn) {
+                        icon.innerText = '💾';
+                        text.innerText = '儲存存檔';
+                    }
+                }, 1800);
+            }, 300);
+        }
+
+        // Ctrl + S Keyboard Shortcut Listener
+        window.addEventListener('keydown', function(e) {
+            if ((e.ctrlKey || e.metaKey) && (e.key === 's' || e.key === 'S')) {
+                e.preventDefault();
+                manualSave();
+            }
+        });
+
+        // Open History Snapshot Modal
+        function openHistoryModal() {
+            const container = document.getElementById('snapshotListContainer');
+            let snapshots = [];
+            try {
+                snapshots = JSON.parse(localStorage.getItem(SNAPSHOT_KEY) || '[]');
+            } catch(e) {}
+
+            if (snapshots.length === 0) {
+                container.innerHTML = '<div style="text-align:center; color:var(--text-muted); padding:20px;">尚無存檔紀錄，點擊「儲存存檔」即可建立紀錄。</div>';
+            } else {
+                container.innerHTML = snapshots.map((s, idx) => `
+                    <div class="save-snapshot-item">
+                        <div>
+                            <div style="font-weight:700; color:#38bdf8;">${s.time}</div>
+                            <div style="font-size:0.75rem; color:var(--text-muted); margin-top:2px;">${s.note}</div>
+                        </div>
+                        <button class="btn" style="font-size:0.75rem; padding:4px 8px; border-color:var(--accent-blue);" onclick="restoreSnapshot(${idx})">
+                            ↺ 還原此版本
+                        </button>
+                    </div>
+                `).join('');
+            }
+            document.getElementById('historyModal').classList.add('active');
+        }
+
+        function restoreSnapshot(idx) {
+            try {
+                const snapshots = JSON.parse(localStorage.getItem(SNAPSHOT_KEY) || '[]');
+                if (snapshots[idx] && confirm('確定要還原到【' + snapshots[idx].time + '】的存檔版本嗎？')) {
+                    appData = JSON.parse(JSON.stringify(snapshots[idx].data));
+                    saveData();
+                    renderAll();
+                    closeModal('historyModal');
+                    showToast('已成功還原至 ' + snapshots[idx].time + ' 的存檔');
+                }
+            } catch(e) {
+                alert('還原失敗：' + e.message);
+            }
+        }
+
+        const origInitApp = initApp;
+        initApp = function() {
+            origInitApp();
+            updateLastSavedDisplay();
+        };
         window.onload = initApp;
     </script>
 </body>
