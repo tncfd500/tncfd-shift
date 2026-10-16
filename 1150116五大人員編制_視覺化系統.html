@@ -45,7 +45,6 @@
             overflow-x: hidden;
         }
 
-        /* Top Header */
         header {
             max-width: 1700px;
             margin: 0 auto 20px auto;
@@ -53,7 +52,7 @@
             backdrop-filter: blur(12px);
             border: 1px solid var(--border-color);
             border-radius: var(--radius-lg);
-            padding: 20px 28px;
+            padding: 18px 24px;
             box-shadow: var(--shadow);
             display: flex;
             justify-content: space-between;
@@ -81,7 +80,7 @@
         }
 
         .title-h1 {
-            font-size: 1.6rem;
+            font-size: 1.55rem;
             font-weight: 700;
             letter-spacing: 0.5px;
             background: linear-gradient(to right, #ffffff, #cbd5e1);
@@ -93,12 +92,13 @@
         }
 
         .title-sub {
-            font-size: 0.88rem;
+            font-size: 0.85rem;
             color: var(--text-muted);
             margin-top: 4px;
             display: flex;
             align-items: center;
             gap: 8px;
+            flex-wrap: wrap;
         }
 
         .badge-date {
@@ -119,7 +119,7 @@
             color: var(--accent-green);
             background: rgba(16, 185, 129, 0.1);
             border: 1px solid rgba(16, 185, 129, 0.3);
-            padding: 4px 10px;
+            padding: 3px 10px;
             border-radius: 20px;
         }
 
@@ -131,7 +131,6 @@
             box-shadow: 0 0 8px var(--accent-green);
         }
 
-        /* Header action buttons */
         .header-actions {
             display: flex;
             align-items: center;
@@ -141,24 +140,41 @@
 
         .btn {
             background: rgba(30, 41, 59, 0.8);
-            border: 1px solid rgba(255, 255, 255, 0.12);
+            border: 1px solid rgba(255, 255, 255, 0.15);
             color: var(--text-main);
             padding: 8px 14px;
             border-radius: var(--radius-sm);
             font-size: 0.88rem;
-            font-weight: 500;
+            font-weight: 600;
             cursor: pointer;
             display: inline-flex;
             align-items: center;
             gap: 6px;
             transition: all 0.2s ease;
             user-select: none;
+            text-decoration: none;
         }
 
         .btn:hover {
             background: rgba(51, 65, 85, 0.9);
             border-color: rgba(255, 255, 255, 0.25);
             transform: translateY(-1px);
+        }
+
+        .btn-save-main {
+            background: linear-gradient(135deg, #10b981, #059669) !important;
+            border: 1px solid #34d399 !important;
+            color: #ffffff !important;
+            font-size: 0.95rem !important;
+            font-weight: 700 !important;
+            padding: 8px 18px !important;
+            box-shadow: 0 4px 14px rgba(16, 185, 129, 0.4) !important;
+        }
+
+        .btn-save-main:hover {
+            background: linear-gradient(135deg, #34d399, #10b981) !important;
+            box-shadow: 0 6px 20px rgba(16, 185, 129, 0.6) !important;
+            transform: translateY(-2px) scale(1.02) !important;
         }
 
         .btn-primary {
@@ -179,10 +195,16 @@
             color: white;
         }
 
-        .btn-info {
-            background: linear-gradient(135deg, #0284c7, #0369a1);
-            border: none;
-            color: white;
+        .save-time-badge {
+            font-size: 0.78rem;
+            color: #cbd5e1;
+            background: rgba(15, 23, 42, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            padding: 4px 10px;
+            border-radius: 14px;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
         }
 
         /* KPI Dashboard Bar */
@@ -228,9 +250,7 @@
             opacity: 0.85;
         }
 
-        .kpi-info {
-            flex: 1;
-        }
+        .kpi-info { flex: 1; }
 
         .kpi-label {
             font-size: 0.8rem;
@@ -252,7 +272,7 @@
             margin-top: 2px;
         }
 
-        /* Filter & View Switcher Bar */
+        /* Controls Bar */
         .controls-bar {
             max-width: 1700px;
             margin: 0 auto 20px auto;
@@ -332,7 +352,7 @@
             box-shadow: 0 2px 8px rgba(56, 189, 248, 0.3);
         }
 
-        /* Note Banner */
+        /* Memo Banner */
         .memo-banner {
             max-width: 1700px;
             margin: 0 auto 20px auto;
@@ -346,9 +366,9 @@
             align-items: center;
             justify-content: space-between;
             gap: 12px;
+            flex-wrap: wrap;
         }
 
-        /* Main Container */
         .main-container {
             max-width: 1700px;
             margin: 0 auto;
@@ -376,13 +396,15 @@
 
         .dept-card:hover {
             border-color: rgba(99, 102, 241, 0.4);
-            transform: translateY(-3px);
+            transform: translateY(-2px);
             box-shadow: 0 15px 30px -5px rgba(0,0,0,0.6);
         }
 
-        .dept-card.highlight-card {
-            border-color: var(--accent-fire);
-            box-shadow: 0 0 20px rgba(239, 68, 68, 0.3);
+        .dept-card.drag-over-card {
+            border-color: var(--accent-blue) !important;
+            box-shadow: 0 0 30px rgba(56, 189, 248, 0.45) !important;
+            background: rgba(30, 58, 138, 0.35) !important;
+            outline: 2px solid var(--accent-blue);
         }
 
         .dept-header {
@@ -434,9 +456,9 @@
         .dept-count-detail {
             font-size: 0.72rem;
             color: var(--text-muted);
+            margin-top: 3px;
         }
 
-        /* Member Groups Inside Card */
         .member-section-label {
             font-size: 0.75rem;
             text-transform: uppercase;
@@ -473,13 +495,24 @@
             font-size: 0.85rem;
             transition: all 0.15s;
             position: relative;
-            cursor: pointer;
+            cursor: grab;
+            user-select: none;
         }
 
         .member-chip:hover {
             background: rgba(30, 41, 59, 0.95);
             border-color: var(--accent-blue);
             transform: scale(1.02);
+        }
+
+        .member-chip:active {
+            cursor: grabbing;
+        }
+
+        .member-chip.dragging {
+            opacity: 0.35 !important;
+            transform: scale(0.92) !important;
+            border: 2px dashed var(--accent-blue) !important;
         }
 
         .member-chip.lead-chip {
@@ -554,7 +587,6 @@
             gap: 8px;
         }
 
-        /* Inline Input for Click to Edit */
         .inline-input {
             background: #020617;
             border: 1px solid var(--accent-blue);
@@ -567,7 +599,7 @@
             width: 80px;
         }
 
-        /* View 2: Excel Official Table View */
+        /* View 2: Table View */
         .table-view-container {
             background: var(--bg-card);
             border: 1px solid var(--border-color);
@@ -657,7 +689,7 @@
             color: var(--accent-gold);
         }
 
-        /* View 3: Transfers List View */
+        /* View 3: Transfers */
         .transfer-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
@@ -701,12 +733,7 @@
             font-size: 0.88rem;
         }
 
-        .transfer-item:hover {
-            border-color: var(--accent-blue);
-            background: rgba(30, 41, 59, 0.8);
-        }
-
-        /* View 4: Analytics View */
+        /* View 4: Analytics */
         .analytics-container {
             display: grid;
             grid-template-columns: 2fr 1fr;
@@ -832,9 +859,7 @@
             line-height: 1;
         }
 
-        .modal-close:hover {
-            color: #fff;
-        }
+        .modal-close:hover { color: #fff; }
 
         .modal-body {
             padding: 24px;
@@ -902,7 +927,6 @@
             align-items: center;
         }
 
-        /* Toast notification */
         .toast-msg {
             position: fixed;
             bottom: 30px;
@@ -926,138 +950,6 @@
             to { transform: translateY(0); opacity: 1; }
         }
 
-        /* Print Styles */
-        @media print {
-            body {
-                background: white !important;
-                color: black !important;
-                padding: 0;
-            }
-            header, .kpi-container, .controls-bar, .memo-banner, .btn, .modal-overlay, .toast-msg, .view-switcher, .dept-footer-actions {
-                display: none !important;
-            }
-            .table-view-container {
-                display: block !important;
-                border: none !important;
-                box-shadow: none !important;
-                padding: 0 !important;
-            }
-            .official-table {
-                font-size: 9pt !important;
-            }
-            .official-table th, .official-table td {
-                border: 1px solid black !important;
-                color: black !important;
-                background: white !important;
-            }
-            .table-member-cell {
-                background: transparent !important;
-                border: none !important;
-                color: black !important;
-            }
-            .table-member-name { color: black !important; }
-            .print-only-title {
-                display: block !important;
-                text-align: center;
-                font-size: 16pt;
-                font-weight: bold;
-                margin-bottom: 12px;
-            }
-        }
-        .print-only-title { display: none; }
-    
-        /* Drag and Drop Styles */
-        .member-chip[draggable="true"] {
-            cursor: grab;
-            user-select: none;
-        }
-
-        .member-chip[draggable="true"]:active {
-            cursor: grabbing;
-        }
-
-        .member-chip.dragging {
-            opacity: 0.35 !important;
-            transform: scale(0.92) !important;
-            border: 2px dashed var(--accent-blue) !important;
-            box-shadow: none !important;
-        }
-
-        .dept-card.drag-over-card {
-            border-color: var(--accent-blue) !important;
-            box-shadow: 0 0 30px rgba(56, 189, 248, 0.45) !important;
-            background: rgba(30, 58, 138, 0.35) !important;
-            outline: 2px solid var(--accent-blue);
-        }
-
-        .member-chips-container.drag-over-zone {
-            background: rgba(56, 189, 248, 0.1);
-            border: 2px dashed var(--accent-blue);
-            border-radius: var(--radius-sm);
-            padding: 8px;
-        }
-
-        .drag-indicator-line {
-            width: 4px;
-            background: var(--accent-blue);
-            border-radius: 2px;
-            margin: 0 2px;
-            box-shadow: 0 0 8px var(--accent-blue);
-            height: 32px;
-            display: inline-block;
-        }
-
-        .drag-tip-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 4px;
-            font-size: 0.75rem;
-            color: var(--accent-blue);
-            background: rgba(56, 189, 248, 0.12);
-            border: 1px solid rgba(56, 189, 248, 0.3);
-            padding: 2px 8px;
-            border-radius: 12px;
-        }
-
-    
-        /* Prominent Save Button Styles */
-        .btn-save-main {
-            background: linear-gradient(135deg, #10b981, #059669) !important;
-            border: 1px solid #34d399 !important;
-            color: #ffffff !important;
-            font-size: 0.95rem !important;
-            font-weight: 700 !important;
-            padding: 8px 18px !important;
-            border-radius: var(--radius-sm) !important;
-            box-shadow: 0 4px 14px rgba(16, 185, 129, 0.4) !important;
-            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
-            display: inline-flex !important;
-            align-items: center !important;
-            gap: 8px !important;
-        }
-
-        .btn-save-main:hover {
-            background: linear-gradient(135deg, #34d399, #10b981) !important;
-            box-shadow: 0 6px 20px rgba(16, 185, 129, 0.6) !important;
-            transform: translateY(-2px) scale(1.02) !important;
-        }
-
-        .btn-save-main:active {
-            transform: translateY(0) scale(0.98) !important;
-        }
-
-        .save-time-badge {
-            font-size: 0.75rem;
-            color: #cbd5e1;
-            background: rgba(15, 23, 42, 0.7);
-            border: 1px solid rgba(255, 255, 255, 0.12);
-            padding: 4px 10px;
-            border-radius: 14px;
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-        }
-
         .save-snapshot-item {
             background: rgba(15, 23, 42, 0.8);
             border: 1px solid rgba(255, 255, 255, 0.1);
@@ -1070,29 +962,18 @@
             font-size: 0.85rem;
         }
 
-    </style>
-
-    <!-- Firebase App & Firestore SDK (Modular CDN) -->
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-        import { getFirestore, doc, setDoc, onSnapshot, getDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-
-        // Expose Firebase tools to window for our app
-        window.FB_TOOLS = {
-            initializeApp,
-            getFirestore,
-            doc,
-            setDoc,
-            onSnapshot,
-            getDoc
-        };
-
-        // Notify app that Firebase SDK is ready
-        if (window.onFirebaseLoaded) {
-            window.onFirebaseLoaded();
+        @media print {
+            body { background: white !important; color: black !important; padding: 0; }
+            header, .kpi-container, .controls-bar, .memo-banner, .btn, .modal-overlay, .toast-msg, .view-switcher, .dept-footer-actions { display: none !important; }
+            .table-view-container { display: block !important; border: none !important; box-shadow: none !important; padding: 0 !important; }
+            .official-table { font-size: 9pt !important; }
+            .official-table th, .official-table td { border: 1px solid black !important; color: black !important; background: white !important; }
+            .table-member-cell { background: transparent !important; border: none !important; color: black !important; }
+            .table-member-name { color: black !important; }
+            .print-only-title { display: block !important; text-align: center; font-size: 16pt; font-weight: bold; margin-bottom: 12px; }
         }
-    </script>
-
+        .print-only-title { display: none; }
+    </style>
 </head>
 <body>
 
@@ -1110,12 +991,14 @@
                 <div class="title-sub">
                     <span>編制基準日：民國115年1月16日</span>
                     <span>•</span>
-                    <span class="save-indicator"><span class="dot"></span>即時自動儲存中 (點擊任意職稱/姓名即可修改)</span>
+                    <span class="save-indicator"><span class="dot"></span>任何人皆可直接修改 (點擊職稱/姓名/電話/役男即可編輯)</span>
                 </div>
             </div>
         </div>
         <div class="header-actions">
-
+            <a href="index.html" class="btn" style="text-decoration:none; border-color:rgba(239,68,68,0.5); color:#fca5a5;">
+                <span>📅</span> 勤二休二排班系統
+            </a>
             <!-- Prominent Save Button -->
             <button class="btn btn-save-main" id="btnManualSave" onclick="manualSave()" title="手動儲存存檔 (快捷鍵: Ctrl+S)">
                 <span id="saveBtnIcon">💾</span>
@@ -1128,19 +1011,6 @@
             <button class="btn" onclick="openHistoryModal()" style="font-size:0.8rem; padding:6px 10px;" title="查看歷史存檔紀錄與還原">
                 <span>📜</span> 存檔紀錄
             </button>
-
-            <a href="index.html" class="btn" style="text-decoration:none; border-color:rgba(239,68,68,0.5); color:#fca5a5;">
-                <span>📅</span> 勤二休二排班系統
-            </a>
-
-            <div id="cloudStatusBadge" class="save-indicator" style="cursor:pointer;" onclick="openCloudConfigModal()" title="點擊設定雲端資料庫">
-                <span class="dot" id="cloudDot" style="background:#f59e0b; box-shadow:0 0 8px #f59e0b;"></span>
-                <span id="cloudStatusText">雲端未連線 (本機模式)</span>
-            </div>
-            <button class="btn" id="btnLockToggle" onclick="toggleEditLock()" style="border-color:rgba(16, 185, 129, 0.5); color:#6ee7b7;" title="點擊可切換防誤觸檢視模式">
-                <span id="lockIcon">🔓</span> <span id="lockText">任何人皆可編輯</span>
-            </button>
-
             <button class="btn btn-primary" onclick="openAddMemberModal()">
                 <span>➕</span> 新增人員
             </button>
@@ -1158,7 +1028,7 @@
                 <span>🖨️</span> 列印 A4
             </button>
             <button class="btn" onclick="confirmReset()" title="恢復原始Excel預設資料">
-                <span>↺</span> 重置
+                <span>↺</span> 重置預設
             </button>
         </div>
     </header>
@@ -1195,16 +1065,16 @@
         <div style="display:flex; align-items:center; gap:8px; flex:1; flex-wrap:wrap;">
             <strong>📌 附註說明：</strong>
             <span id="memoContentText" style="cursor:pointer; padding:3px 8px; border-radius:4px; background:rgba(255,255,255,0.06); border:1px dashed rgba(245,158,11,0.4);" onclick="startEditMemo()" title="點擊修改附註說明">
-                ${appData.notes || '點擊此處可輸入附註說明...'}
+                司機1人、歸仁萬副中支援永康，歸仁蔡霖支援關廟至關廟分隊補人
             </span>
             <button class="btn" style="padding:2px 8px; font-size:0.75rem; background:rgba(245,158,11,0.2); border:1px solid rgba(245,158,11,0.4); color:#fde68a;" onclick="startEditMemo()">✏️ 修改附註</button>
         </div>
         <div style="font-size:0.75rem; color:#fde68a; opacity:0.85;">
-            💡 秘訣：全站已解鎖！可<strong>直接拖曳卡片調動</strong>、點擊<strong>職稱/姓名/役男數/附註</strong>直接修改！
+            💡 秘訣：全站已解鎖！可直接<strong>按住滑鼠拖曳人員卡片</strong>調動，點擊<strong>職稱/姓名/電話/役男</strong>即可直接修改！
         </div>
     </div>
 
-    <!-- Main Views Container -->
+    <!-- Main Container -->
     <main class="main-container">
         <!-- View 1: Cards View -->
         <div id="cardsView" class="departments-grid">
@@ -1227,6 +1097,7 @@
         </div>
     </main>
 
+    <!-- Modals -->
     <!-- Edit Member Modal -->
     <div class="modal-overlay" id="memberModal">
         <div class="modal-content">
@@ -1240,9 +1111,7 @@
 
                 <div class="form-group">
                     <label class="form-label">所屬單位</label>
-                    <select class="form-select" id="editDeptSelect">
-                        <!-- Populated dynamically -->
-                    </select>
+                    <select class="form-select" id="editDeptSelect"></select>
                 </div>
 
                 <div class="form-group">
@@ -1283,265 +1152,94 @@
         </div>
     </div>
 
+    <!-- History Snapshot Modal -->
+    <div class="modal-overlay" id="historyModal">
+        <div class="modal-content" style="max-width:500px;">
+            <div class="modal-header">
+                <div class="modal-title">📜 歷史存檔紀錄與版本還原</div>
+                <button class="modal-close" onclick="closeModal('historyModal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div style="font-size:0.85rem; color:#cbd5e1; margin-bottom:12px;">
+                    每次點擊「儲存存檔」都會自動在此保留一份存檔快照，若不慎改錯可隨時點擊還原：
+                </div>
+                <div id="snapshotListContainer" style="max-height:300px; overflow-y:auto;"></div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn" onclick="closeModal('historyModal')">關閉</button>
+            </div>
+        </div>
+    </div>
+
     <!-- Toast Notification -->
     <div class="toast-msg" id="toastMsg">
         <span>✅</span>
         <span id="toastText">儲存成功</span>
     </div>
 
+    <!-- Core Script -->
     <script>
-        // Initial Dataset
         const DEFAULT_DATA = {"title":"臺南市政府消防局第五救災救護大隊人員編制表","effectiveDate":"1150116","notes":"司機1人、歸仁萬副中支援永康，歸仁蔡霖支援關廟至關廟分隊補人","departments":[{"id":"hq","name":"第五大隊部","phones":["2016462","7034384"],"policeBefore":12,"policeAfter":14,"draftees":0,"assistants":2,"members":[{"title":"大隊長","name":"陳坤宗","note":""},{"title":"副大隊長","name":"李博閔","note":""},{"title":"副大隊長","name":"蘇偉誠","note":""},{"title":"組長","name":"陳建中","note":""},{"title":"組長","name":"曾志方","note":""},{"title":"組員","name":"謝振國","note":""},{"title":"小隊長","name":"鄭國甫","note":""},{"title":"小隊長","name":"翁吉賢","note":""},{"title":"隊員","name":"羅澤欣","note":""},{"title":"隊員","name":"蔡辰英","note":""},{"title":"隊員","name":"王誠乾","note":""},{"title":"隊員","name":"陳家豪","note":""},{"title":"隊員","name":"邱智輝","note":""},{"title":"隊員","name":"王宇玄","note":"金門縣消防局調入"},{"title":"事務助理","name":"楊詔惠","note":""},{"title":"事務助理","name":"丁榆棋","note":""}]},{"id":"guiren_mid","name":"歸仁中隊","phones":[],"policeBefore":2,"policeAfter":2,"draftees":0,"assistants":0,"members":[{"title":"中隊長","name":"謝亘洲","note":""},{"title":"組員","name":"黃紹穎","note":""}]},{"id":"safety_inspection","name":"安檢小組","phones":["2331119","7030080(90)"],"policeBefore":10,"policeAfter":11,"draftees":0,"assistants":0,"members":[{"title":"組員","name":"李鎮宇","note":""},{"title":"隊員","name":"陳明文","note":""},{"title":"隊員","name":"何嘉航","note":""},{"title":"隊員","name":"莊文鴻","note":""},{"title":"隊員","name":"陳志霖","note":""},{"title":"隊員","name":"梅敦貴","note":""},{"title":"隊員","name":"吳幸城","note":""},{"title":"隊員","name":"張福麟","note":""},{"title":"隊員","name":"曾翔","note":""},{"title":"隊員","name":"陳羿君","note":""},{"title":"隊員","name":"吳昱霖","note":"金門縣消防局調入"}]},{"id":"daqiao_paramedic","name":"大橋高救隊","phones":["2016462"],"policeBefore":8,"policeAfter":10,"draftees":0,"assistants":0,"members":[{"title":"小隊長","name":"蘇士雄","note":""},{"title":"隊員","name":"王健宇","note":""},{"title":"隊員","name":"陳盈甫","note":""},{"title":"隊員","name":"陳明全","note":""},{"title":"隊員","name":"邱典軍","note":""},{"title":"隊員","name":"陳偉柏","note":""},{"title":"隊員","name":"林威男","note":""},{"title":"隊員","name":"蔡宏勤","note":""},{"title":"隊員","name":"林思辰","note":""},{"title":"隊員","name":"陳信閔","note":""}]},{"id":"yongkang","name":"永康分隊","phones":["2326951","7034464"],"policeBefore":17,"policeAfter":20,"draftees":1,"assistants":0,"members":[{"title":"副中隊長","name":"萬明忠","note":"歸仁支援永康"},{"title":"小隊長","name":"陳俊福","note":""},{"title":"小隊長","name":"柯炎文","note":""},{"title":"小隊長","name":"陳昆守","note":""},{"title":"隊員","name":"張洸銘","note":""},{"title":"隊員","name":"林振凱","note":""},{"title":"隊員","name":"王宣翰","note":""},{"title":"隊員","name":"林嘉賜","note":""},{"title":"隊員","name":"蕭志明","note":""},{"title":"隊員","name":"施俞宏","note":""},{"title":"隊員","name":"孫志文","note":""},{"title":"隊員","name":"吳宸豪","note":""},{"title":"隊員","name":"王基榮","note":""},{"title":"隊員","name":"黃科豪","note":""},{"title":"隊員","name":"李侃一","note":""},{"title":"隊員","name":"謝于婷","note":""},{"title":"隊員","name":"陳宣彰","note":""},{"title":"隊員","name":"張修珉","note":"新竹市消防局調入"},{"title":"隊員","name":"葉昶毅","note":"花蓮縣消防局調入"},{"title":"隊員","name":"袁羽娟","note":"高雄市政府消防局調入"},{"title":"隊員","name":"李主恩","note":"待退/異動: 115.05.21"}]},{"id":"yanhang","name":"鹽行分隊","phones":["2536326","7034977"],"policeBefore":17,"policeAfter":21,"draftees":1,"assistants":0,"members":[{"title":"中隊長","name":"趙森軒","note":""},{"title":"小隊長","name":"李錫昌","note":""},{"title":"小隊長","name":"陳宏安","note":""},{"title":"小隊長","name":"林建豪","note":""},{"title":"隊員","name":"馮琮偉","note":""},{"title":"隊員","name":"廖鈞禾","note":""},{"title":"隊員","name":"趙志展","note":""},{"title":"隊員","name":"陳軍亦","note":""},{"title":"隊員","name":"黃韋豪","note":""},{"title":"隊員","name":"郭楨旻","note":""},{"title":"隊員","name":"李振平","note":""},{"title":"隊員","name":"凃君達","note":""},{"title":"隊員","name":"黃國維","note":""},{"title":"隊員","name":"李承澤","note":""},{"title":"隊員","name":"羅揚閔","note":""},{"title":"隊員","name":"周茂昌","note":""},{"title":"隊員","name":"陳品宏","note":""},{"title":"隊員","name":"鄭駿杰","note":"新竹市消防局調入"},{"title":"隊員","name":"吳軒仰","note":"彰化縣消防局調入"},{"title":"隊員","name":"陳家康","note":"113警特四等分發"},{"title":"隊員","name":"黃大政","note":"113警特四等分發"},{"title":"隊員","name":"周家緯","note":"待退/異動: 115.05.21"}]},{"id":"fuxing","name":"復興分隊","phones":["3117228","7034479"],"policeBefore":19,"policeAfter":22,"draftees":1,"assistants":0,"members":[{"title":"副中隊長","name":"黃柏翰","note":""},{"title":"小隊長","name":"許文亮","note":""},{"title":"小隊長","name":"黃瑜來","note":""},{"title":"小隊長","name":"林哲賢","note":""},{"title":"隊員","name":"陳柏榮","note":""},{"title":"隊員","name":"莊伯瀚","note":""},{"title":"隊員","name":"黃裕翔","note":""},{"title":"隊員","name":"蘇子凱","note":""},{"title":"隊員","name":"吳政翰","note":""},{"title":"隊員","name":"陳帥君","note":""},{"title":"隊員","name":"羅右昇","note":""},{"title":"隊員","name":"簡辰翰","note":""},{"title":"隊員","name":"黃耿哲","note":""},{"title":"隊員","name":"林紜鋒","note":""},{"title":"隊員","name":"張唯容","note":""},{"title":"隊員","name":"徐嘉佑","note":""},{"title":"隊員","name":"王崇宇","note":""},{"title":"隊員","name":"黃禹哲","note":""},{"title":"隊員","name":"蔡志玲","note":"臺中市消防局調入"},{"title":"隊員","name":"陳錫儒","note":"花蓮縣消防局調入"},{"title":"隊員","name":"陳諺琦","note":"113警特四等分發"},{"title":"隊員","name":"李尚錡","note":"113警特四等分發"},{"title":"隊員","name":"林渙晉","note":"待退/異動: 115/7/23"}]},{"id":"dawan","name":"大灣分隊","phones":["2711995","7034474"],"policeBefore":16,"policeAfter":18,"draftees":1,"assistants":0,"members":[{"title":"分隊長","name":"黃華龍","note":""},{"title":"小隊長","name":"鄭慶豊","note":""},{"title":"小隊長","name":"黃聖然","note":""},{"title":"隊員","name":"康福源","note":""},{"title":"隊員","name":"盧倬晨","note":""},{"title":"隊員","name":"鄭乃彰","note":""},{"title":"隊員","name":"文吉仁","note":""},{"title":"隊員","name":"李忠翰","note":""},{"title":"隊員","name":"陳德峰","note":""},{"title":"隊員","name":"黃俊銘","note":""},{"title":"隊員","name":"楊尚振","note":""},{"title":"隊員","name":"陳紹銘","note":""},{"title":"隊員","name":"黃培華","note":""},{"title":"隊員","name":"戴駿家","note":""},{"title":"隊員","name":"周奕君","note":""},{"title":"隊員","name":"施承勳","note":""},{"title":"隊員","name":"薛雅云","note":"臺中市消防局調入"},{"title":"隊員","name":"廖偉華","note":"臺中市消防局調入"},{"title":"隊員","name":"莊洺曛","note":"待退/異動: 115/4/16"}]},{"id":"guiren_sub","name":"歸仁分隊","phones":["2304739","7034424"],"policeBefore":15,"policeAfter":19,"draftees":1,"assistants":0,"members":[{"title":"分隊長","name":"吳智超","note":""},{"title":"小隊長","name":"林矩慶","note":""},{"title":"小隊長","name":"賴明德","note":""},{"title":"小隊長","name":"王鐙毅","note":""},{"title":"隊員","name":"吳佳哲","note":""},{"title":"隊員","name":"張經緯","note":""},{"title":"隊員","name":"楊忠霖","note":""},{"title":"隊員","name":"詹易修","note":""},{"title":"隊員","name":"王遠和","note":""},{"title":"隊員","name":"鄭景方","note":""},{"title":"隊員","name":"焦湘崐","note":""},{"title":"隊員","name":"田景文","note":""},{"title":"隊員","name":"盧世偉","note":""},{"title":"隊員","name":"謝明翰","note":""},{"title":"隊員","name":"劉騏寬","note":""},{"title":"隊員","name":"許鈞翔","note":"新竹市消防局調入"},{"title":"隊員","name":"楊逸豪","note":"高雄市政府消防局調入"},{"title":"隊員","name":"楊靜宜","note":"彰化縣消防局調入"},{"title":"隊員","name":"邱政鋼","note":"113警特四等分發"},{"title":"隊員","name":"吳昕彥","note":"待退/異動: 115.05.21"}]},{"id":"guiren_paramedic","name":"歸仁高救隊","phones":[],"policeBefore":8,"policeAfter":8,"draftees":0,"assistants":0,"members":[{"title":"隊員","name":"張永松","note":""},{"title":"隊員","name":"胡育銓","note":""},{"title":"隊員","name":"葉繼謙","note":""},{"title":"隊員","name":"王信斌","note":""},{"title":"隊員","name":"林群祐","note":""},{"title":"隊員","name":"陳瑋杰","note":""},{"title":"隊員","name":"鄭凱澧","note":""},{"title":"隊員","name":"王俊凱","note":"新北市消防局調入(歸仁高救)"}]},{"id":"baoxi","name":"保西分隊","phones":["3388300","3388355","7034434"],"policeBefore":15,"policeAfter":17,"draftees":1,"assistants":0,"members":[{"title":"分隊長","name":"戴偉倫","note":""},{"title":"小隊長","name":"林銘俊","note":""},{"title":"小隊長","name":"嚴志中","note":""},{"title":"隊員","name":"蔡濬溢","note":""},{"title":"隊員","name":"黃子原","note":""},{"title":"隊員","name":"謝承憲","note":""},{"title":"隊員","name":"李修任","note":""},{"title":"隊員","name":"吳東昌","note":""},{"title":"隊員","name":"劉家安","note":""},{"title":"隊員","name":"魏啟汶","note":""},{"title":"隊員","name":"林維哲","note":""},{"title":"隊員","name":"林君霖","note":""},{"title":"隊員","name":"陳苡岑","note":""},{"title":"隊員","name":"謝佩欣","note":"桃園市消防局調入"},{"title":"隊員","name":"孫唯傑","note":"113警特四等分發"},{"title":"隊員","name":"林宗叡","note":"113警特四等分發"},{"title":"隊員","name":"林怡岑","note":"113警特四等分發"},{"title":"隊員","name":"吳昱瑭","note":"待退/異動: 115.4.8"}]},{"id":"rende","name":"仁德分隊","phones":["2702827","7034454"],"policeBefore":16,"policeAfter":19,"draftees":1,"assistants":0,"members":[{"title":"副中隊長","name":"王才瑋","note":""},{"title":"小隊長","name":"林聖哲","note":""},{"title":"小隊長","name":"王偉宏","note":""},{"title":"隊員","name":"謝智雄","note":""},{"title":"隊員","name":"林秉湟","note":""},{"title":"隊員","name":"黃家鴻","note":""},{"title":"隊員","name":"呂德謙","note":""},{"title":"隊員","name":"郭豐仁","note":""},{"title":"隊員","name":"邱鴻恩","note":""},{"title":"隊員","name":"陳文斌","note":""},{"title":"隊員","name":"魏如濤","note":""},{"title":"隊員","name":"黃睿騰","note":""},{"title":"隊員","name":"吳郁君","note":""},{"title":"隊員","name":"劉文宏","note":""},{"title":"隊員","name":"宋音瑱","note":""},{"title":"隊員","name":"程龍翔","note":""},{"title":"隊員","name":"李岡鴻","note":"桃園市消防局調入"},{"title":"隊員","name":"劉冠晨","note":"雲林縣消防局調入"},{"title":"隊員","name":"林思璇","note":"113警特四等分發"},{"title":"隊員","name":"吳正恩","note":"待退/異動: 115.10.15"}]},{"id":"wenxian","name":"文賢分隊","phones":["2666302","7034459"],"policeBefore":15,"policeAfter":18,"draftees":1,"assistants":0,"members":[{"title":"分隊長","name":"吳慶崇","note":""},{"title":"小隊長","name":"陳禹良","note":""},{"title":"小隊長","name":"聶豐明","note":""},{"title":"隊員","name":"買仕賢","note":""},{"title":"隊員","name":"曾仕雄","note":""},{"title":"隊員","name":"徐溢聲","note":""},{"title":"隊員","name":"姜宏達","note":""},{"title":"隊員","name":"賴貫年","note":""},{"title":"隊員","name":"陳柏穎","note":""},{"title":"隊員","name":"楊承豪","note":""},{"title":"隊員","name":"黃柏諺","note":""},{"title":"隊員","name":"蔡宗晏","note":""},{"title":"隊員","name":"李坤霖","note":""},{"title":"隊員","name":"林澔廷","note":""},{"title":"隊員","name":"許建志","note":"新北市消防局調入"},{"title":"隊員","name":"張鎧鵬","note":"113警特四等分發"},{"title":"隊員","name":"吳智傑","note":"113警特四等分發"},{"title":"隊員","name":"林雨淥","note":"113警特四等分發"},{"title":"隊員","name":"邵翊鈞","note":"待退/異動: 115.07.23"}]},{"id":"guanmiao","name":"關廟分隊","phones":["5952895","5966114","7035079"],"policeBefore":19,"policeAfter":22,"draftees":2,"assistants":0,"members":[{"title":"分隊長","name":"邱奎景","note":""},{"title":"小隊長","name":"姚志和","note":""},{"title":"小隊長","name":"吳國禎","note":""},{"title":"隊員","name":"王昇揚","note":""},{"title":"隊員","name":"李加正","note":""},{"title":"隊員","name":"劉冠巖","note":""},{"title":"隊員","name":"張峻彬","note":""},{"title":"隊員","name":"楊竣","note":""},{"title":"隊員","name":"呂雪菁","note":""},{"title":"隊員","name":"林玉婷","note":""},{"title":"隊員","name":"朱世維","note":""},{"title":"隊員","name":"張鋕廷","note":""},{"title":"隊員","name":"黃丞毅","note":""},{"title":"隊員","name":"鮑啟華","note":""},{"title":"隊員","name":"陳建誠","note":""},{"title":"隊員","name":"林祺翰","note":""},{"title":"隊員","name":"黃學鴻","note":""},{"title":"隊員","name":"楊耿豪","note":""},{"title":"隊員","name":"洪祥凱","note":"113警特四等分發"},{"title":"隊員","name":"張賐展","note":"113警特四等分發"},{"title":"隊員","name":"幸慶榮","note":"臺北市消防局調入"},{"title":"隊員","name":"林懷蕙","note":"待退/異動: 115.3.12"},{"title":"隊員","name":"許嘉威","note":"待退/異動: 115.4.16"},{"title":"隊員","name":"蔡霖","note":"歸仁支援關廟"}]}],"transfers":[{"category":"外縣市調入","info":"45.吳昱霖：金門縣消防局隊員→五大安檢隊員"},{"category":"警特新進分發","info":"132.陳家康：五大鹽行隊員(113一般警察特考四等分發)"},{"category":"外縣市調入","info":"46.王宇玄：金門縣消防局隊員→五大隊員"},{"category":"警特新進分發","info":"133.黃大政：五大鹽行隊員(113一般警察特考四等分發)"},{"category":"外縣市調入","info":"47.張修珉：新竹市消防局隊員→五大永康隊員"},{"category":"警特新進分發","info":"134.陳諺琦：五大復興隊員(113一般警察特考四等分發)"},{"category":"外縣市調入","info":"48.葉昶毅：花蓮縣消防局隊員→五大永康隊員"},{"category":"警特新進分發","info":"135.李尚錡：五大復興隊員(113一般警察特考四等分發)"},{"category":"外縣市調入","info":"49.袁羽娟：高雄市政府消防局隊員→五大永康隊員"},{"category":"警特新進分發","info":"136.邱政鋼：五大歸仁隊員(113一般警察特考四等分發)"},{"category":"外縣市調入","info":"50.鄭駿杰：新竹市消防局隊員→五大鹽行隊員"},{"category":"警特新進分發","info":"137.林思璇：五大仁德隊員(113一般警察特考四等分發)"},{"category":"外縣市調入","info":"51.吳軒仰：彰化縣消防局隊員→五大鹽行隊員"},{"category":"警特新進分發","info":"138.張鎧鵬：五大文賢隊員(113一般警察特考四等分發)"},{"category":"外縣市調入","info":"52.薛雅云：臺中市政府消防局隊員→五大大灣隊員"},{"category":"警特新進分發","info":"139.吳智傑：五大文賢隊員(113一般警察特考四等分發)"},{"category":"外縣市調入","info":"53.廖偉華：臺中市政府消防局隊員→五大大灣隊員"},{"category":"警特新進分發","info":"140.林雨淥：五大文賢隊員(113一般警察特考四等分發)"},{"category":"警特新進分發","info":"141.洪祥凱：五大關廟隊員(113一般警察特考四等分發)"},{"category":"外縣市調入","info":"54.陳錫儒：花蓮縣消防局隊員→五大復興隊員"},{"category":"警特新進分發","info":"142.張賐展：五大關廟隊員(113一般警察特考四等分發)"},{"category":"外縣市調入","info":"55.蔡志玲：臺中市政府消防局隊員→五大復興隊員"},{"category":"警特新進分發","info":"143.孫唯傑：五大保西隊員(113一般警察特考四等分發)"},{"category":"外縣市調入","info":"56.許鈞翔：新竹市消防局隊員→五大歸仁隊員"},{"category":"警特新進分發","info":"144.林宗叡：五大保西隊員(113一般警察特考四等分發)"},{"category":"外縣市調入","info":"57.楊逸豪：高雄市政府消防局隊員→五大歸仁隊員"},{"category":"警特新進分發","info":"145.林怡岑：五大保西隊員(113一般警察特考四等分發)"},{"category":"外縣市調入","info":"58.楊靜宜：彰化縣消防局隊員→五大歸仁隊員"},{"category":"外縣市調入","info":"59.王俊凱：新北市政府消防局隊員→五大歸仁高救隊員"},{"category":"外縣市調入","info":"60.李岡鴻：桃園市政府消防局隊員→五大仁德隊員"},{"category":"外縣市調入","info":"61.劉冠晨：雲林縣消防局隊員→五大仁德隊員"},{"category":"外縣市調入","info":"62.許建志：新北市政府消防局隊員→五大文賢隊員"},{"category":"外縣市調入","info":"63.幸慶榮：臺北市政府消防局隊員→五大關廟隊員"},{"category":"外縣市調入","info":"64.謝佩欣：桃園市政府消防局隊員→五大保西隊員"}]};
 
-        // Current Active State
         let appData = null;
+        window.appData = null;
         let currentView = 'cards';
         let searchQuery = '';
+        let draggedItemInfo = null;
+        const SNAPSHOT_KEY = 'TNCFD_SAVE_SNAPSHOTS_1150116';
+        let lastSaveTimestamp = localStorage.getItem('TNCFD_LAST_SAVE_TIME') || '';
 
-        
-        // Edit Lock & Security State
-        let isEditUnlocked = true;
-        let adminPasscode = localStorage.getItem('TNCFD_PASSCODE') || '5555';
-
-        // Firebase Cloud State
-        let db = null;
-        let unsubscribeSnapshot = null;
-        let isCloudSyncing = false;
-        let lastRemoteUpdate = 0;
-
-        function updateLockUI() {
-            const lockIcon = document.getElementById('lockIcon');
-            const lockText = document.getElementById('lockText');
-            const btnLock = document.getElementById('btnLockToggle');
-
-            if (isEditUnlocked) {
-                lockIcon.innerText = '🔓';
-                lockText.innerText = '已解鎖編輯';
-                btnLock.style.borderColor = 'rgba(16, 185, 129, 0.5)';
-                btnLock.style.color = '#6ee7b7';
-                document.body.classList.remove('readonly-mode');
-            } else {
-                lockIcon.innerText = '🔒';
-                lockText.innerText = '解鎖編輯';
-                btnLock.style.borderColor = 'rgba(245, 158, 11, 0.4)';
-                btnLock.style.color = '#fde68a';
-                document.body.classList.add('readonly-mode');
-            }
-        }
-
-        function toggleEditLock() {
-            if (isEditUnlocked) {
-                isEditUnlocked = false;
-                updateLockUI();
-                showToast('已鎖定為安全檢視模式');
-            } else {
-                document.getElementById('passcodeInput').value = '';
-                document.getElementById('passcodeModal').classList.add('active');
-                setTimeout(() => document.getElementById('passcodeInput').focus(), 100);
-            }
-        }
-
-        function verifyPasscode() {
-            const input = document.getElementById('passcodeInput').value.trim();
-            if (input === adminPasscode || input === '5555') {
-                isEditUnlocked = true;
-                updateLockUI();
-                closeModal('passcodeModal');
-                showToast('🔓 密碼正確，已啟用即時共編模式');
-            } else {
-                alert('密碼不正確，請重新輸入！(預設密碼為 5555)');
-            }
-        }
-
-        // Firebase Cloud Sync Setup
-        window.onFirebaseLoaded = function() {
-            initFirebaseConnection();
-        };
-
-        function initFirebaseConnection() {
-            const savedCfg = localStorage.getItem('TNCFD_FIREBASE_CFG');
-            if (!savedCfg || !window.FB_TOOLS) {
-                updateCloudStatus(false, '本機模式 (點擊設定雲端)');
-                return;
-            }
-
-            try {
-                const config = JSON.parse(savedCfg);
-                const app = window.FB_TOOLS.initializeApp(config);
-                db = window.FB_TOOLS.getFirestore(app);
-
-                const docPath = localStorage.getItem('TNCFD_FIREBASE_PATH') || 'tncfd_personnel/1150116';
-                const [colName, docId] = docPath.split('/');
-                const targetDocRef = window.FB_TOOLS.doc(db, colName, docId);
-
-                updateCloudStatus(true, '雲端即時連線中');
-
-                // Real-time listener: onSnapshot
-                if (unsubscribeSnapshot) unsubscribeSnapshot();
-                unsubscribeSnapshot = window.FB_TOOLS.onSnapshot(targetDocRef, (docSnap) => {
-                    if (docSnap.exists()) {
-                        const cloudData = docSnap.data();
-                        if (cloudData && cloudData.departments && !isCloudSyncing) {
-                            appData = cloudData;
-                            localStorage.setItem('TNCFD_V_DATA_1150116', JSON.stringify(appData));
-                            renderAll();
-                            showToast('⚡ 雲端已即時同步最新編制！');
-                        }
-                    } else {
-                        // First time: write initial data to cloud
-                        window.FB_TOOLS.setDoc(targetDocRef, appData);
-                    }
-                }, (err) => {
-                    console.error('Firestore snapshot error:', err);
-                    updateCloudStatus(false, '連線異常，已切回本機');
-                });
-
-            } catch (err) {
-                console.error('Firebase init error:', err);
-                updateCloudStatus(false, '配置錯誤');
-            }
-        }
-
-        function updateCloudStatus(connected, text) {
-            const dot = document.getElementById('cloudDot');
-            const txt = document.getElementById('cloudStatusText');
-            if (connected) {
-                dot.style.background = '#10b981';
-                dot.style.boxShadow = '0 0 10px #10b981';
-                txt.innerText = text;
-            } else {
-                dot.style.background = '#f59e0b';
-                dot.style.boxShadow = '0 0 8px #f59e0b';
-                txt.innerText = text;
-            }
-        }
-
-        function openCloudConfigModal() {
-            document.getElementById('firebaseConfigInput').value = localStorage.getItem('TNCFD_FIREBASE_CFG') || '';
-            document.getElementById('firebaseDocPath').value = localStorage.getItem('TNCFD_FIREBASE_PATH') || 'tncfd_personnel/1150116';
-            document.getElementById('adminPasscodeConfig').value = adminPasscode;
-            document.getElementById('cloudConfigModal').classList.add('active');
-        }
-
-        function saveCloudConfig() {
-            const cfgStr = document.getElementById('firebaseConfigInput').value.trim();
-            const pathStr = document.getElementById('firebaseDocPath').value.trim() || 'tncfd_personnel/1150116';
-            const passStr = document.getElementById('adminPasscodeConfig').value.trim() || '5555';
-
-            adminPasscode = passStr;
-            localStorage.setItem('TNCFD_PASSCODE', passStr);
-            localStorage.setItem('TNCFD_FIREBASE_PATH', pathStr);
-
-            if (cfgStr) {
-                try {
-                    JSON.parse(cfgStr); // Validate JSON
-                    localStorage.setItem('TNCFD_FIREBASE_CFG', cfgStr);
-                    closeModal('cloudConfigModal');
-                    initFirebaseConnection();
-                    showToast('已更新雲端資料庫連線');
-                } catch(e) {
-                    alert('Firebase Config 格式需為標準 JSON！');
-                }
-            } else {
-                closeModal('cloudConfigModal');
-            }
-        }
-
-        function clearCloudConfig() {
-            localStorage.removeItem('TNCFD_FIREBASE_CFG');
-            if (unsubscribeSnapshot) unsubscribeSnapshot();
-            db = null;
-            updateCloudStatus(false, '本機模式 (點擊設定雲端)');
-            closeModal('cloudConfigModal');
-            showToast('已切換為純本機離線模式');
-        }
-
-        
-        // Edit Memo Banner Function
-        function startEditMemo() {
-            const currentNotes = appData.notes || '';
-            const newNotes = prompt('請修改附註說明：', currentNotes);
-            if (newNotes !== null) {
-                appData.notes = newNotes.trim();
-                saveData();
-                renderAll();
-                showToast('已更新附註說明');
-            }
-        }
-
-        // Edit Dept property inline (e.g. draftees, phones, policeBefore, policeAfter)
-        function editDeptProp(deptId, propName, label) {
-            const dept = appData.departments.find(d => d.id === deptId);
-            if (!dept) return;
-
-            let currentVal = dept[propName];
-            if (Array.isArray(currentVal)) currentVal = currentVal.join(' / ');
-            
-            const newVal = prompt('請輸入 ' + dept.name + ' 的【' + label + '】：', currentVal || '');
-            if (newVal !== null) {
-                if (propName === 'phones') {
-                    dept.phones = newVal.split(/[/,，、 ]+/).map(s => s.trim()).filter(Boolean);
-                } else if (propName === 'draftees' || propName === 'policeBefore' || propName === 'policeAfter') {
-                    dept[propName] = parseInt(newVal.trim()) || 0;
-                } else {
-                    dept[propName] = newVal.trim();
-                }
-                saveData();
-                renderAll();
-                showToast('已更新 ' + dept.name + ' 的 ' + label);
-            }
-        }
-
-        // Initialize from localStorage or default
+        // Safe Initialization
         function initApp() {
-            const saved = localStorage.getItem('TNCFD_V_DATA_1150116');
-            if (saved) {
-                try {
-                    appData = JSON.parse(saved);
-                } catch(e) {
+            try {
+                const saved = localStorage.getItem('TNCFD_V_DATA_1150116');
+                if (saved) {
+                    try {
+                        const parsed = JSON.parse(saved);
+                        if (parsed && Array.isArray(parsed.departments) && parsed.departments.length > 0) {
+                            appData = parsed;
+                        } else {
+                            appData = JSON.parse(JSON.stringify(DEFAULT_DATA));
+                            localStorage.setItem('TNCFD_V_DATA_1150116', JSON.stringify(appData));
+                        }
+                    } catch(e) {
+                        appData = JSON.parse(JSON.stringify(DEFAULT_DATA));
+                    }
+                } else {
                     appData = JSON.parse(JSON.stringify(DEFAULT_DATA));
                 }
-            } else {
+            } catch(e) {
                 appData = JSON.parse(JSON.stringify(DEFAULT_DATA));
             }
+
+            if (!appData || !Array.isArray(appData.departments) || appData.departments.length === 0) {
+                appData = JSON.parse(JSON.stringify(DEFAULT_DATA));
+            }
+
             populateDeptSelect();
             renderAll();
+            updateLastSavedDisplay();
         }
 
         function saveData() {
-            localStorage.setItem('TNCFD_V_DATA_1150116', JSON.stringify(appData));
-            renderKPI();
-
-            // Sync to Firebase if connected
-            if (db && window.FB_TOOLS) {
-                isCloudSyncing = true;
-                const docPath = localStorage.getItem('TNCFD_FIREBASE_PATH') || 'tncfd_personnel/1150116';
-                const [colName, docId] = docPath.split('/');
-                const targetDocRef = window.FB_TOOLS.doc(db, colName, docId);
-                window.FB_TOOLS.setDoc(targetDocRef, appData)
-                    .then(() => {
-                        showToast('⚡ 已即時同步至雲端資料庫');
-                    })
-                    .catch(err => {
-                        console.error('Cloud sync write error:', err);
-                        showToast('已存至本機 (雲端連線失敗)');
-                    })
-                    .finally(() => {
-                        setTimeout(() => { isCloudSyncing = false; }, 300);
-                    });
-            } else {
-                showToast('已儲存至本機快取');
+            try {
+                localStorage.setItem('TNCFD_V_DATA_1150116', JSON.stringify(appData));
+            } catch(e) {
+                console.warn('Storage error:', e);
             }
+            renderKPI();
         }
 
         function showToast(msg) {
             const toast = document.getElementById('toastMsg');
-            document.getElementById('toastText').innerText = msg;
+            const txt = document.getElementById('toastText');
+            if (!toast || !txt) return;
+            txt.innerText = msg;
             toast.style.display = 'flex';
             clearTimeout(toast.timer);
             toast.timer = setTimeout(() => {
                 toast.style.display = 'none';
-            }, 2000);
+            }, 2200);
         }
 
         // View Switching
@@ -1572,7 +1270,6 @@
             }
         }
 
-        // Search Filter
         function handleSearch() {
             searchQuery = document.getElementById('searchInput').value.trim().toLowerCase();
             renderCurrentView();
@@ -1590,46 +1287,41 @@
             else if (currentView === 'analytics') renderAnalyticsView();
         }
 
-                // KPI Rendering - Fully dynamic based on all current filled data
+        // Recalculate KPIs
         function renderKPI() {
             let policeCount = 0;
             let drafteesCount = 0;
             let assistantsCount = 0;
             let transferCount = 0;
-
             const countedTransfers = new Set();
 
-            appData.departments.forEach(dept => {
-                // Count draftees from dept.draftees property
-                drafteesCount += parseInt(dept.draftees) || 0;
+            if (appData && Array.isArray(appData.departments)) {
+                appData.departments.forEach(dept => {
+                    drafteesCount += parseInt(dept.draftees) || 0;
+                    if (dept.assistants) assistantsCount += parseInt(dept.assistants) || 0;
 
-                dept.members.forEach(m => {
-                    const title = (m.title || '').trim();
-                    const note = (m.note || '').trim();
+                    if (Array.isArray(dept.members)) {
+                        dept.members.forEach(m => {
+                            const title = (m.title || '').trim();
+                            const note = (m.note || '').trim();
 
-                    if (/事務助理|助理/.test(title)) {
-                        assistantsCount++;
-                    } else if (/役男|替代役/.test(title)) {
-                        drafteesCount++;
-                    } else {
-                        policeCount++;
-                    }
+                            if (/事務助理|助理/.test(title)) {
+                                if (!dept.assistants) assistantsCount++;
+                            } else if (/役男|替代役/.test(title)) {
+                                // already in draftees
+                            } else {
+                                policeCount++;
+                            }
 
-                    // Check if member has transfer/new recruits note
-                    if (/調入|分發|特考|新進/.test(note)) {
-                        countedTransfers.add(m.name + '_' + dept.id);
+                            if (/調入|分發|特考|新進/.test(note)) {
+                                countedTransfers.add(m.name + '_' + dept.id);
+                            }
+                        });
                     }
                 });
-            });
-
-            // If user has original transfer list in appData, ensure it is also counted or matched
-            if (appData.transfers && appData.transfers.length > 0) {
-                // If member notes didn't capture all original transfers, use whichever is greater
-                transferCount = Math.max(countedTransfers.size, appData.transfers.length);
-            } else {
-                transferCount = countedTransfers.size;
             }
 
+            transferCount = (appData.transfers && appData.transfers.length > 0) ? Math.max(countedTransfers.size, appData.transfers.length) : countedTransfers.size;
             const totalMembers = policeCount + drafteesCount + assistantsCount;
 
             const kpiHtml = `
@@ -1646,7 +1338,7 @@
                     <div class="kpi-info">
                         <div class="kpi-label">警消現員數</div>
                         <div class="kpi-value" id="kpiPoliceVal">${policeCount}</div>
-                        <div class="kpi-sub">各大隊/中隊/分隊外勤幹部與隊員</div>
+                        <div class="kpi-sub">救災救護主力陣容</div>
                     </div>
                 </div>
                 <div class="kpi-card green">
@@ -1674,16 +1366,15 @@
                     </div>
                 </div>
             `;
-            document.getElementById('kpiContainer').innerHTML = kpiHtml;
+            const kpiEl = document.getElementById('kpiContainer');
+            if (kpiEl) kpiEl.innerHTML = kpiHtml;
 
-            // Also update memo banner text if it exists
             const memoEl = document.getElementById('memoContentText');
-            if (memoEl) {
+            if (memoEl && appData) {
                 memoEl.innerText = appData.notes || '點擊此處可輸入附註說明...';
             }
         }
 
-        // Helper to get badge style
         function getTitleBadgeClass(title) {
             if (/大隊長|副大隊長/.test(title)) return 'title-chief';
             if (/中隊長|副中隊長|分隊長/.test(title)) return 'title-officer';
@@ -1695,35 +1386,34 @@
         // View 1: Cards View Render
         function renderCardsView() {
             const container = document.getElementById('cardsView');
+            if (!container || !appData || !appData.departments) return;
             let html = '';
 
             appData.departments.forEach((dept, deptIdx) => {
-                // Filter members by search
-                let filteredMembers = dept.members.map((m, idx) => ({ ...m, origIndex: idx }));
+                let filteredMembers = (dept.members || []).map((m, idx) => ({ ...m, origIndex: idx }));
                 let deptMatches = dept.name.toLowerCase().includes(searchQuery) || 
-                                  dept.phones.some(p => p.includes(searchQuery));
+                                  (dept.phones || []).some(p => p.includes(searchQuery));
 
                 if (searchQuery && !deptMatches) {
                     filteredMembers = filteredMembers.filter(m => 
-                        m.name.toLowerCase().includes(searchQuery) ||
-                        m.title.toLowerCase().includes(searchQuery) ||
+                        (m.name || '').toLowerCase().includes(searchQuery) ||
+                        (m.title || '').toLowerCase().includes(searchQuery) ||
                         (m.note && m.note.toLowerCase().includes(searchQuery))
                     );
-                    if (filteredMembers.length === 0) return; // Hide this dept
+                    if (filteredMembers.length === 0) return;
                 }
 
-                // Split into leaders, officers, members
                 const leaders = filteredMembers.filter(m => /大隊長|副大隊長|中隊長|副中隊長|分隊長/.test(m.title));
                 const officers = filteredMembers.filter(m => /組長|組員|小隊長/.test(m.title));
                 const regular = filteredMembers.filter(m => !/大隊長|副大隊長|中隊長|副中隊長|分隊長|組長|組員|小隊長/.test(m.title));
 
-                const policeCount = dept.members.filter(m => m.title !== '事務助理').length;
+                const policeCount = (dept.members || []).filter(m => !/事務助理|助理/.test(m.title)).length;
 
                 html += `
                     <div class="dept-card ${searchQuery ? 'highlight-card' : ''}" 
-          ondragover="handleCardDragOver(event)" 
-          ondragleave="handleCardDragLeave(event)" 
-          ondrop="handleCardDrop(event, '${dept.id}')">
+                         ondragover="handleCardDragOver(event)" 
+                         ondragleave="handleCardDragLeave(event)" 
+                         ondrop="handleCardDrop(event, '${dept.id}')">
                         <div class="dept-header">
                             <div class="dept-title-group">
                                 <div class="dept-name">
@@ -1732,11 +1422,11 @@
                                 </div>
                                 <div class="dept-phones">
                                     <span>📞</span>
-                                    <span style="cursor:pointer;" onclick="editDeptProp('${dept.id}', 'phones', '公務電話')" title="點擊修改電話">${dept.phones.length > 0 ? dept.phones.join(' / ') : '無(點擊新增電話)'}</span>
+                                    <span style="cursor:pointer;" onclick="editDeptProp('${dept.id}', 'phones', '公務電話')" title="點擊修改電話">${(dept.phones && dept.phones.length > 0) ? dept.phones.join(' / ') : '無(點擊新增電話)'}</span>
                                 </div>
                             </div>
                             <div class="dept-stats-badge" title="點擊數值可修改">
-                                <div class="dept-count-main" title="現有警消人數">${policeCount} 員</div>
+                                <div class="dept-count-main" id="deptCount_${dept.id}">${policeCount} 員</div>
                                 <div class="dept-count-detail" style="cursor:pointer;">
                                     <span onclick="editDeptProp('${dept.id}', 'policeBefore', '0116前人數')" title="點擊修改0116前人數">前:${dept.policeBefore ?? '-'}</span> | 
                                     <span onclick="editDeptProp('${dept.id}', 'policeAfter', '0116後人數')" title="點擊修改0116後人數">後:${dept.policeAfter ?? '-'}</span> | 
@@ -1783,8 +1473,6 @@
         }
 
         // Render Individual Member Chip
-        let draggedItemInfo = null;
-
         function renderMemberChip(deptId, memberIdx, member) {
             const badgeClass = getTitleBadgeClass(member.title);
             const isLead = /大隊長|副大隊長|中隊長|副中隊長|分隊長/.test(member.title);
@@ -1799,19 +1487,17 @@
             return `
                 <div class="${chipClass}" 
                      draggable="true" 
-                     data-dept="${deptId}" 
-                     data-idx="${memberIdx}"
                      ondragstart="handleDragStart(event, '${deptId}', ${memberIdx})"
                      ondragend="handleDragEnd(event)"
                      ondragover="handleDragOverChip(event)"
                      ondrop="handleDropOnChip(event, '${deptId}', ${memberIdx})"
                      onclick="openEditMemberModal('${deptId}', ${memberIdx})"
-                     title="可拖曳調整順序或跨單位調動；點擊進行詳細編輯">
+                     title="按住滑鼠可拖曳排序或跨單位調動；點擊進行詳細編輯">
                     <span style="cursor:grab; font-size:0.75rem; opacity:0.6; margin-right:-2px;" title="拖曳把手">⠿</span>
-                    <span class="member-title ${badgeClass}" onclick="event.stopPropagation(); startInlineEdit(this, '${deptId}', ${memberIdx}, 'title')" title="點擊修改職稱">
+                    <span class="member-title ${badgeClass}" onclick="event.stopPropagation(); startInlineEdit(this, '${deptId}', ${memberIdx}, 'title')" title="點擊直接修改職稱">
                         ${member.title}
                     </span>
-                    <span class="member-name" onclick="event.stopPropagation(); startInlineEdit(this, '${deptId}', ${memberIdx}, 'name')" title="點擊修改姓名">
+                    <span class="member-name" onclick="event.stopPropagation(); startInlineEdit(this, '${deptId}', ${memberIdx}, 'name')" title="點擊直接修改姓名">
                         ${member.name}
                     </span>
                     ${member.note ? `<span class="member-note-tag" title="${member.note}">${member.note}</span>` : ''}
@@ -1820,115 +1506,8 @@
             `;
         }
 
-        // Drag and Drop Event Handlers
-        function handleDragStart(e, deptId, memberIdx) {
-            if (!isEditUnlocked) {
-                e.preventDefault();
-                showToast('🔒 目前為安全檢視模式，請先點擊上方「解鎖編輯」');
-                return;
-            }
-            draggedItemInfo = { deptId, memberIdx };
-            e.dataTransfer.effectAllowed = 'move';
-            e.dataTransfer.setData('text/plain', JSON.stringify(draggedItemInfo));
-            // Add slight delay so preview image is generated before adding class
-            setTimeout(() => {
-                if (e.target && e.target.classList) {
-                    e.target.classList.add('dragging');
-                }
-            }, 10);
-        }
-
-        function handleDragEnd(e) {
-            if (e.target && e.target.classList) {
-                e.target.classList.remove('dragging');
-            }
-            document.querySelectorAll('.dept-card').forEach(c => c.classList.remove('drag-over-card'));
-            document.querySelectorAll('.member-chips-container').forEach(c => c.classList.remove('drag-over-zone'));
-            draggedItemInfo = null;
-        }
-
-        function handleCardDragOver(e) {
-            e.preventDefault();
-            e.stopPropagation();
-            e.dataTransfer.dropEffect = 'move';
-            const card = e.currentTarget;
-            if (!card.classList.contains('drag-over-card')) {
-                card.classList.add('drag-over-card');
-            }
-        }
-
-        function handleCardDragLeave(e) {
-            const card = e.currentTarget;
-            // Only remove if leaving the card entirely
-            if (!card.contains(e.relatedTarget)) {
-                card.classList.remove('drag-over-card');
-            }
-        }
-
-        function handleCardDrop(e, targetDeptId) {
-            e.preventDefault();
-            e.stopPropagation();
-            const card = e.currentTarget;
-            card.classList.remove('drag-over-card');
-
-            if (!draggedItemInfo) return;
-            const { deptId: srcDeptId, memberIdx: srcIdx } = draggedItemInfo;
-
-            moveMember(srcDeptId, srcIdx, targetDeptId, null);
-        }
-
-        function handleDragOverChip(e) {
-            e.preventDefault();
-            e.stopPropagation();
-            e.dataTransfer.dropEffect = 'move';
-        }
-
-        function handleDropOnChip(e, targetDeptId, targetIdx) {
-            e.preventDefault();
-            e.stopPropagation();
-            document.querySelectorAll('.dept-card').forEach(c => c.classList.remove('drag-over-card'));
-
-            if (!draggedItemInfo) return;
-            const { deptId: srcDeptId, memberIdx: srcIdx } = draggedItemInfo;
-
-            moveMember(srcDeptId, srcIdx, targetDeptId, targetIdx);
-        }
-
-        // Logic to move or reorder member
-        function moveMember(srcDeptId, srcIdx, targetDeptId, targetIdx) {
-            const srcDept = appData.departments.find(d => d.id === srcDeptId);
-            const targetDept = appData.departments.find(d => d.id === targetDeptId);
-            if (!srcDept || !targetDept) return;
-
-            const member = srcDept.members[srcIdx];
-            if (!member) return;
-
-            // Remove from source
-            srcDept.members.splice(srcIdx, 1);
-
-            // Determine insert position
-            if (targetIdx === null || targetIdx === undefined || targetIdx >= targetDept.members.length) {
-                targetDept.members.push(member);
-            } else {
-                targetDept.members.splice(targetIdx, 0, member);
-            }
-
-            saveData();
-            renderAll();
-
-            if (srcDeptId !== targetDeptId) {
-                showToast(`已將 ${member.title} ${member.name} 調至【${targetDept.name}】`);
-            } else {
-                showToast(`已調整 ${member.name} 在【${targetDept.name}】的排列順序`);
-            }
-        }
-
         // Inline Click to Edit
         function startInlineEdit(element, deptId, memberIdx, field) {
-            if (!isEditUnlocked) {
-                toggleEditLock();
-                return;
-            }
             const currentVal = element.innerText.trim();
             const input = document.createElement('input');
             input.type = 'text';
@@ -1942,26 +1521,102 @@
             function finishEdit() {
                 const newVal = input.value.trim() || currentVal;
                 const dept = appData.departments.find(d => d.id === deptId);
-                if (dept && dept.members[memberIdx]) {
+                if (dept && dept.members && dept.members[memberIdx]) {
                     dept.members[memberIdx][field] = newVal;
                     saveData();
                 }
-                renderCurrentView();
+                renderAll();
             }
 
             input.onblur = finishEdit;
             input.onkeydown = function(e) {
-                if (e.key === 'Enter') {
-                    finishEdit();
-                } else if (e.key === 'Escape') {
-                    renderCurrentView();
-                }
+                if (e.key === 'Enter') finishEdit();
+                else if (e.key === 'Escape') renderAll();
             };
+        }
+
+        // Drag and Drop Event Handlers
+        function handleDragStart(e, deptId, memberIdx) {
+            draggedItemInfo = { deptId, memberIdx };
+            e.dataTransfer.effectAllowed = 'move';
+            e.dataTransfer.setData('text/plain', JSON.stringify(draggedItemInfo));
+            setTimeout(() => {
+                if (e.target && e.target.classList) e.target.classList.add('dragging');
+            }, 10);
+        }
+
+        function handleDragEnd(e) {
+            if (e.target && e.target.classList) e.target.classList.remove('dragging');
+            document.querySelectorAll('.dept-card').forEach(c => c.classList.remove('drag-over-card'));
+            draggedItemInfo = null;
+        }
+
+        function handleCardDragOver(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            e.dataTransfer.dropEffect = 'move';
+            const card = e.currentTarget;
+            if (!card.classList.contains('drag-over-card')) card.classList.add('drag-over-card');
+        }
+
+        function handleCardDragLeave(e) {
+            const card = e.currentTarget;
+            if (!card.contains(e.relatedTarget)) card.classList.remove('drag-over-card');
+        }
+
+        function handleCardDrop(e, targetDeptId) {
+            e.preventDefault();
+            e.stopPropagation();
+            const card = e.currentTarget;
+            card.classList.remove('drag-over-card');
+            if (!draggedItemInfo) return;
+            moveMember(draggedItemInfo.deptId, draggedItemInfo.memberIdx, targetDeptId, null);
+        }
+
+        function handleDragOverChip(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            e.dataTransfer.dropEffect = 'move';
+        }
+
+        function handleDropOnChip(e, targetDeptId, targetIdx) {
+            e.preventDefault();
+            e.stopPropagation();
+            document.querySelectorAll('.dept-card').forEach(c => c.classList.remove('drag-over-card'));
+            if (!draggedItemInfo) return;
+            moveMember(draggedItemInfo.deptId, draggedItemInfo.memberIdx, targetDeptId, targetIdx);
+        }
+
+        function moveMember(srcDeptId, srcIdx, targetDeptId, targetIdx) {
+            const srcDept = appData.departments.find(d => d.id === srcDeptId);
+            const targetDept = appData.departments.find(d => d.id === targetDeptId);
+            if (!srcDept || !targetDept || !srcDept.members) return;
+
+            const member = srcDept.members[srcIdx];
+            if (!member) return;
+
+            srcDept.members.splice(srcIdx, 1);
+            if (targetIdx === null || targetIdx === undefined || targetIdx >= targetDept.members.length) {
+                targetDept.members.push(member);
+            } else {
+                targetDept.members.splice(targetIdx, 0, member);
+            }
+
+            saveData();
+            renderAll();
+
+            if (srcDeptId !== targetDeptId) {
+                showToast('已將 ' + member.title + ' ' + member.name + ' 調至【' + targetDept.name + '】');
+            } else {
+                showToast('已調整 ' + member.name + ' 的排列順序');
+            }
         }
 
         // View 2: Table View Render (Excel Style)
         function renderTableView() {
             const container = document.getElementById('tableView');
+            if (!container || !appData || !appData.departments) return;
+
             let html = `
                 <table class="official-table">
                     <thead>
@@ -1979,13 +1634,13 @@
             `;
 
             appData.departments.forEach((dept, dIdx) => {
-                const policeCount = dept.members.filter(m => m.title !== '事務助理').length;
+                const policeCount = (dept.members || []).filter(m => !/事務助理|助理/.test(m.title)).length;
                 html += `
                     <tr>
                         <td class="dept-col">
                             <strong>${dept.name}</strong>
                             <div style="font-size:0.75rem; color:var(--text-muted); font-weight:normal;">
-                                ${dept.phones.join(' / ') || '無'}
+                                ${(dept.phones && dept.phones.length > 0) ? dept.phones.join(' / ') : '無'}
                             </div>
                         </td>
                         <td class="num-col">${dept.policeBefore || '-'}</td>
@@ -1995,7 +1650,7 @@
                         <td class="num-col" style="color:#38bdf8; font-weight:700;">${policeCount}</td>
                         <td style="text-align:left; padding:8px;">
                             <div style="display:flex; flex-wrap:wrap; gap:4px;">
-                                ${dept.members.map((m, mIdx) => `
+                                ${(dept.members || []).map((m, mIdx) => `
                                     <div class="table-member-cell" onclick="openEditMemberModal('${dept.id}', ${mIdx})">
                                         <span class="table-member-title">${m.title}</span>
                                         <span class="table-member-name">${m.name}</span>
@@ -2018,8 +1673,8 @@
         // View 3: Transfers View
         function renderTransfersView() {
             const container = document.getElementById('transfersView');
+            if (!container) return;
             const transfers = appData.transfers || [];
-
             const outside = transfers.filter(t => t.category === '外縣市調入');
             const newExam = transfers.filter(t => t.category === '警特新進分發');
 
@@ -2059,13 +1714,12 @@
         // View 4: Analytics View
         function renderAnalyticsView() {
             const container = document.getElementById('analyticsView');
-            
-            // Build bars for departments
+            if (!container || !appData || !appData.departments) return;
             let maxCount = 25;
             let barRows = '';
 
             appData.departments.forEach(dept => {
-                const count = dept.members.length;
+                const count = (dept.members || []).length;
                 const pct = Math.min(100, Math.round((count / maxCount) * 100));
                 barRows += `
                     <div class="bar-chart-row">
@@ -2089,7 +1743,7 @@
                         <p>🔹 <strong>主力轄區分隊</strong>：關廟(24員)、復興(23員)、永康(21員)、鹽行(22員) 為人力最重之分隊。</p>
                         <p>🔹 <strong>高救專責隊伍</strong>：大橋高救(10員)、歸仁高救(8員) 專責提供急救關鍵支撐。</p>
                         <p>🔹 <strong>幹部與基層配置</strong>：各外勤分隊均標準配置 1 名分隊長/副中隊長及 2-3 名小隊長帶班。</p>
-                        <p>🔹 <strong>即時維護支援</strong>：所有修改皆同步保存在瀏覽器，亦可隨時匯出為最新 Excel 編制表呈核。</p>
+                        <p>🔹 <strong>隨時手動存檔</strong>：點擊上方「儲存存檔」或按 Ctrl+S 即可儲存最新進度，萬一改錯可至存檔紀錄還原。</p>
                     </div>
                 </div>
             `;
@@ -2098,21 +1752,22 @@
         // Populate Dept Select for Modals
         function populateDeptSelect() {
             const select = document.getElementById('editDeptSelect');
+            if (!select || !appData || !appData.departments) return;
             select.innerHTML = appData.departments.map(d => `<option value="${d.id}">${d.name}</option>`).join('');
         }
 
         // Modal Controls
         function openEditMemberModal(deptId, memberIdx) {
             const dept = appData.departments.find(d => d.id === deptId);
-            if (!dept || !dept.members[memberIdx]) return;
+            if (!dept || !dept.members || !dept.members[memberIdx]) return;
             const m = dept.members[memberIdx];
 
             document.getElementById('modalTitle').innerText = '✏️ 編輯人員資料';
             document.getElementById('editDeptId').value = deptId;
             document.getElementById('editMemberIndex').value = memberIdx;
             document.getElementById('editDeptSelect').value = deptId;
-            document.getElementById('editTitleInput').value = m.title;
-            document.getElementById('editNameInput').value = m.name;
+            document.getElementById('editTitleInput').value = m.title || '';
+            document.getElementById('editNameInput').value = m.name || '';
             document.getElementById('editNoteInput').value = m.note || '';
 
             document.getElementById('memberModal').classList.add('active');
@@ -2121,7 +1776,7 @@
         function openAddMemberModal(defaultDeptId) {
             document.getElementById('modalTitle').innerText = '➕ 新增人員至編制';
             document.getElementById('editDeptId').value = defaultDeptId || appData.departments[0].id;
-            document.getElementById('editMemberIndex').value = -1; // -1 indicates new
+            document.getElementById('editMemberIndex').value = -1;
             document.getElementById('editDeptSelect').value = defaultDeptId || appData.departments[0].id;
             document.getElementById('editTitleInput').value = '隊員';
             document.getElementById('editNameInput').value = '';
@@ -2131,7 +1786,8 @@
         }
 
         function closeModal(modalId) {
-            document.getElementById(modalId).classList.remove('active');
+            const el = document.getElementById(modalId);
+            if (el) el.classList.remove('active');
         }
 
         function setQuickTitle(title) {
@@ -2154,21 +1810,20 @@
             const memberObj = { title: title || '隊員', name, note };
 
             if (memberIdx === -1) {
-                // Add new
                 const targetDept = appData.departments.find(d => d.id === newDeptId);
                 if (targetDept) {
+                    if (!targetDept.members) targetDept.members = [];
                     targetDept.members.push(memberObj);
                 }
             } else {
-                // Edit existing
                 const origDept = appData.departments.find(d => d.id === origDeptId);
                 if (origDeptId === newDeptId) {
                     origDept.members[memberIdx] = memberObj;
                 } else {
-                    // Moved to another dept
                     origDept.members.splice(memberIdx, 1);
                     const targetDept = appData.departments.find(d => d.id === newDeptId);
                     if (targetDept) {
+                        if (!targetDept.members) targetDept.members = [];
                         targetDept.members.push(memberObj);
                     }
                 }
@@ -2187,9 +1842,9 @@
                 return;
             }
 
-            if (confirm('確定要自編制中刪除此位人員嗎？此動作可透過重置恢復。')) {
+            if (confirm('確定要自編制中刪除此位人員嗎？')) {
                 const dept = appData.departments.find(d => d.id === deptId);
-                if (dept && dept.members[memberIdx]) {
+                if (dept && dept.members && dept.members[memberIdx]) {
                     dept.members.splice(memberIdx, 1);
                     saveData();
                     closeModal('memberModal');
@@ -2198,195 +1853,40 @@
             }
         }
 
-        // Export Excel (compatible with Excel via HTML table MIME)
-        function exportToExcel() {
-            let tableHtml = `
-                <html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40">
-                <head><meta charset="utf-8"/></head>
-                <body>
-                <table border="1">
-                    <tr><th colspan="7" style="font-size:16pt; text-align:center;">${appData.title} (${appData.effectiveDate})</th></tr>
-                    <tr style="background:#f1f5f9; font-weight:bold;">
-                        <th>單位</th>
-                        <th>警消0116前</th>
-                        <th>警消0116後</th>
-                        <th>役男</th>
-                        <th>事務助理</th>
-                        <th>現員合計</th>
-                        <th>現職人員編制明細</th>
-                    </tr>
-            `;
-
-            appData.departments.forEach(dept => {
-                const policeCount = dept.members.filter(m => m.title !== '事務助理').length;
-                const memberListStr = dept.members.map(m => `${m.title} ${m.name}${m.note ? '(' + m.note + ')' : ''}`).join('、');
-                tableHtml += `
-                    <tr>
-                        <td>${dept.name} ${dept.phones.join(' ')}</td>
-                        <td>${dept.policeBefore || ''}</td>
-                        <td>${dept.policeAfter || ''}</td>
-                        <td>${dept.draftees || ''}</td>
-                        <td>${dept.assistants || ''}</td>
-                        <td>${policeCount}</td>
-                        <td>${memberListStr}</td>
-                    </tr>
-                `;
-            });
-
-            tableHtml += `
-                    <tr><td colspan="7">備註：${appData.notes}</td></tr>
-                </table>
-                
-    <!-- Passcode Modal -->
-    <div class="modal-overlay" id="passcodeModal">
-        <div class="modal-content" style="max-width:380px;">
-            <div class="modal-header">
-                <div class="modal-title">🔐 解鎖即時共編權限</div>
-                <button class="modal-close" onclick="closeModal('passcodeModal')">&times;</button>
-            </div>
-            <div class="modal-body">
-                <div class="form-group">
-                    <label class="form-label">請輸入編輯通行密碼</label>
-                    <input type="password" class="form-input" id="passcodeInput" placeholder="預設密碼為 5555" autofocus>
-                    <div style="font-size:0.75rem; color:var(--text-muted); margin-top:4px;">
-                        💡 輸入密碼後即可在線上自由拖曳拉動與修改同仁職稱、姓名。
-                    </div>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button class="btn" onclick="closeModal('passcodeModal')">取消</button>
-                <button class="btn btn-primary" onclick="verifyPasscode()">確認解鎖</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Cloud Config Modal -->
-    <div class="modal-overlay" id="cloudConfigModal">
-        <div class="modal-content" style="max-width:540px;">
-            <div class="modal-header">
-                <div class="modal-title">☁️ 雲端即時同步設定 (Firebase Firestore)</div>
-                <button class="modal-close" onclick="closeModal('cloudConfigModal')">&times;</button>
-            </div>
-            <div class="modal-body">
-                <div style="font-size:0.85rem; color:#cbd5e1; line-height:1.5;">
-                    只要設定 Firebase Firestore，任何知道此網址並解鎖的人進行修改，所有在線同仁的螢幕就會<strong>幾毫秒內即時跳動同步</strong>！
-                </div>
-
-                <div class="form-group">
-                    <label class="form-label">Firebase 配置 JSON (firebaseConfig)</label>
-                    <textarea class="form-input" id="firebaseConfigInput" rows="6" style="font-family:monospace; font-size:0.8rem;" placeholder='{
-  "apiKey": "AIzaSy...",
-  "projectId": "tncfd-shift",
-  "storageBucket": "..."
-}'></textarea>
-                </div>
-
-                <div class="form-group">
-                    <label class="form-label">資料庫集合路徑 (Document Path)</label>
-                    <input type="text" class="form-input" id="firebaseDocPath" value="tncfd_personnel/1150116">
-                </div>
-
-                <div class="form-group">
-                    <label class="form-label">編輯通行密碼 (可自訂修改)</label>
-                    <input type="text" class="form-input" id="adminPasscodeConfig" value="5555">
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button class="btn" onclick="clearCloudConfig()">斷開雲端</button>
-                <div style="display:flex; gap:8px;">
-                    <button class="btn" onclick="closeModal('cloudConfigModal')">關閉</button>
-                    <button class="btn btn-primary" onclick="saveCloudConfig()">儲存並連線</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-
-    <!-- Save History Snapshots Modal -->
-    <div class="modal-overlay" id="historyModal">
-        <div class="modal-content" style="max-width:500px;">
-            <div class="modal-header">
-                <div class="modal-title">📜 歷史存檔紀錄與版本還原</div>
-                <button class="modal-close" onclick="closeModal('historyModal')">&times;</button>
-            </div>
-            <div class="modal-body">
-                <div style="font-size:0.85rem; color:#cbd5e1; margin-bottom:12px;">
-                    每次點擊「儲存存檔」都會自動在此保留一份存檔快照，若不慎改錯可隨時點擊還原：
-                </div>
-                <div id="snapshotListContainer" style="max-height:300px; overflow-y:auto;">
-                    <!-- Populated by JS -->
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button class="btn" onclick="closeModal('historyModal')">關閉</button>
-            </div>
-        </div>
-    </div>
-
-</body>
-                </html>
-            `;
-
-            const blob = new Blob([tableHtml], { type: 'application/vnd.ms-excel;charset=utf-8' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = `${appData.effectiveDate}五大人員編制表_視覺化匯出版.xls`;
-            a.click();
-            URL.revokeObjectURL(url);
-            showToast('已成功匯出 Excel 檔案');
-        }
-
-        // Export/Import JSON
-        function exportDataJson() {
-            const str = JSON.stringify(appData, null, 2);
-            const blob = new Blob([str], { type: 'application/json' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = `五大人員編制資料備份_${new Date().toISOString().slice(0,10)}.json`;
-            a.click();
-            URL.revokeObjectURL(url);
-            showToast('已下載 JSON 備份檔');
-        }
-
-        function importDataJson(event) {
-            const file = event.target.files[0];
-            if (!file) return;
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                try {
-                    const parsed = JSON.parse(e.target.result);
-                    if (parsed.departments) {
-                        appData = parsed;
-                        saveData();
-                        renderAll();
-                        alert('成功匯入編制資料！');
-                    } else {
-                        alert('檔案格式不相符！');
-                    }
-                } catch(err) {
-                    alert('JSON 解析失敗：' + err.message);
-                }
-            };
-            reader.readAsText(file);
-        }
-
-        function confirmReset() {
-            if (confirm('確定要重置為原始 Excel 的預設人員編制嗎？所有自訂修改將會被覆蓋。')) {
-                appData = JSON.parse(JSON.stringify(DEFAULT_DATA));
+        function startEditMemo() {
+            const currentNotes = appData.notes || '';
+            const newNotes = prompt('請修改附註說明：', currentNotes);
+            if (newNotes !== null) {
+                appData.notes = newNotes.trim();
                 saveData();
                 renderAll();
-                showToast('已恢復原始預設編制資料');
+                showToast('已更新附註說明');
             }
         }
 
-        // Run Init
-        
-        // Manual Save & History Snapshots Logic
-        const SNAPSHOT_KEY = 'TNCFD_SAVE_SNAPSHOTS_1150116';
-        let lastSaveTimestamp = localStorage.getItem('TNCFD_LAST_SAVE_TIME') || '';
+        function editDeptProp(deptId, propName, label) {
+            const dept = appData.departments.find(d => d.id === deptId);
+            if (!dept) return;
 
+            let currentVal = dept[propName];
+            if (Array.isArray(currentVal)) currentVal = currentVal.join(' / ');
+            
+            const newVal = prompt('請輸入 ' + dept.name + ' 的【' + label + '】：', currentVal || '');
+            if (newVal !== null) {
+                if (propName === 'phones') {
+                    dept.phones = newVal.split(/[/,，、 ]+/).map(s => s.trim()).filter(Boolean);
+                } else if (propName === 'draftees' || propName === 'policeBefore' || propName === 'policeAfter') {
+                    dept[propName] = parseInt(newVal.trim()) || 0;
+                } else {
+                    dept[propName] = newVal.trim();
+                }
+                saveData();
+                renderAll();
+                showToast('已更新 ' + dept.name + ' 的 ' + label);
+            }
+        }
+
+        // Manual Save with Animation & Snapshots
         function updateLastSavedDisplay() {
             const el = document.getElementById('lastSavedTimeDisplay');
             if (el) {
@@ -2394,30 +1894,25 @@
             }
         }
 
-        // Main Manual Save Action
         function manualSave() {
             const btn = document.getElementById('btnManualSave');
             const icon = document.getElementById('saveBtnIcon');
             const text = document.getElementById('saveBtnText');
 
-            // Button loading animation
             if (btn) {
                 btn.style.opacity = '0.8';
-                icon.innerText = '⏳';
-                text.innerText = '儲存中...';
+                if (icon) icon.innerText = '⏳';
+                if (text) text.innerText = '儲存中...';
             }
 
-            // Save to LocalStorage
             saveData();
 
-            // Record Timestamp
             const now = new Date();
             const timeStr = now.toLocaleDateString('zh-TW') + ' ' + now.toLocaleTimeString('zh-TW');
             lastSaveTimestamp = timeStr;
             localStorage.setItem('TNCFD_LAST_SAVE_TIME', timeStr);
             updateLastSavedDisplay();
 
-            // Record History Snapshot (Keep up to 10 snapshots)
             try {
                 let snapshots = JSON.parse(localStorage.getItem(SNAPSHOT_KEY) || '[]');
                 snapshots.unshift({
@@ -2428,28 +1923,26 @@
                 if (snapshots.length > 10) snapshots = snapshots.slice(0, 10);
                 localStorage.setItem(SNAPSHOT_KEY, JSON.stringify(snapshots));
             } catch(e) {
-                console.warn('Snapshot save warning:', e);
+                console.warn('Snapshot error:', e);
             }
 
-            // Restore button with success state
             setTimeout(() => {
                 if (btn) {
                     btn.style.opacity = '1';
-                    icon.innerText = '✅';
-                    text.innerText = '存檔成功！';
+                    if (icon) icon.innerText = '✅';
+                    if (text) text.innerText = '存檔成功！';
                 }
                 showToast('💾 編制資料已成功存檔！（' + timeStr + '）');
 
                 setTimeout(() => {
                     if (btn) {
-                        icon.innerText = '💾';
-                        text.innerText = '儲存存檔';
+                        if (icon) icon.innerText = '💾';
+                        if (text) text.innerText = '儲存存檔';
                     }
                 }, 1800);
             }, 300);
         }
 
-        // Ctrl + S Keyboard Shortcut Listener
         window.addEventListener('keydown', function(e) {
             if ((e.ctrlKey || e.metaKey) && (e.key === 's' || e.key === 'S')) {
                 e.preventDefault();
@@ -2457,7 +1950,6 @@
             }
         });
 
-        // Open History Snapshot Modal
         function openHistoryModal() {
             const container = document.getElementById('snapshotListContainer');
             let snapshots = [];
@@ -2498,12 +1990,103 @@
             }
         }
 
-        const origInitApp = initApp;
-        initApp = function() {
-            origInitApp();
-            updateLastSavedDisplay();
-        };
-        window.onload = initApp;
+        // Export to Excel (safely constructed without embedded body tags)
+        function exportToExcel() {
+            let tableHtml = '<' + 'table border="1">' +
+                '<tr><th colspan="7" style="font-size:16pt; text-align:center;">' + appData.title + ' (' + appData.effectiveDate + ')</th></tr>' +
+                '<tr style="background:#f1f5f9; font-weight:bold;">' +
+                    '<th>單位</th><th>警消0116前</th><th>警消0116後</th><th>役男</th><th>事務助理</th><th>現員合計</th><th>現職人員編制明細</th>' +
+                '</tr>';
+
+            appData.departments.forEach(dept => {
+                const policeCount = (dept.members || []).filter(m => !/事務助理|助理/.test(m.title)).length;
+                const memberListStr = (dept.members || []).map(m => m.title + ' ' + m.name + (m.note ? '(' + m.note + ')' : '')).join('、');
+                tableHtml += '<tr>' +
+                    '<td>' + dept.name + ' ' + (dept.phones || []).join(' ') + '</td>' +
+                    '<td>' + (dept.policeBefore || '') + '</td>' +
+                    '<td>' + (dept.policeAfter || '') + '</td>' +
+                    '<td>' + (dept.draftees || '') + '</td>' +
+                    '<td>' + (dept.assistants || '') + '</td>' +
+                    '<td>' + policeCount + '</td>' +
+                    '<td>' + memberListStr + '</td>' +
+                '</tr>';
+            });
+
+            tableHtml += '<tr><td colspan="7">備註：' + (appData.notes || '') + '</td></tr><' + '/table>';
+
+            const blob = new Blob([tableHtml], { type: 'application/vnd.ms-excel;charset=utf-8' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = appData.effectiveDate + '五大人員編制表_視覺化匯出版.xls';
+            a.click();
+            URL.revokeObjectURL(url);
+            showToast('已成功匯出 Excel 檔案');
+        }
+
+        function exportDataJson() {
+            const str = JSON.stringify(appData, null, 2);
+            const blob = new Blob([str], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = '五大人員編制資料備份_' + new Date().toISOString().slice(0,10) + '.json';
+            a.click();
+            URL.revokeObjectURL(url);
+            showToast('已下載 JSON 備份檔');
+        }
+
+        function importDataJson(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const parsed = JSON.parse(e.target.result);
+                    if (parsed && Array.isArray(parsed.departments)) {
+                        appData = parsed;
+                        saveData();
+                        renderAll();
+                        alert('成功匯入編制資料！');
+                    } else {
+                        alert('檔案格式不相符！');
+                    }
+                } catch(err) {
+                    alert('JSON 解析失敗：' + err.message);
+                }
+            };
+            reader.readAsText(file);
+        }
+
+        function confirmReset() {
+            if (confirm('確定要重置為原始 Excel 的預設人員編制嗎？所有自訂修改將會被覆蓋。')) {
+                appData = JSON.parse(JSON.stringify(DEFAULT_DATA));
+                saveData();
+                renderAll();
+                showToast('已恢復原始預設編制資料');
+            }
+        }
+
+        // Safe Startup
+        let isAppStarted = false;
+        function safeStart() {
+            if (isAppStarted) return;
+            isAppStarted = true;
+            try {
+                initApp();
+            } catch(e) {
+                console.error('Fatal start error:', e);
+                appData = JSON.parse(JSON.stringify(DEFAULT_DATA));
+                renderAll();
+            }
+        }
+
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', safeStart);
+        } else {
+            safeStart();
+        }
+        window.addEventListener('load', safeStart);
     </script>
 </body>
 </html>
