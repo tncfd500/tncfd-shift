@@ -1072,8 +1072,8 @@
                 <span class="dot" id="cloudDot" style="background:#f59e0b; box-shadow:0 0 8px #f59e0b;"></span>
                 <span id="cloudStatusText">雲端未連線 (本機模式)</span>
             </div>
-            <button class="btn" id="btnLockToggle" onclick="toggleEditLock()" style="border-color:rgba(245, 158, 11, 0.4); color:#fde68a;">
-                <span id="lockIcon">🔒</span> <span id="lockText">解鎖編輯</span>
+            <button class="btn" id="btnLockToggle" onclick="toggleEditLock()" style="border-color:rgba(16, 185, 129, 0.5); color:#6ee7b7;" title="點擊可切換防誤觸檢視模式">
+                <span id="lockIcon">🔓</span> <span id="lockText">任何人皆可編輯</span>
             </button>
 
             <button class="btn btn-primary" onclick="openAddMemberModal()">
@@ -1126,12 +1126,16 @@
     </div>
 
     <!-- Memo Banner -->
-    <div class="memo-banner">
-        <div>
-            <strong>📌 附註說明：</strong> 司機1人、歸仁萬副中支援永康，歸仁蔡霖支援關廟至關廟分隊補人。
+    <div class="memo-banner" id="memoBannerContainer">
+        <div style="display:flex; align-items:center; gap:8px; flex:1; flex-wrap:wrap;">
+            <strong>📌 附註說明：</strong>
+            <span id="memoContentText" style="cursor:pointer; padding:3px 8px; border-radius:4px; background:rgba(255,255,255,0.06); border:1px dashed rgba(245,158,11,0.4);" onclick="startEditMemo()" title="點擊修改附註說明">
+                ${appData.notes || '點擊此處可輸入附註說明...'}
+            </span>
+            <button class="btn" style="padding:2px 8px; font-size:0.75rem; background:rgba(245,158,11,0.2); border:1px solid rgba(245,158,11,0.4); color:#fde68a;" onclick="startEditMemo()">✏️ 修改附註</button>
         </div>
         <div style="font-size:0.75rem; color:#fde68a; opacity:0.85;">
-            💡 秘訣：可直接<strong>按住滑鼠拖曳人員卡片</strong>進行跨分隊調動或同分隊排序；點擊「職稱」或「姓名」可行內編輯！
+            💡 秘訣：全站已解鎖！可<strong>直接拖曳卡片調動</strong>、點擊<strong>職稱/姓名/役男數/附註</strong>直接修改！
         </div>
     </div>
 
@@ -1231,7 +1235,7 @@
 
         
         // Edit Lock & Security State
-        let isEditUnlocked = false;
+        let isEditUnlocked = true;
         let adminPasscode = localStorage.getItem('TNCFD_PASSCODE') || '5555';
 
         // Firebase Cloud State
@@ -1387,6 +1391,42 @@
             showToast('已切換為純本機離線模式');
         }
 
+        
+        // Edit Memo Banner Function
+        function startEditMemo() {
+            const currentNotes = appData.notes || '';
+            const newNotes = prompt('請修改附註說明：', currentNotes);
+            if (newNotes !== null) {
+                appData.notes = newNotes.trim();
+                saveData();
+                renderAll();
+                showToast('已更新附註說明');
+            }
+        }
+
+        // Edit Dept property inline (e.g. draftees, phones, policeBefore, policeAfter)
+        function editDeptProp(deptId, propName, label) {
+            const dept = appData.departments.find(d => d.id === deptId);
+            if (!dept) return;
+
+            let currentVal = dept[propName];
+            if (Array.isArray(currentVal)) currentVal = currentVal.join(' / ');
+            
+            const newVal = prompt('請輸入 ' + dept.name + ' 的【' + label + '】：', currentVal || '');
+            if (newVal !== null) {
+                if (propName === 'phones') {
+                    dept.phones = newVal.split(/[/,，、 ]+/).map(s => s.trim()).filter(Boolean);
+                } else if (propName === 'draftees' || propName === 'policeBefore' || propName === 'policeAfter') {
+                    dept[propName] = parseInt(newVal.trim()) || 0;
+                } else {
+                    dept[propName] = newVal.trim();
+                }
+                saveData();
+                renderAll();
+                showToast('已更新 ' + dept.name + ' 的 ' + label);
+            }
+        }
+
         // Initialize from localStorage or default
         function initApp() {
             const saved = localStorage.getItem('TNCFD_V_DATA_1150116');
@@ -1485,71 +1525,97 @@
             else if (currentView === 'analytics') renderAnalyticsView();
         }
 
-        // KPI Rendering
+                // KPI Rendering - Fully dynamic based on all current filled data
         function renderKPI() {
-            let totalMembers = 0;
             let policeCount = 0;
             let drafteesCount = 0;
             let assistantsCount = 0;
-            let transferCount = appData.transfers ? appData.transfers.length : 0;
+            let transferCount = 0;
+
+            const countedTransfers = new Set();
 
             appData.departments.forEach(dept => {
-                drafteesCount += (dept.draftees || 0);
+                // Count draftees from dept.draftees property
+                drafteesCount += parseInt(dept.draftees) || 0;
+
                 dept.members.forEach(m => {
-                    totalMembers++;
-                    if (m.title === '事務助理') {
+                    const title = (m.title || '').trim();
+                    const note = (m.note || '').trim();
+
+                    if (/事務助理|助理/.test(title)) {
                         assistantsCount++;
-                    } else if (m.title === '役男') {
-                        // Already counted in draftees
+                    } else if (/役男|替代役/.test(title)) {
+                        drafteesCount++;
                     } else {
                         policeCount++;
                     }
+
+                    // Check if member has transfer/new recruits note
+                    if (/調入|分發|特考|新進/.test(note)) {
+                        countedTransfers.add(m.name + '_' + dept.id);
+                    }
                 });
             });
+
+            // If user has original transfer list in appData, ensure it is also counted or matched
+            if (appData.transfers && appData.transfers.length > 0) {
+                // If member notes didn't capture all original transfers, use whichever is greater
+                transferCount = Math.max(countedTransfers.size, appData.transfers.length);
+            } else {
+                transferCount = countedTransfers.size;
+            }
+
+            const totalMembers = policeCount + drafteesCount + assistantsCount;
 
             const kpiHtml = `
                 <div class="kpi-card">
                     <div class="kpi-icon">👥</div>
                     <div class="kpi-info">
                         <div class="kpi-label">編制總人數</div>
-                        <div class="kpi-value">${totalMembers + drafteesCount}</div>
-                        <div class="kpi-sub">警消 + 役男 + 助理</div>
+                        <div class="kpi-value" id="kpiTotalVal">${totalMembers}</div>
+                        <div class="kpi-sub">警消(${policeCount}) + 役男(${drafteesCount}) + 助理(${assistantsCount})</div>
                     </div>
                 </div>
                 <div class="kpi-card blue">
                     <div class="kpi-icon">🛡️</div>
                     <div class="kpi-info">
                         <div class="kpi-label">警消現員數</div>
-                        <div class="kpi-value">${policeCount}</div>
-                        <div class="kpi-sub">救災救護主力陣容</div>
+                        <div class="kpi-value" id="kpiPoliceVal">${policeCount}</div>
+                        <div class="kpi-sub">各大隊/中隊/分隊外勤幹部與隊員</div>
                     </div>
                 </div>
                 <div class="kpi-card green">
                     <div class="kpi-icon">🎖️</div>
                     <div class="kpi-info">
                         <div class="kpi-label">替代役男</div>
-                        <div class="kpi-value">${drafteesCount}</div>
-                        <div class="kpi-sub">各分隊常態配置</div>
+                        <div class="kpi-value" id="kpiDrafteeVal">${drafteesCount}</div>
+                        <div class="kpi-sub">各分隊常態編制（點擊分隊可修改）</div>
                     </div>
                 </div>
                 <div class="kpi-card gold">
                     <div class="kpi-icon">💼</div>
                     <div class="kpi-info">
                         <div class="kpi-label">事務助理</div>
-                        <div class="kpi-value">${assistantsCount}</div>
-                        <div class="kpi-sub">大隊部專任行政</div>
+                        <div class="kpi-value" id="kpiAssistantVal">${assistantsCount}</div>
+                        <div class="kpi-sub">大隊部專任行政專責同仁</div>
                     </div>
                 </div>
                 <div class="kpi-card purple">
                     <div class="kpi-icon">🔄</div>
                     <div class="kpi-info">
                         <div class="kpi-label">本次調動/新進</div>
-                        <div class="kpi-value">${transferCount}</div>
-                        <div class="kpi-sub">外調 20 人 + 警特 14 人</div>
+                        <div class="kpi-value" id="kpiTransferVal">${transferCount}</div>
+                        <div class="kpi-sub">外調人員與新進分發（動態連動備註）</div>
                     </div>
                 </div>
             `;
             document.getElementById('kpiContainer').innerHTML = kpiHtml;
+
+            // Also update memo banner text if it exists
+            const memoEl = document.getElementById('memoContentText');
+            if (memoEl) {
+                memoEl.innerText = appData.notes || '點擊此處可輸入附註說明...';
+            }
         }
 
         // Helper to get badge style
@@ -1601,14 +1667,15 @@
                                 </div>
                                 <div class="dept-phones">
                                     <span>📞</span>
-                                    <span>${dept.phones.length > 0 ? dept.phones.join(' / ') : '內部派工/暫無'}</span>
+                                    <span style="cursor:pointer;" onclick="editDeptProp('${dept.id}', 'phones', '公務電話')" title="點擊修改電話">${dept.phones.length > 0 ? dept.phones.join(' / ') : '無(點擊新增電話)'}</span>
                                 </div>
                             </div>
-                            <div class="dept-stats-badge">
-                                <div class="dept-count-main">${policeCount} 員</div>
-                                <div class="dept-count-detail">
-                                    0116前:${dept.policeBefore || '-'} | 0116後:${dept.policeAfter || '-'}
-                                    ${dept.draftees ? ' | 役:' + dept.draftees : ''}
+                            <div class="dept-stats-badge" title="點擊數值可修改">
+                                <div class="dept-count-main" title="現有警消人數">${policeCount} 員</div>
+                                <div class="dept-count-detail" style="cursor:pointer;">
+                                    <span onclick="editDeptProp('${dept.id}', 'policeBefore', '0116前人數')" title="點擊修改0116前人數">前:${dept.policeBefore ?? '-'}</span> | 
+                                    <span onclick="editDeptProp('${dept.id}', 'policeAfter', '0116後人數')" title="點擊修改0116後人數">後:${dept.policeAfter ?? '-'}</span> | 
+                                    <span style="color:#6ee7b7; font-weight:bold;" onclick="editDeptProp('${dept.id}', 'draftees', '役男人數')" title="點擊修改替代役男數">役:${dept.draftees ?? 0}</span>
                                 </div>
                             </div>
                         </div>
