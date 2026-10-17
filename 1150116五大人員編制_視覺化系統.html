@@ -205,6 +205,39 @@
             display: inline-flex;
             align-items: center;
             gap: 6px;
+            transition: all 0.3s ease;
+        }
+
+        .save-time-badge.saved {
+            border-color: rgba(16, 185, 129, 0.5);
+            background: rgba(6, 78, 59, 0.4);
+            color: #6ee7b7;
+        }
+
+        .save-time-badge.saving {
+            border-color: rgba(245, 158, 11, 0.5);
+            background: rgba(120, 53, 15, 0.4);
+            color: #fde68a;
+        }
+
+        .save-dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: #10b981;
+            box-shadow: 0 0 6px #10b981;
+            display: inline-block;
+        }
+
+        .save-dot.saving {
+            background: #f59e0b;
+            box-shadow: 0 0 6px #f59e0b;
+            animation: pulseSaving 0.8s infinite alternate;
+        }
+
+        @keyframes pulseSaving {
+            from { opacity: 0.3; transform: scale(0.85); }
+            to { opacity: 1; transform: scale(1.15); }
         }
 
         /* KPI Dashboard Bar */
@@ -1087,13 +1120,13 @@
             </button>
 
             <!-- Prominent Save Button -->
-            <button class="btn btn-save-main" id="btnManualSave" onclick="manualSave()" title="手動儲存存檔 (快捷鍵: Ctrl+S)">
+            <button class="btn btn-save-main" id="btnManualSave" onclick="manualSave()" title="手動儲存存檔並建立快照 (快捷鍵: Ctrl+S)">
                 <span id="saveBtnIcon">💾</span>
                 <span id="saveBtnText">儲存存檔</span>
             </button>
-            <div class="save-time-badge" id="saveTimeBadge" title="最近一次存檔時間">
-                <span>🕒</span>
-                <span id="lastSavedTimeDisplay">尚未存檔</span>
+            <div class="save-time-badge saved" id="saveTimeBadge" title="自動存檔狀態">
+                <span class="save-dot" id="saveStatusDot"></span>
+                <span id="lastSavedTimeDisplay">⚡ 自動存檔就緒</span>
             </div>
             <button class="btn" onclick="openHistoryModal()" style="font-size:0.8rem; padding:6px 10px;" title="查看歷史存檔紀錄與還原">
                 <span>📜</span> 存檔紀錄
@@ -1275,6 +1308,9 @@
         let draggedItemInfo = null;
         const SNAPSHOT_KEY = 'TNCFD_SAVE_SNAPSHOTS_1150116';
         let lastSaveTimestamp = localStorage.getItem('TNCFD_LAST_SAVE_TIME') || '';
+        let autoSaveTimer = null;
+        let lastSnapshotTime = 0;
+        let isDataDirty = false;
 
         
         // Lock Mode State
@@ -1361,13 +1397,75 @@
             updateLockUI();
         }
 
-        function saveData() {
+        function updateLastSavedDisplay(customText, status = 'saved') {
+            const badge = document.getElementById('saveTimeBadge');
+            const dot = document.getElementById('saveStatusDot');
+            const el = document.getElementById('lastSavedTimeDisplay');
+            if (badge) {
+                badge.classList.remove('saving', 'saved');
+                if (status) badge.classList.add(status);
+            }
+            if (dot) {
+                dot.className = status === 'saving' ? 'save-dot saving' : 'save-dot';
+            }
+            if (el) {
+                if (customText) {
+                    el.innerText = customText;
+                } else if (lastSaveTimestamp) {
+                    el.innerText = '⚡ 已自動存檔 ' + (lastSaveTimestamp.split(' ')[1] || lastSaveTimestamp);
+                } else {
+                    el.innerText = '⚡ 自動存檔就緒';
+                }
+            }
+        }
+
+        function saveData(isManual = false, reason = '資料變更') {
+            if (autoSaveTimer) {
+                clearTimeout(autoSaveTimer);
+                autoSaveTimer = null;
+            }
             try {
                 localStorage.setItem('TNCFD_V_DATA_1150116', JSON.stringify(appData));
             } catch(e) {
                 console.warn('Storage error:', e);
             }
             renderKPI();
+
+            const now = new Date();
+            const timeStr = now.toLocaleDateString('zh-TW') + ' ' + now.toLocaleTimeString('zh-TW');
+            const timeOnly = now.toLocaleTimeString('zh-TW');
+            lastSaveTimestamp = timeStr;
+            localStorage.setItem('TNCFD_LAST_SAVE_TIME', timeStr);
+            isDataDirty = false;
+
+            updateLastSavedDisplay(isManual ? '✅ 已手動存檔 ' + timeOnly : '⚡ 已自動存檔 ' + timeOnly, 'saved');
+
+            const nowMs = Date.now();
+            const isMajorChange = isManual || reason.includes('調') || reason.includes('刪除') || reason.includes('新增') || reason.includes('完成編輯') || reason.includes('附註');
+            if (isManual || (isMajorChange && nowMs - lastSnapshotTime > 30000)) {
+                try {
+                    let snapshots = JSON.parse(localStorage.getItem(SNAPSHOT_KEY) || '[]');
+                    snapshots.unshift({
+                        time: timeStr,
+                        data: JSON.parse(JSON.stringify(appData)),
+                        note: (isManual ? '[手動] ' : '[自動] ') + (reason || (appData.notes || '無附註說明')).slice(0, 25)
+                    });
+                    if (snapshots.length > 10) snapshots = snapshots.slice(0, 10);
+                    localStorage.setItem(SNAPSHOT_KEY, JSON.stringify(snapshots));
+                    lastSnapshotTime = nowMs;
+                } catch(e) {
+                    console.warn('Snapshot error:', e);
+                }
+            }
+        }
+
+        function scheduleAutoSave(delay = 600, reason = '輸入中') {
+            isDataDirty = true;
+            updateLastSavedDisplay('⏳ 自動存檔中...', 'saving');
+            if (autoSaveTimer) clearTimeout(autoSaveTimer);
+            autoSaveTimer = setTimeout(() => {
+                saveData(false, reason);
+            }, delay);
         }
 
         function showToast(msg) {
@@ -1703,6 +1801,7 @@
                 if (dept && dept.members && dept.members[memberIdx]) {
                     dept.members[memberIdx][field] = tempVal;
                     renderKPI(true); // Instant recalculation with pulse!
+                    scheduleAutoSave(600, '行內編輯: ' + field);
                 }
             };
 
@@ -1711,7 +1810,7 @@
                 const dept = appData.departments.find(d => d.id === deptId);
                 if (dept && dept.members && dept.members[memberIdx]) {
                     dept.members[memberIdx][field] = newVal;
-                    saveData();
+                    saveData(false, '完成編輯: ' + field + ' = ' + newVal);
                 }
                 renderAll();
             }
@@ -1800,13 +1899,13 @@
                 targetDept.members.splice(targetIdx, 0, member);
             }
 
-            saveData();
+            saveData(false, '人員調動: ' + member.name + ' 至 ' + targetDept.name);
             renderAll();
 
             if (srcDeptId !== targetDeptId) {
-                showToast('已將 ' + member.title + ' ' + member.name + ' 調至【' + targetDept.name + '】');
+                showToast('🔄 已將 ' + member.title + ' ' + member.name + ' 調至【' + targetDept.name + '】（已自動存檔）');
             } else {
-                showToast('已調整 ' + member.name + ' 的排列順序');
+                showToast('↕️ 已調整 ' + member.name + ' 的排列順序（已自動存檔）');
             }
         }
 
@@ -2020,6 +2119,13 @@
         function closeModal(modalId) {
             const el = document.getElementById(modalId);
             if (el) el.classList.remove('active');
+            if (modalId === 'memberModal') {
+                const saved = localStorage.getItem('TNCFD_V_DATA_1150116');
+                if (saved) {
+                    try { appData = JSON.parse(saved); } catch(e) {}
+                }
+                renderKPI();
+            }
         }
 
         function setQuickTitle(title) {
@@ -2061,9 +2167,10 @@
                 }
             }
 
-            saveData();
+            saveData(false, (memberIdx === -1 ? '新增人員: ' : '更新人員: ') + name);
             closeModal('memberModal');
             renderAll();
+            showToast('✅ 人員資料已更新（已自動存檔）');
         }
 
         function deleteCurrentMember() {
@@ -2078,9 +2185,10 @@
                 const dept = appData.departments.find(d => d.id === deptId);
                 if (dept && dept.members && dept.members[memberIdx]) {
                     dept.members.splice(memberIdx, 1);
-                    saveData();
+                    saveData(false, '刪除人員');
                     closeModal('memberModal');
                     renderAll();
+                    showToast('🗑️ 人員已刪除（已自動存檔）');
                 }
             }
         }
@@ -2094,9 +2202,9 @@
             const newNotes = prompt('請修改附註說明：', currentNotes);
             if (newNotes !== null) {
                 appData.notes = newNotes.trim();
-                saveData();
+                saveData(false, '更新附註說明');
                 renderAll();
-                showToast('已更新附註說明');
+                showToast('✅ 附註說明已更新（已自動存檔）');
             }
         }
 
@@ -2120,21 +2228,14 @@
                 } else {
                     dept[propName] = newVal.trim();
                 }
-                saveData();
+                saveData(false, '更新分隊數據: ' + label);
                 renderKPI(true);
                 renderAll();
-                showToast('已更新 ' + dept.name + ' 的 ' + label + '，頂部數據已即時連動跳動！');
+                showToast('✅ 已更新 ' + dept.name + ' 的 ' + label + '（已自動存檔）');
             }
         }
 
         // Manual Save with Animation & Snapshots
-        function updateLastSavedDisplay() {
-            const el = document.getElementById('lastSavedTimeDisplay');
-            if (el) {
-                el.innerText = lastSaveTimestamp ? '存檔於 ' + lastSaveTimestamp : '尚未手動存檔';
-            }
-        }
-
         function manualSave() {
             const btn = document.getElementById('btnManualSave');
             const icon = document.getElementById('saveBtnIcon');
@@ -2146,26 +2247,10 @@
                 if (text) text.innerText = '儲存中...';
             }
 
-            saveData();
+            saveData(true, '手動立即存檔');
 
             const now = new Date();
             const timeStr = now.toLocaleDateString('zh-TW') + ' ' + now.toLocaleTimeString('zh-TW');
-            lastSaveTimestamp = timeStr;
-            localStorage.setItem('TNCFD_LAST_SAVE_TIME', timeStr);
-            updateLastSavedDisplay();
-
-            try {
-                let snapshots = JSON.parse(localStorage.getItem(SNAPSHOT_KEY) || '[]');
-                snapshots.unshift({
-                    time: timeStr,
-                    data: JSON.parse(JSON.stringify(appData)),
-                    note: (appData.notes || '無附註說明').slice(0, 30)
-                });
-                if (snapshots.length > 10) snapshots = snapshots.slice(0, 10);
-                localStorage.setItem(SNAPSHOT_KEY, JSON.stringify(snapshots));
-            } catch(e) {
-                console.warn('Snapshot error:', e);
-            }
 
             setTimeout(() => {
                 if (btn) {
@@ -2173,7 +2258,7 @@
                     if (icon) icon.innerText = '✅';
                     if (text) text.innerText = '存檔成功！';
                 }
-                showToast('💾 編制資料已成功存檔！（' + timeStr + '）');
+                showToast('💾 編制資料已手動存檔並建立快照！（' + timeStr + '）');
 
                 setTimeout(() => {
                     if (btn) {
@@ -2181,8 +2266,16 @@
                         if (text) text.innerText = '儲存存檔';
                     }
                 }, 1800);
-            }, 300);
+            }, 250);
         }
+
+        window.addEventListener('beforeunload', function() {
+            if (isDataDirty) {
+                try {
+                    localStorage.setItem('TNCFD_V_DATA_1150116', JSON.stringify(appData));
+                } catch(e) {}
+            }
+        });
 
         window.addEventListener('keydown', function(e) {
             if ((e.ctrlKey || e.metaKey) && (e.key === 's' || e.key === 'S')) {
