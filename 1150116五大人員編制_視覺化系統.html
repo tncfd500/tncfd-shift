@@ -973,6 +973,35 @@
             .print-only-title { display: block !important; text-align: center; font-size: 16pt; font-weight: bold; margin-bottom: 12px; }
         }
         .print-only-title { display: none; }
+    
+        @keyframes kpiPulse {
+            0% { transform: scale(1); color: #fff; }
+            50% { transform: scale(1.22); color: #38bdf8; text-shadow: 0 0 12px #38bdf8; }
+            100% { transform: scale(1); color: #fff; }
+        }
+
+        .kpi-pulsing {
+            animation: kpiPulse 0.4s ease-out;
+        }
+
+        .dept-stat-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            padding: 2px 7px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.15s;
+        }
+
+        .dept-stat-pill:hover {
+            background: rgba(56, 189, 248, 0.2);
+            border-color: var(--accent-blue);
+            transform: translateY(-1px);
+        }
+
     </style>
 </head>
 <body>
@@ -986,7 +1015,7 @@
             <div>
                 <h1 class="title-h1">
                     臺南市政府消防局第五大隊
-                    <span class="badge-date">人員編制視覺化系統</span>
+                    <span class="badge-date">人員編制視覺化系統 v1.3 即時連動版</span>
                 </h1>
                 <div class="title-sub">
                     <span>編制基準日：民國115年1月16日</span>
@@ -1289,7 +1318,7 @@
         }
 
                 // Dynamic Recalculation Engine - 100% reactive to all filled data
-        function renderKPI() {
+        function renderKPI(withPulse = false) {
             let policeCount = 0;
             let drafteesCount = 0;
             let assistantsCount = 0;
@@ -1297,10 +1326,8 @@
 
             if (appData && Array.isArray(appData.departments)) {
                 appData.departments.forEach(dept => {
-                    // 1. Draftees from dept property
                     drafteesCount += (parseInt(dept.draftees) || 0);
 
-                    // 2. Members scan
                     if (Array.isArray(dept.members)) {
                         let deptAssistantsInMembers = 0;
                         dept.members.forEach(m => {
@@ -1317,13 +1344,11 @@
                                 policeCount++;
                             }
 
-                            // Dynamic transfer count: whenever note contains transfer keywords
                             if (/調入|分發|特考|新進/.test(note) || /調入|分發|特考|新進/.test(name)) {
                                 transferCount++;
                             }
                         });
 
-                        // If dept has explicit assistants field and no assistants in members yet, count it
                         if (dept.assistants && deptAssistantsInMembers === 0) {
                             assistantsCount += (parseInt(dept.assistants) || 0);
                         }
@@ -1331,58 +1356,86 @@
                 });
             }
 
-            // Total members is exactly police + draftees + assistants
             const totalMembers = policeCount + drafteesCount + assistantsCount;
 
-            // Update DOM
-            const kpiHtml = `
-                <div class="kpi-card">
-                    <div class="kpi-icon">👥</div>
-                    <div class="kpi-info">
-                        <div class="kpi-label">編制總人數</div>
-                        <div class="kpi-value" id="kpiTotalVal">${totalMembers}</div>
-                        <div class="kpi-sub">警消(${policeCount}) + 役男(${drafteesCount}) + 助理(${assistantsCount})</div>
+            // Direct update of elements if present to avoid full re-rendering flicker
+            const elTotal = document.getElementById('kpiTotalVal');
+            const elPolice = document.getElementById('kpiPoliceVal');
+            const elDraftee = document.getElementById('kpiDrafteeVal');
+            const elAssistant = document.getElementById('kpiAssistantVal');
+            const elTransfer = document.getElementById('kpiTransferVal');
+
+            if (elTotal && elPolice && elDraftee && elAssistant && elTransfer) {
+                updateValueWithPulse(elTotal, totalMembers, withPulse);
+                updateValueWithPulse(elPolice, policeCount, withPulse);
+                updateValueWithPulse(elDraftee, drafteesCount, withPulse);
+                updateValueWithPulse(elAssistant, assistantsCount, withPulse);
+                updateValueWithPulse(elTransfer, transferCount, withPulse);
+
+                const subEl = document.getElementById('kpiTotalSub');
+                if (subEl) subEl.innerText = `警消(${policeCount}) + 役男(${drafteesCount}) + 助理(${assistantsCount})`;
+            } else {
+                // Initial render of KPI block
+                const kpiHtml = `
+                    <div class="kpi-card">
+                        <div class="kpi-icon">👥</div>
+                        <div class="kpi-info">
+                            <div class="kpi-label">編制總人數</div>
+                            <div class="kpi-value" id="kpiTotalVal">${totalMembers}</div>
+                            <div class="kpi-sub" id="kpiTotalSub">警消(${policeCount}) + 役男(${drafteesCount}) + 助理(${assistantsCount})</div>
+                        </div>
                     </div>
-                </div>
-                <div class="kpi-card blue">
-                    <div class="kpi-icon">🛡️</div>
-                    <div class="kpi-info">
-                        <div class="kpi-label">警消現員數</div>
-                        <div class="kpi-value" id="kpiPoliceVal">${policeCount}</div>
-                        <div class="kpi-sub">救災救護主力陣容 (隨隊員增減即時連動)</div>
+                    <div class="kpi-card blue">
+                        <div class="kpi-icon">🛡️</div>
+                        <div class="kpi-info">
+                            <div class="kpi-label">警消現員數</div>
+                            <div class="kpi-value" id="kpiPoliceVal">${policeCount}</div>
+                            <div class="kpi-sub">救災救護主力陣容 (隨隊員增減即時連動)</div>
+                        </div>
                     </div>
-                </div>
-                <div class="kpi-card green">
-                    <div class="kpi-icon">🎖️</div>
-                    <div class="kpi-info">
-                        <div class="kpi-label">替代役男</div>
-                        <div class="kpi-value" id="kpiDrafteeVal">${drafteesCount}</div>
-                        <div class="kpi-sub">各分隊役男 (修改下方役男數即時連動)</div>
+                    <div class="kpi-card green">
+                        <div class="kpi-icon">🎖️</div>
+                        <div class="kpi-info">
+                            <div class="kpi-label">替代役男</div>
+                            <div class="kpi-value" id="kpiDrafteeVal">${drafteesCount}</div>
+                            <div class="kpi-sub">各分隊役男 (修改下方役男數即時連動)</div>
+                        </div>
                     </div>
-                </div>
-                <div class="kpi-card gold">
-                    <div class="kpi-icon">💼</div>
-                    <div class="kpi-info">
-                        <div class="kpi-label">事務助理</div>
-                        <div class="kpi-value" id="kpiAssistantVal">${assistantsCount}</div>
-                        <div class="kpi-sub">行政專責 (修改下方助理即時連動)</div>
+                    <div class="kpi-card gold">
+                        <div class="kpi-icon">💼</div>
+                        <div class="kpi-info">
+                            <div class="kpi-label">事務助理</div>
+                            <div class="kpi-value" id="kpiAssistantVal">${assistantsCount}</div>
+                            <div class="kpi-sub">行政專責 (修改下方助理即時連動)</div>
+                        </div>
                     </div>
-                </div>
-                <div class="kpi-card purple">
-                    <div class="kpi-icon">🔄</div>
-                    <div class="kpi-info">
-                        <div class="kpi-label">本次調動/新進</div>
-                        <div class="kpi-value" id="kpiTransferVal">${transferCount}</div>
-                        <div class="kpi-sub">外調與特考 (備註填寫調動即時累加)</div>
+                    <div class="kpi-card purple">
+                        <div class="kpi-icon">🔄</div>
+                        <div class="kpi-info">
+                            <div class="kpi-label">本次調動/新進</div>
+                            <div class="kpi-value" id="kpiTransferVal">${transferCount}</div>
+                            <div class="kpi-sub">外調與特考 (備註填寫調動即時累加)</div>
+                        </div>
                     </div>
-                </div>
-            `;
-            const kpiEl = document.getElementById('kpiContainer');
-            if (kpiEl) kpiEl.innerHTML = kpiHtml;
+                `;
+                const kpiEl = document.getElementById('kpiContainer');
+                if (kpiEl) kpiEl.innerHTML = kpiHtml;
+            }
 
             const memoEl = document.getElementById('memoContentText');
             if (memoEl && appData) {
                 memoEl.innerText = appData.notes || '點擊此處可輸入附註說明...';
+            }
+        }
+
+        function updateValueWithPulse(element, newVal, withPulse) {
+            if (!element) return;
+            const currentVal = parseInt(element.innerText) || 0;
+            element.innerText = newVal;
+            if (withPulse && currentVal !== newVal) {
+                element.classList.remove('kpi-pulsing');
+                void element.offsetWidth; // Trigger reflow
+                element.classList.add('kpi-pulsing');
             }
         }
 
@@ -1436,12 +1489,12 @@
                                     <span style="cursor:pointer;" onclick="editDeptProp('${dept.id}', 'phones', '公務電話')" title="點擊修改電話">${(dept.phones && dept.phones.length > 0) ? dept.phones.join(' / ') : '無(點擊新增電話)'}</span>
                                 </div>
                             </div>
-                            <div class="dept-stats-badge" title="點擊數值可修改">
-                                <div class="dept-count-main" id="deptCount_${dept.id}">${policeCount} 員</div>
-                                <div class="dept-count-detail" style="cursor:pointer;">
-                                    <span onclick="editDeptProp('${dept.id}', 'policeBefore', '0116前人數')" title="點擊修改0116前人數">前:${dept.policeBefore ?? '-'}</span> | 
-                                    <span onclick="editDeptProp('${dept.id}', 'policeAfter', '0116後人數')" title="點擊修改0116後人數">後:${dept.policeAfter ?? '-'}</span> | 
-                                    <span style="color:#6ee7b7; font-weight:bold;" onclick="editDeptProp('${dept.id}', 'draftees', '役男人數')" title="點擊修改替代役男數">役:${dept.draftees ?? 0}</span>
+                            <div class="dept-stats-badge">
+                                <div class="dept-count-main" id="deptCount_${dept.id}" title="現有警消人數">${policeCount} 員</div>
+                                <div class="dept-count-detail" style="display:flex; align-items:center; gap:4px; justify-content:flex-end;">
+                                    <span class="dept-stat-pill" onclick="editDeptProp('${dept.id}', 'policeBefore', '0116前人數')" title="點擊修改0116前人數">前: ${dept.policeBefore ?? '-'}</span>
+                                    <span class="dept-stat-pill" onclick="editDeptProp('${dept.id}', 'policeAfter', '0116後人數')" title="點擊修改0116後人數">後: ${dept.policeAfter ?? '-'}</span>
+                                    <span class="dept-stat-pill" style="color:#6ee7b7; border-color:rgba(16,185,129,0.4);" onclick="editDeptProp('${dept.id}', 'draftees', '役男人數')" title="點擊修改役男數（頂部即時連動！）">役: ${dept.draftees ?? 0}</span>
                                 </div>
                             </div>
                         </div>
@@ -1517,7 +1570,7 @@
             `;
         }
 
-        // Inline Click to Edit
+        // Inline Click to Edit with LIVE keystroke linkage
         function startInlineEdit(element, deptId, memberIdx, field) {
             const currentVal = element.innerText.trim();
             const input = document.createElement('input');
@@ -1528,6 +1581,16 @@
             element.replaceWith(input);
             input.focus();
             input.select();
+
+            // LIVE REACTION on every keystroke!
+            input.oninput = function() {
+                const tempVal = input.value.trim();
+                const dept = appData.departments.find(d => d.id === deptId);
+                if (dept && dept.members && dept.members[memberIdx]) {
+                    dept.members[memberIdx][field] = tempVal;
+                    renderKPI(true); // Instant recalculation with pulse!
+                }
+            };
 
             function finishEdit() {
                 const newVal = input.value.trim() || currentVal;
@@ -1542,7 +1605,13 @@
             input.onblur = finishEdit;
             input.onkeydown = function(e) {
                 if (e.key === 'Enter') finishEdit();
-                else if (e.key === 'Escape') renderAll();
+                else if (e.key === 'Escape') {
+                    const dept = appData.departments.find(d => d.id === deptId);
+                    if (dept && dept.members && dept.members[memberIdx]) {
+                        dept.members[memberIdx][field] = currentVal;
+                    }
+                    renderAll();
+                }
             };
         }
 
@@ -1767,6 +1836,32 @@
             select.innerHTML = appData.departments.map(d => `<option value="${d.id}">${d.name}</option>`).join('');
         }
 
+        
+        // Attach live input listeners to modal inputs
+        function setupModalLiveListeners() {
+            const titleInput = document.getElementById('editTitleInput');
+            const noteInput = document.getElementById('editNoteInput');
+            if (titleInput) {
+                titleInput.addEventListener('input', previewModalChanges);
+            }
+            if (noteInput) {
+                noteInput.addEventListener('input', previewModalChanges);
+            }
+        }
+
+        function previewModalChanges() {
+            const deptId = document.getElementById('editDeptId').value;
+            const memberIdx = parseInt(document.getElementById('editMemberIndex').value);
+            const title = document.getElementById('editTitleInput').value.trim();
+            const note = document.getElementById('editNoteInput').value.trim();
+            const dept = appData.departments.find(d => d.id === deptId);
+            if (dept && dept.members && dept.members[memberIdx]) {
+                dept.members[memberIdx].title = title;
+                dept.members[memberIdx].note = note;
+                renderKPI(true);
+            }
+        }
+
         // Modal Controls
         function openEditMemberModal(deptId, memberIdx) {
             const dept = appData.departments.find(d => d.id === deptId);
@@ -1892,8 +1987,9 @@
                     dept[propName] = newVal.trim();
                 }
                 saveData();
+                renderKPI(true);
                 renderAll();
-                showToast('已更新 ' + dept.name + ' 的 ' + label + '，頂部統計已同步連動！');
+                showToast('已更新 ' + dept.name + ' 的 ' + label + '，頂部數據已即時連動跳動！');
             }
         }
 
@@ -2085,6 +2181,7 @@
             isAppStarted = true;
             try {
                 initApp();
+                setupModalLiveListeners();
             } catch(e) {
                 console.error('Fatal start error:', e);
                 appData = JSON.parse(JSON.stringify(DEFAULT_DATA));
