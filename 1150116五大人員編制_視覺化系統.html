@@ -1002,6 +1002,57 @@
             transform: translateY(-1px);
         }
 
+    
+        /* Read-Only Locked Mode Styles */
+        body.readonly-locked .member-chip {
+            cursor: default !important;
+            user-select: text !important;
+        }
+
+        body.readonly-locked .member-chip:hover {
+            transform: none !important;
+            border-color: rgba(255, 255, 255, 0.12) !important;
+        }
+
+        body.readonly-locked .chip-drag-handle {
+            display: none !important;
+        }
+
+        body.readonly-locked .chip-edit-icon {
+            display: none !important;
+        }
+
+        body.readonly-locked .dept-footer-actions {
+            display: none !important;
+        }
+
+        body.readonly-locked .btn-edit-action {
+            display: none !important;
+        }
+
+        body.readonly-locked .dept-stat-pill {
+            cursor: default !important;
+            pointer-events: none !important;
+        }
+
+        .btn-lock-toggle {
+            transition: all 0.2s ease !important;
+            font-weight: 700 !important;
+        }
+
+        .btn-lock-toggle.locked {
+            background: rgba(245, 158, 11, 0.15) !important;
+            border-color: var(--accent-gold) !important;
+            color: #fde68a !important;
+            box-shadow: 0 0 10px rgba(245, 158, 11, 0.25) !important;
+        }
+
+        .btn-lock-toggle.unlocked {
+            background: rgba(16, 185, 129, 0.15) !important;
+            border-color: var(--accent-green) !important;
+            color: #6ee7b7 !important;
+        }
+
     </style>
 </head>
 <body>
@@ -1020,7 +1071,7 @@
                 <div class="title-sub">
                     <span>編制基準日：民國115年1月16日</span>
                     <span>•</span>
-                    <span class="save-indicator"><span class="dot"></span>任何人皆可直接修改 (點擊職稱/姓名/電話/役男即可編輯)</span>
+                    <span class="save-indicator" id="topModeIndicator"><span class="dot" id="modeDot"></span><span id="modeText">編輯模式：可自由拖曳、修改職稱姓名與役男數</span></span>
                 </div>
             </div>
         </div>
@@ -1028,6 +1079,13 @@
             <a href="index.html" class="btn" style="text-decoration:none; border-color:rgba(239,68,68,0.5); color:#fca5a5;">
                 <span>📅</span> 勤二休二排班系統
             </a>
+            
+            <!-- Lock / Read-Only Toggle Button -->
+            <button class="btn btn-lock-toggle unlocked" id="btnLockToggle" onclick="toggleLockMode()" title="點擊切換：鎖定僅供檢視 / 開放編輯">
+                <span id="lockIcon">🔓</span>
+                <span id="lockText">編輯模式中</span>
+            </button>
+
             <!-- Prominent Save Button -->
             <button class="btn btn-save-main" id="btnManualSave" onclick="manualSave()" title="手動儲存存檔 (快捷鍵: Ctrl+S)">
                 <span id="saveBtnIcon">💾</span>
@@ -1218,6 +1276,57 @@
         const SNAPSHOT_KEY = 'TNCFD_SAVE_SNAPSHOTS_1150116';
         let lastSaveTimestamp = localStorage.getItem('TNCFD_LAST_SAVE_TIME') || '';
 
+        
+        // Lock Mode State
+        let isLockedReadOnly = localStorage.getItem('TNCFD_READONLY_LOCKED') === 'true';
+
+        function updateLockUI() {
+            const btn = document.getElementById('btnLockToggle');
+            const icon = document.getElementById('lockIcon');
+            const text = document.getElementById('lockText');
+            const modeText = document.getElementById('modeText');
+            const modeDot = document.getElementById('modeDot');
+
+            if (isLockedReadOnly) {
+                if (btn) {
+                    btn.className = 'btn btn-lock-toggle locked';
+                    if (icon) icon.innerText = '🔒';
+                    if (text) text.innerText = '僅供檢視 (已鎖定)';
+                }
+                if (modeText) modeText.innerText = '👀 目前為「僅供檢視模式」（已鎖定防誤觸，無法修改）';
+                if (modeDot) {
+                    modeDot.style.background = '#f59e0b';
+                    modeDot.style.boxShadow = '0 0 8px #f59e0b';
+                }
+                document.body.classList.add('readonly-locked');
+            } else {
+                if (btn) {
+                    btn.className = 'btn btn-lock-toggle unlocked';
+                    if (icon) icon.innerText = '🔓';
+                    if (text) text.innerText = '編輯模式中';
+                }
+                if (modeText) modeText.innerText = '✏️ 編輯模式：可直接拖曳人員、修改職稱姓名與役男數';
+                if (modeDot) {
+                    modeDot.style.background = '#10b981';
+                    modeDot.style.boxShadow = '0 0 8px #10b981';
+                }
+                document.body.classList.remove('readonly-locked');
+            }
+        }
+
+        function toggleLockMode() {
+            isLockedReadOnly = !isLockedReadOnly;
+            localStorage.setItem('TNCFD_READONLY_LOCKED', isLockedReadOnly ? 'true' : 'false');
+            updateLockUI();
+            renderCurrentView();
+
+            if (isLockedReadOnly) {
+                showToast('🔒 已切換為「僅供檢視模式」，已鎖定防誤觸！');
+            } else {
+                showToast('🔓 已解除鎖定，目前為「編輯模式」，可自由修改！');
+            }
+        }
+
         // Safe Initialization
         function initApp() {
             try {
@@ -1249,6 +1358,7 @@
             populateDeptSelect();
             renderAll();
             updateLastSavedDisplay();
+            updateLockUI();
         }
 
         function saveData() {
@@ -1550,14 +1660,14 @@
 
             return `
                 <div class="${chipClass}" 
-                     draggable="true" 
+                     draggable="${!isLockedReadOnly}" 
                      ondragstart="handleDragStart(event, '${deptId}', ${memberIdx})"
                      ondragend="handleDragEnd(event)"
                      ondragover="handleDragOverChip(event)"
                      ondrop="handleDropOnChip(event, '${deptId}', ${memberIdx})"
                      onclick="openEditMemberModal('${deptId}', ${memberIdx})"
                      title="按住滑鼠可拖曳排序或跨單位調動；點擊進行詳細編輯">
-                    <span style="cursor:grab; font-size:0.75rem; opacity:0.6; margin-right:-2px;" title="拖曳把手">⠿</span>
+                    <span class="chip-drag-handle" style="cursor:grab; font-size:0.75rem; opacity:0.6; margin-right:-2px;" title="拖曳把手">${isLockedReadOnly ? '' : '⠿'}</span>
                     <span class="member-title ${badgeClass}" onclick="event.stopPropagation(); startInlineEdit(this, '${deptId}', ${memberIdx}, 'title')" title="點擊直接修改職稱">
                         ${member.title}
                     </span>
@@ -1572,6 +1682,10 @@
 
         // Inline Click to Edit with LIVE keystroke linkage
         function startInlineEdit(element, deptId, memberIdx, field) {
+            if (isLockedReadOnly) {
+                showToast('🔒 目前為「僅供檢視模式」，若需修改請先點擊上方「僅供檢視」按鈕解除鎖定！');
+                return;
+            }
             const currentVal = element.innerText.trim();
             const input = document.createElement('input');
             input.type = 'text';
@@ -1617,6 +1731,10 @@
 
         // Drag and Drop Event Handlers
         function handleDragStart(e, deptId, memberIdx) {
+            if (isLockedReadOnly) {
+                e.preventDefault();
+                return;
+            }
             draggedItemInfo = { deptId, memberIdx };
             e.dataTransfer.effectAllowed = 'move';
             e.dataTransfer.setData('text/plain', JSON.stringify(draggedItemInfo));
@@ -1864,6 +1982,10 @@
 
         // Modal Controls
         function openEditMemberModal(deptId, memberIdx) {
+            if (isLockedReadOnly) {
+                showToast('🔒 目前為「僅供檢視模式」，如需編輯請先點擊上方按鈕解除鎖定');
+                return;
+            }
             const dept = appData.departments.find(d => d.id === deptId);
             if (!dept || !dept.members || !dept.members[memberIdx]) return;
             const m = dept.members[memberIdx];
@@ -1880,6 +2002,10 @@
         }
 
         function openAddMemberModal(defaultDeptId) {
+            if (isLockedReadOnly) {
+                showToast('🔒 目前為「僅供檢視模式」，如需新增人員請先點擊上方按鈕解除鎖定');
+                return;
+            }
             document.getElementById('modalTitle').innerText = '➕ 新增人員至編制';
             document.getElementById('editDeptId').value = defaultDeptId || appData.departments[0].id;
             document.getElementById('editMemberIndex').value = -1;
@@ -1960,6 +2086,10 @@
         }
 
         function startEditMemo() {
+            if (isLockedReadOnly) {
+                showToast('🔒 目前為「僅供檢視模式」，附註說明已鎖定');
+                return;
+            }
             const currentNotes = appData.notes || '';
             const newNotes = prompt('請修改附註說明：', currentNotes);
             if (newNotes !== null) {
@@ -1971,6 +2101,10 @@
         }
 
         function editDeptProp(deptId, propName, label) {
+            if (isLockedReadOnly) {
+                showToast('🔒 目前為「僅供檢視模式」，分隊資訊已鎖定');
+                return;
+            }
             const dept = appData.departments.find(d => d.id === deptId);
             if (!dept) return;
 
