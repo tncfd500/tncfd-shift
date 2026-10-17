@@ -1215,6 +1215,7 @@
             if (!appData || !Array.isArray(appData.departments) || appData.departments.length === 0) {
                 appData = JSON.parse(JSON.stringify(DEFAULT_DATA));
             }
+            window.appData = appData;
 
             populateDeptSelect();
             renderAll();
@@ -1287,43 +1288,53 @@
             else if (currentView === 'analytics') renderAnalyticsView();
         }
 
-        // Recalculate KPIs
+                // Dynamic Recalculation Engine - 100% reactive to all filled data
         function renderKPI() {
             let policeCount = 0;
             let drafteesCount = 0;
             let assistantsCount = 0;
             let transferCount = 0;
-            const countedTransfers = new Set();
 
             if (appData && Array.isArray(appData.departments)) {
                 appData.departments.forEach(dept => {
-                    drafteesCount += parseInt(dept.draftees) || 0;
-                    if (dept.assistants) assistantsCount += parseInt(dept.assistants) || 0;
+                    // 1. Draftees from dept property
+                    drafteesCount += (parseInt(dept.draftees) || 0);
 
+                    // 2. Members scan
                     if (Array.isArray(dept.members)) {
+                        let deptAssistantsInMembers = 0;
                         dept.members.forEach(m => {
                             const title = (m.title || '').trim();
                             const note = (m.note || '').trim();
+                            const name = (m.name || '').trim();
 
                             if (/事務助理|助理/.test(title)) {
-                                if (!dept.assistants) assistantsCount++;
+                                assistantsCount++;
+                                deptAssistantsInMembers++;
                             } else if (/役男|替代役/.test(title)) {
-                                // already in draftees
+                                drafteesCount++;
                             } else {
                                 policeCount++;
                             }
 
-                            if (/調入|分發|特考|新進/.test(note)) {
-                                countedTransfers.add(m.name + '_' + dept.id);
+                            // Dynamic transfer count: whenever note contains transfer keywords
+                            if (/調入|分發|特考|新進/.test(note) || /調入|分發|特考|新進/.test(name)) {
+                                transferCount++;
                             }
                         });
+
+                        // If dept has explicit assistants field and no assistants in members yet, count it
+                        if (dept.assistants && deptAssistantsInMembers === 0) {
+                            assistantsCount += (parseInt(dept.assistants) || 0);
+                        }
                     }
                 });
             }
 
-            transferCount = (appData.transfers && appData.transfers.length > 0) ? Math.max(countedTransfers.size, appData.transfers.length) : countedTransfers.size;
+            // Total members is exactly police + draftees + assistants
             const totalMembers = policeCount + drafteesCount + assistantsCount;
 
+            // Update DOM
             const kpiHtml = `
                 <div class="kpi-card">
                     <div class="kpi-icon">👥</div>
@@ -1338,7 +1349,7 @@
                     <div class="kpi-info">
                         <div class="kpi-label">警消現員數</div>
                         <div class="kpi-value" id="kpiPoliceVal">${policeCount}</div>
-                        <div class="kpi-sub">救災救護主力陣容</div>
+                        <div class="kpi-sub">救災救護主力陣容 (隨隊員增減即時連動)</div>
                     </div>
                 </div>
                 <div class="kpi-card green">
@@ -1346,7 +1357,7 @@
                     <div class="kpi-info">
                         <div class="kpi-label">替代役男</div>
                         <div class="kpi-value" id="kpiDrafteeVal">${drafteesCount}</div>
-                        <div class="kpi-sub">各分隊常態編制（點擊分隊可修改）</div>
+                        <div class="kpi-sub">各分隊役男 (修改下方役男數即時連動)</div>
                     </div>
                 </div>
                 <div class="kpi-card gold">
@@ -1354,7 +1365,7 @@
                     <div class="kpi-info">
                         <div class="kpi-label">事務助理</div>
                         <div class="kpi-value" id="kpiAssistantVal">${assistantsCount}</div>
-                        <div class="kpi-sub">大隊部專任行政專責同仁</div>
+                        <div class="kpi-sub">行政專責 (修改下方助理即時連動)</div>
                     </div>
                 </div>
                 <div class="kpi-card purple">
@@ -1362,7 +1373,7 @@
                     <div class="kpi-info">
                         <div class="kpi-label">本次調動/新進</div>
                         <div class="kpi-value" id="kpiTransferVal">${transferCount}</div>
-                        <div class="kpi-sub">外調人員與新進分發（動態連動備註）</div>
+                        <div class="kpi-sub">外調與特考 (備註填寫調動即時累加)</div>
                     </div>
                 </div>
             `;
@@ -1871,18 +1882,18 @@
             let currentVal = dept[propName];
             if (Array.isArray(currentVal)) currentVal = currentVal.join(' / ');
             
-            const newVal = prompt('請輸入 ' + dept.name + ' 的【' + label + '】：', currentVal || '');
+            const newVal = prompt('請輸入 ' + dept.name + ' 的【' + label + '】：', currentVal !== undefined ? currentVal : '');
             if (newVal !== null) {
                 if (propName === 'phones') {
                     dept.phones = newVal.split(/[/,，、 ]+/).map(s => s.trim()).filter(Boolean);
-                } else if (propName === 'draftees' || propName === 'policeBefore' || propName === 'policeAfter') {
+                } else if (propName === 'draftees' || propName === 'policeBefore' || propName === 'policeAfter' || propName === 'assistants') {
                     dept[propName] = parseInt(newVal.trim()) || 0;
                 } else {
                     dept[propName] = newVal.trim();
                 }
                 saveData();
                 renderAll();
-                showToast('已更新 ' + dept.name + ' 的 ' + label);
+                showToast('已更新 ' + dept.name + ' 的 ' + label + '，頂部統計已同步連動！');
             }
         }
 
