@@ -995,17 +995,229 @@
             font-size: 0.85rem;
         }
 
-        @media print {
-            body { background: white !important; color: black !important; padding: 0; }
-            header, .kpi-container, .controls-bar, .memo-banner, .btn, .modal-overlay, .toast-msg, .view-switcher, .dept-footer-actions { display: none !important; }
-            .table-view-container { display: block !important; border: none !important; box-shadow: none !important; padding: 0 !important; }
-            .official-table { font-size: 9pt !important; }
-            .official-table th, .official-table td { border: 1px solid black !important; color: black !important; background: white !important; }
-            .table-member-cell { background: transparent !important; border: none !important; color: black !important; }
-            .table-member-name { color: black !important; }
-            .print-only-title { display: block !important; text-align: center; font-size: 16pt; font-weight: bold; margin-bottom: 12px; }
+        /* A4 Excel Table Styles (Screen & Print) */
+        #a4PrintWrapper {
+            display: none;
         }
-        .print-only-title { display: none; }
+
+        .a4-print-container {
+            width: 100%;
+            background: #ffffff;
+            color: #000000;
+            padding: 16px;
+            border-radius: 8px;
+            box-sizing: border-box;
+            font-family: "Microsoft JhengHei", "微軟正黑體", "DFKai-SB", "標楷體", sans-serif;
+        }
+
+        .a4-title {
+            text-align: center;
+            font-size: 15pt;
+            font-weight: bold;
+            letter-spacing: 1.5px;
+            padding-bottom: 8px;
+            color: #000000;
+        }
+
+        .a4-excel-table {
+            width: 100%;
+            border-collapse: collapse;
+            table-layout: fixed;
+            border: 2px solid #000000;
+            font-size: 8.5pt;
+            line-height: 1.25;
+            background: #ffffff;
+            color: #000000;
+        }
+
+        .a4-excel-table th, 
+        .a4-excel-table td {
+            border: 1px solid #000000;
+            padding: 3px 2px;
+            text-align: center;
+            vertical-align: middle;
+            word-break: break-all;
+            overflow: hidden;
+            color: #000000;
+            background: #ffffff;
+        }
+
+        .a4-excel-table th {
+            background: #f1f5f9;
+            font-weight: bold;
+        }
+
+        .a4-spacer-col {
+            width: 6px !important;
+            min-width: 6px !important;
+            max-width: 6px !important;
+            background: #e2e8f0 !important;
+            border-left: 1.5px solid #000000 !important;
+            border-right: 1.5px solid #000000 !important;
+            padding: 0 !important;
+        }
+
+        .a4-dept-cell {
+            font-size: 8pt;
+            font-weight: bold;
+            line-height: 1.2;
+        }
+
+        .a4-leader-cell {
+            font-size: 8pt;
+            line-height: 1.25;
+            white-space: pre-line;
+        }
+
+        .a4-captain-cell {
+            font-size: 8pt;
+            line-height: 1.25;
+            white-space: pre-line;
+        }
+
+        .a4-member-cell {
+            font-size: 8pt;
+            line-height: 1.2;
+        }
+
+        .a4-total-row td {
+            font-weight: bold;
+            background: #f8fafc;
+        }
+
+        .a4-notes-cell {
+            text-align: left !important;
+            padding-left: 8px !important;
+            font-size: 8.5pt;
+        }
+
+        @media print {
+            @page {
+                size: A4 landscape;
+                margin: 4mm 6mm;
+            }
+
+            html, body {
+                background: #ffffff !important;
+                color: #000000 !important;
+                padding: 0 !important;
+                margin: 0 !important;
+                font-family: "Microsoft JhengHei", "微軟正黑體", "DFKai-SB", "標楷體", sans-serif !important;
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+
+            /* Hide all Web UI components */
+            header,
+            .header-actions,
+            .controls-bar,
+            .kpi-container,
+            .memo-banner,
+            .view-switcher,
+            .departments-grid,
+            #cardsView,
+            #tableView,
+            #transfersView,
+            #analysisView,
+            .btn,
+            .modal-overlay,
+            .toast-msg,
+            .readonly-indicator-banner,
+            .save-time-badge {
+                display: none !important;
+            }
+
+            /* Always show the A4 Excel Print Container */
+            #a4PrintWrapper {
+                display: block !important;
+                width: 100% !important;
+                padding: 0 !important;
+                margin: 0 !important;
+            }
+
+            .a4-print-container {
+                width: 100% !important;
+                padding: 0 !important;
+                background: #ffffff !important;
+                color: #000000 !important;
+            }
+
+            .a4-title {
+                text-align: center !important;
+                font-size: 14pt !important;
+                font-weight: bold !important;
+                padding-bottom: 5px !important;
+            }
+
+            .a4-excel-table {
+                width: 100% !important;
+                border-collapse: collapse !important;
+                border: 2px solid #000000 !important;
+                font-size: 7.8pt !important;
+                line-height: 1.2 !important;
+                table-layout: fixed !important;
+            }
+
+            .a4-excel-table th, 
+            .a4-excel-table td {
+                border: 1px solid #000000 !important;
+                padding: 2.5px 1.5px !important;
+                color: #000000 !important;
+                background: #ffffff !important;
+                text-align: center !important;
+                vertical-align: middle !important;
+                word-break: break-all !important;
+                overflow: hidden !important;
+            }
+
+            .a4-excel-table th {
+                background: #e2e8f0 !important;
+                font-weight: bold !important;
+            }
+
+            .a4-spacer-col {
+                background: #cbd5e1 !important;
+                width: 5px !important;
+                min-width: 5px !important;
+                max-width: 5px !important;
+                padding: 0 !important;
+                border-left: 1.5px solid #000000 !important;
+                border-right: 1.5px solid #000000 !important;
+            }
+
+            .a4-dept-cell {
+                font-weight: bold !important;
+                font-size: 7.5pt !important;
+                text-align: center !important;
+                line-height: 1.15 !important;
+            }
+
+            .a4-leader-cell {
+                font-size: 7.5pt !important;
+                line-height: 1.2 !important;
+            }
+
+            .a4-captain-cell {
+                font-size: 7.5pt !important;
+                line-height: 1.2 !important;
+            }
+
+            .a4-member-cell {
+                font-size: 7.5pt !important;
+                line-height: 1.15 !important;
+            }
+
+            .a4-total-row td {
+                font-weight: bold !important;
+                background: #f1f5f9 !important;
+            }
+
+            .a4-notes-cell {
+                text-align: left !important;
+                padding-left: 6px !important;
+                font-size: 7.8pt !important;
+            }
+        }
     
         @keyframes kpiPulse {
             0% { transform: scale(1); color: #fff; }
@@ -1144,7 +1356,7 @@
                 <span>📂</span> 載入 JSON
                 <input type="file" id="jsonFileInput" accept=".json" style="display:none;" onchange="importDataJson(event)">
             </label>
-            <button class="btn" onclick="window.print()">
+            <button class="btn btn-primary" onclick="triggerA4Print()" title="列印符合 1150116五大人員編制_華麗版.xlsx 格式之 A4 橫向表格">
                 <span>🖨️</span> 列印 A4
             </button>
             <button class="btn" onclick="confirmReset()" title="恢復原始Excel預設資料">
@@ -1296,6 +1508,9 @@
         <span>✅</span>
         <span id="toastText">儲存成功</span>
     </div>
+
+    <!-- Hidden A4 Print Table (Activated during print & table view) -->
+    <div id="a4PrintWrapper"></div>
 
     <!-- Core Script -->
     <script>
@@ -1516,6 +1731,7 @@
         function renderAll() {
             renderKPI();
             renderCurrentView();
+            renderA4PrintTable();
         }
 
         function renderCurrentView() {
@@ -1909,62 +2125,265 @@
             }
         }
 
-        // View 2: Table View Render (Excel Style)
-        function renderTableView() {
-            const container = document.getElementById('tableView');
-            if (!container || !appData || !appData.departments) return;
+        // Dynamic Generator for A4 Excel Table (1150116五大人員編制_華麗版.xlsx 官方格式)
+        function generateA4PrintTableHtml(data) {
+            const depts = data.departments || [];
+            
+            let totalBefore = 0;
+            let totalAfter = 0;
+            let totalDraftees = 0;
+            let totalAssistants = 0;
+            let grandTotal = 0;
 
-            let html = `
-                <table class="official-table">
+            depts.forEach(d => {
+                totalBefore += (parseInt(d.policeBefore) || 0);
+                totalAfter += (parseInt(d.policeAfter) || 0);
+                totalDraftees += (parseInt(d.draftees) || 0);
+                totalAssistants += (parseInt(d.assistants) || 0);
+            });
+            grandTotal = totalAfter + totalDraftees + totalAssistants;
+
+            const dateStr = data.effectiveDate || '1150116';
+            const dateShort = dateStr.slice(-4);
+
+            let tableHtml = `
+            <div class="a4-print-container">
+                <div class="a4-title">${data.title || '臺南市政府消防局第五救災救護大隊人員編制表'}(${dateStr})</div>
+                <table class="a4-excel-table">
                     <thead>
                         <tr>
-                            <th style="min-width:180px;">單位名稱</th>
-                            <th style="width:50px;">前</th>
-                            <th style="width:50px;">後</th>
-                            <th style="width:45px;">役男</th>
-                            <th style="width:50px;">助理</th>
-                            <th style="width:60px;">現員</th>
-                            <th style="text-align:left; padding-left:14px;">編制陣容人員名冊 (點擊人員可直接編輯修改)</th>
+                            <th style="width:11%;">單位</th>
+                            <th style="width:4.5%;">警消<br>${dateShort}前</th>
+                            <th style="width:4.5%;">警消<br>${dateShort}後</th>
+                            <th style="width:3.2%;">役男</th>
+                            <th style="width:4.2%;">事務<br>助理</th>
+                            <th style="width:4.2%;">合計</th>
+                            <th class="a4-spacer-col"></th>
+                            <th style="width:5.5%;">大隊長</th>
+                            <th style="width:6.5%;">副大隊長</th>
+                            <th style="width:6.5%;">組長：</th>
+                            <th style="width:5.5%;">組長：</th>
+                            <th style="width:5%;">組員</th>
+                            <th style="width:6.5%;">小隊長</th>
+                            <th style="width:4.8%;">隊員</th>
+                            <th style="width:4.8%;">隊員</th>
+                            <th style="width:4.8%;">隊員</th>
+                            <th style="width:4.8%;">隊員</th>
+                            <th style="width:4.8%;">隊員</th>
+                            <th style="width:4.8%;">隊員</th>
+                            <th style="width:4.8%;">隊員</th>
+                            <th style="width:4.8%;">隊員</th>
                         </tr>
                     </thead>
                     <tbody>
             `;
 
-            appData.departments.forEach((dept, dIdx) => {
-                const policeCount = (dept.members || []).filter(m => !/事務助理|助理/.test(m.title)).length;
-                html += `
-                    <tr>
-                        <td class="dept-col">
-                            <strong>${dept.name}</strong>
-                            <div style="font-size:0.75rem; color:var(--text-muted); font-weight:normal;">
-                                ${(dept.phones && dept.phones.length > 0) ? dept.phones.join(' / ') : '無'}
-                            </div>
-                        </td>
-                        <td class="num-col">${dept.policeBefore || '-'}</td>
-                        <td class="num-col">${dept.policeAfter || '-'}</td>
-                        <td class="num-col">${dept.draftees || '-'}</td>
-                        <td class="num-col">${dept.assistants || '-'}</td>
-                        <td class="num-col" style="color:#38bdf8; font-weight:700;">${policeCount}</td>
-                        <td style="text-align:left; padding:8px;">
-                            <div style="display:flex; flex-wrap:wrap; gap:4px;">
-                                ${(dept.members || []).map((m, mIdx) => `
-                                    <div class="table-member-cell" onclick="openEditMemberModal('${dept.id}', ${mIdx})">
-                                        <span class="table-member-title">${m.title}</span>
-                                        <span class="table-member-name">${m.name}</span>
-                                        ${m.note ? `<span class="table-member-note">${m.note}</span>` : ''}
-                                    </div>
-                                `).join('')}
-                            </div>
-                        </td>
-                    </tr>
-                `;
+            depts.forEach(dept => {
+                const id = dept.id;
+                const phonesStr = (dept.phones && dept.phones.length > 0) ? dept.phones.join(' ') : '';
+                const deptDisplay = `${dept.name.replace('救災救護', '')} ${phonesStr}`.trim();
+                const pBefore = dept.policeBefore !== undefined ? dept.policeBefore : '';
+                const pAfter = dept.policeAfter !== undefined ? dept.policeAfter : '';
+                const draftees = dept.draftees ? dept.draftees : '';
+                const assistants = dept.assistants ? dept.assistants : '';
+                const deptTotal = (parseInt(dept.policeAfter) || 0) + (parseInt(dept.draftees) || 0) + (parseInt(dept.assistants) || 0);
+
+                const members = dept.members || [];
+
+                function formatMem(m) {
+                    if (!m) return '';
+                    let txt = m.name || '';
+                    if (m.note) {
+                        if (m.note.includes('待退') || m.note.includes('異動') || m.note.match(/\d+[\.\/]\d+/)) {
+                            txt = `【${txt}】 ${m.note.replace('待退/異動:', '').trim()}`;
+                        } else if (m.note.includes('支援')) {
+                            txt = `${txt}(支援)`;
+                        } else if (m.title && /事務助理|助理/.test(m.title)) {
+                            txt = `(事務助理) ${txt}`;
+                        }
+                    } else if (m.title && /事務助理|助理/.test(m.title)) {
+                        txt = `(事務助理) ${txt}`;
+                    }
+                    return txt;
+                }
+
+                if (id === 'hq') {
+                    const leader = members.find(m => /大隊長/.test(m.title) && !/副/.test(m.title));
+                    const deputies = members.filter(m => /副大隊長/.test(m.title));
+                    const chiefs = members.filter(m => /組長/.test(m.title));
+                    const officer = members.find(m => /組員/.test(m.title));
+                    const subCaptains = members.filter(m => /小隊長/.test(m.title));
+                    const regular = members.filter(m => !/大隊長|組長|組員|小隊長/.test(m.title));
+
+                    tableHtml += `
+                        <tr>
+                            <td class="a4-dept-cell">${deptDisplay}</td>
+                            <td>${pBefore}</td>
+                            <td>${pAfter}</td>
+                            <td>${draftees}</td>
+                            <td>${assistants}</td>
+                            <td><strong>${deptTotal}</strong></td>
+                            <td class="a4-spacer-col"></td>
+                            <td>${leader ? leader.name : ''}</td>
+                            <td class="a4-leader-cell">${deputies.map(m => m.name).join(' ')}</td>
+                            <td>${chiefs[0] ? chiefs[0].name : ''}</td>
+                            <td>${chiefs[1] ? chiefs[1].name : ''}</td>
+                            <td>${officer ? officer.name : ''}</td>
+                            <td class="a4-captain-cell">${subCaptains.map(m => m.name).join(' ')}</td>
+                    `;
+                    for (let i = 0; i < 8; i++) {
+                        tableHtml += `<td class="a4-member-cell">${formatMem(regular[i])}</td>`;
+                    }
+                    tableHtml += `</tr>`;
+                } else if (id === 'guiren_mid') {
+                    const leader = members.find(m => /中隊長/.test(m.title));
+                    const officer = members.find(m => /組員/.test(m.title));
+                    tableHtml += `
+                        <tr>
+                            <td class="a4-dept-cell">${deptDisplay}</td>
+                            <td>${pBefore}</td>
+                            <td>${pAfter}</td>
+                            <td>${draftees}</td>
+                            <td>${assistants}</td>
+                            <td><strong>${deptTotal}</strong></td>
+                            <td class="a4-spacer-col"></td>
+                            <td></td>
+                            <td class="a4-leader-cell">${leader ? `${leader.title} ${leader.name}` : ''}</td>
+                            <td>${officer ? `${officer.title} ${officer.name}` : ''}</td>
+                            <td></td><td></td><td></td>
+                            <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+                        </tr>
+                    `;
+                } else if (id === 'safety_inspection') {
+                    const officer = members.find(m => /組員/.test(m.title));
+                    const others = members.filter(m => !/組員/.test(m.title));
+                    tableHtml += `
+                        <tr>
+                            <td class="a4-dept-cell">${deptDisplay}</td>
+                            <td>${pBefore}</td>
+                            <td>${pAfter}</td>
+                            <td>${draftees}</td>
+                            <td>${assistants}</td>
+                            <td><strong>${deptTotal}</strong></td>
+                            <td class="a4-spacer-col"></td>
+                            <td>${officer ? `組員 ${officer.name}` : ''}</td>
+                    `;
+                    for (let i = 0; i < 13; i++) {
+                        tableHtml += `<td class="a4-member-cell">${formatMem(others[i])}</td>`;
+                    }
+                    tableHtml += `</tr>`;
+                } else if (id === 'daqiao_paramedic' || id === 'guiren_paramedic') {
+                    const captain = members.find(m => /小隊長/.test(m.title));
+                    const others = members.filter(m => !/小隊長/.test(m.title));
+                    tableHtml += `
+                        <tr>
+                            <td class="a4-dept-cell">${deptDisplay}</td>
+                            <td>${pBefore}</td>
+                            <td>${pAfter}</td>
+                            <td>${draftees}</td>
+                            <td>${assistants}</td>
+                            <td><strong>${deptTotal}</strong></td>
+                            <td class="a4-spacer-col"></td>
+                            <td></td>
+                            <td></td>
+                            <td class="a4-captain-cell">${captain ? `小隊長 ${captain.name}` : ''}</td>
+                    `;
+                    for (let i = 0; i < 11; i++) {
+                        tableHtml += `<td class="a4-member-cell">${formatMem(others[i])}</td>`;
+                    }
+                    tableHtml += `</tr>`;
+                } else {
+                    const leader = members.find(m => /分隊長|中隊長/.test(m.title));
+                    const captains = members.filter(m => /小隊長/.test(m.title));
+                    const others = members.filter(m => !/分隊長|中隊長|小隊長/.test(m.title));
+
+                    const row1Mems = others.slice(0, 11);
+                    const row2Mems = others.slice(11);
+
+                    let leaderText = '';
+                    if (leader) {
+                        const cleanTitle = leader.title.includes('分隊長') ? '(分隊長)' : leader.title;
+                        leaderText = `${cleanTitle}<br>${leader.name}`;
+                    }
+
+                    const captainsText = captains.map(c => c.name).join(' ');
+
+                    tableHtml += `
+                        <tr>
+                            <td rowspan="2" class="a4-dept-cell">${deptDisplay}</td>
+                            <td rowspan="2">${pBefore}</td>
+                            <td rowspan="2">${pAfter}</td>
+                            <td rowspan="2">${draftees}</td>
+                            <td rowspan="2">${assistants}</td>
+                            <td rowspan="2"><strong>${deptTotal}</strong></td>
+                            <td rowspan="2" class="a4-spacer-col"></td>
+                            <td rowspan="2"></td>
+                            <td rowspan="2" class="a4-leader-cell">${leaderText}</td>
+                            <td rowspan="2" class="a4-captain-cell">${captainsText}</td>
+                    `;
+                    for (let i = 0; i < 11; i++) {
+                        tableHtml += `<td class="a4-member-cell">${formatMem(row1Mems[i])}</td>`;
+                    }
+                    tableHtml += `</tr><tr>`;
+                    for (let i = 0; i < 11; i++) {
+                        tableHtml += `<td class="a4-member-cell">${formatMem(row2Mems[i])}</td>`;
+                    }
+                    tableHtml += `</tr>`;
+                }
             });
 
-            html += `
-                    </tbody>
-                </table>
+            tableHtml += `
+                    <tr class="a4-total-row">
+                        <td>合計</td>
+                        <td>${totalBefore}</td>
+                        <td>${totalAfter}</td>
+                        <td>${totalDraftees}</td>
+                        <td>${totalAssistants}</td>
+                        <td>${grandTotal}</td>
+                        <td class="a4-spacer-col"></td>
+                        <td colspan="14" class="a4-notes-cell">
+                            <strong>備註：</strong>${data.notes || '司機1人、歸仁萬副中支援永康，歸仁蔡霖支援關廟'}
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            </div>
             `;
-            container.innerHTML = html;
+
+            return tableHtml;
+        }
+
+        function renderA4PrintTable() {
+            const printWrapper = document.getElementById('a4PrintWrapper');
+            if (printWrapper && appData) {
+                printWrapper.innerHTML = generateA4PrintTableHtml(appData);
+            }
+        }
+
+        function triggerA4Print() {
+            renderA4PrintTable();
+            window.print();
+        }
+
+        // View 2: Table View Render (Excel A4 Style Preview)
+        function renderTableView() {
+            const container = document.getElementById('tableView');
+            if (!container || !appData || !appData.departments) return;
+
+            renderA4PrintTable();
+            container.innerHTML = `
+                <div class="table-view-container">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; flex-wrap:wrap; gap:10px;">
+                        <div style="font-size:1.1rem; font-weight:bold; color:var(--accent-blue); display:flex; align-items:center; gap:8px;">
+                            <span>📋</span> 官制編制總表 (符合 1150116五大人員編制_華麗版.xlsx 官方橫向格式)
+                        </div>
+                        <button class="btn btn-primary" onclick="triggerA4Print()">
+                            <span>🖨️</span> 列印此 A4 橫向編制表
+                        </button>
+                    </div>
+                    ${generateA4PrintTableHtml(appData)}
+                </div>
+            `;
         }
 
         // View 3: Transfers View
@@ -2326,36 +2745,17 @@
 
         // Export to Excel (safely constructed without embedded body tags)
         function exportToExcel() {
-            let tableHtml = '<' + 'table border="1">' +
-                '<tr><th colspan="7" style="font-size:16pt; text-align:center;">' + appData.title + ' (' + appData.effectiveDate + ')</th></tr>' +
-                '<tr style="background:#f1f5f9; font-weight:bold;">' +
-                    '<th>單位</th><th>警消0116前</th><th>警消0116後</th><th>役男</th><th>事務助理</th><th>現員合計</th><th>現職人員編制明細</th>' +
-                '</tr>';
-
-            appData.departments.forEach(dept => {
-                const policeCount = (dept.members || []).filter(m => !/事務助理|助理/.test(m.title)).length;
-                const memberListStr = (dept.members || []).map(m => m.title + ' ' + m.name + (m.note ? '(' + m.note + ')' : '')).join('、');
-                tableHtml += '<tr>' +
-                    '<td>' + dept.name + ' ' + (dept.phones || []).join(' ') + '</td>' +
-                    '<td>' + (dept.policeBefore || '') + '</td>' +
-                    '<td>' + (dept.policeAfter || '') + '</td>' +
-                    '<td>' + (dept.draftees || '') + '</td>' +
-                    '<td>' + (dept.assistants || '') + '</td>' +
-                    '<td>' + policeCount + '</td>' +
-                    '<td>' + memberListStr + '</td>' +
-                '</tr>';
-            });
-
-            tableHtml += '<tr><td colspan="7">備註：' + (appData.notes || '') + '</td></tr><' + '/table>';
-
-            const blob = new Blob([tableHtml], { type: 'application/vnd.ms-excel;charset=utf-8' });
+            const tableInnerHtml = generateA4PrintTableHtml(appData);
+            const htmlContent = '<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40"><head><meta charset="utf-8"><!--[if gte mso 9]><xml><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet><x:Name>編制表</x:Name><x:WorksheetOptions><x:DisplayGridlines/><x:FitToPage/><x:Print><x:FitWidth>1</x:FitWidth><x:FitHeight>1</x:FitHeight><x:ValidPrinterInfo/><x:Orientation>Landscape</x:Orientation></x:Print></x:WorksheetOptions></x:ExcelWorksheet></x:ExcelWorksheets></x:ExcelWorkbook></xml><![endif]--><style>table { border-collapse: collapse; font-family: "標楷體", "Microsoft JhengHei"; font-size: 9pt; } th, td { border: 1px solid #000; text-align: center; vertical-align: middle; padding: 3px; }</style></head><body>' +
+                tableInnerHtml + '</body></html>';
+            const blob = new Blob([htmlContent], { type: 'application/vnd.ms-excel;charset=utf-8;' });
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
-            a.download = appData.effectiveDate + '五大人員編制表_視覺化匯出版.xls';
+            a.download = (appData.effectiveDate || '1150116') + '五大人員編制表_華麗A4版.xls';
             a.click();
             URL.revokeObjectURL(url);
-            showToast('已成功匯出 Excel 檔案');
+            showToast('📊 已成功匯出符合 1150116五大人員編制_華麗版.xlsx 格式之 Excel 檔案');
         }
 
         function exportDataJson() {
