@@ -995,6 +995,798 @@
             font-size: 0.85rem;
         }
 
+        /* A4 Excel Table Styles (Screen & Print) - Matches C:\Users\TNCFD\Desktop\一氧化碳座談會\1150116五大人員編制_華麗版.xlsx */
+        #a4PrintWrapper {
+            display: none;
+        }
+
+        .a4-print-container {
+            width: 100%;
+            background: #ffffff;
+            color: #000000;
+            padding: 16px;
+            border-radius: 8px;
+            box-sizing: border-box;
+            font-family: "Microsoft JhengHei", "微軟正黑體", "DFKai-SB", "標楷體", sans-serif;
+        }
+
+        .a4-title {
+            text-align: center;
+            font-size: 15pt;
+            font-weight: bold;
+            letter-spacing: 1.5px;
+            padding-bottom: 8px;
+            color: #000000;
+        }
+
+        .a4-excel-table {
+            width: 100%;
+            border-collapse: collapse;
+            table-layout: fixed;
+            border: 2px solid #000000;
+            font-size: 8.5pt;
+            line-height: 1.25;
+            background: #ffffff;
+            color: #000000;
+        }
+
+        .a4-excel-table th, 
+        .a4-excel-table td {
+            border: 1px solid #000000;
+            padding: 3px 2px;
+            text-align: center;
+            vertical-align: middle;
+            word-break: break-all;
+            overflow: hidden;
+            color: #000000;
+            background: #ffffff;
+        }
+
+        .a4-excel-table th {
+            background: #f1f5f9;
+            font-weight: bold;
+        }
+
+        .a4-dept-cell {
+            font-size: 8pt;
+            font-weight: bold;
+            line-height: 1.2;
+        }
+
+        .a4-leader-cell {
+            font-size: 8pt;
+            line-height: 1.25;
+            white-space: pre-line;
+        }
+
+        .a4-captain-cell {
+            font-size: 8pt;
+            line-height: 1.25;
+            white-space: pre-line;
+        }
+
+        .a4-member-cell {
+            font-size: 8pt;
+            line-height: 1.2;
+        }
+
+        .a4-total-row td {
+            font-weight: bold;
+            background: #f8fafc;
+        }
+
+        .a4-notes-cell {
+            text-align: left !important;
+            padding-left: 8px !important;
+            font-size: 8.5pt;
+        }
+
+        @media print {
+            @page {
+                size: A4 landscape;
+                margin: 4mm 6mm;
+            }
+
+            html, body {
+                background: #ffffff !important;
+                color: #000000 !important;
+                padding: 0 !important;
+                margin: 0 !important;
+                font-family: "Microsoft JhengHei", "微軟正黑體", "DFKai-SB", "標楷體", sans-serif !important;
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+
+            /* Hide all Web UI components */
+            header,
+            .header-actions,
+            .controls-bar,
+            .kpi-container,
+            .memo-banner,
+            .view-switcher,
+            .departments-grid,
+            #cardsView,
+            #tableView,
+            #transfersView,
+            #analysisView,
+            .btn,
+            .modal-overlay,
+            .toast-msg,
+            .readonly-indicator-banner,
+            .save-time-badge {
+                display: none !important;
+            }
+
+            /* Always show the A4 Excel Print Container */
+            #a4PrintWrapper {
+                display: block !important;
+                width: 100% !important;
+                padding: 0 !important;
+                margin: 0 !important;
+            }
+
+            .a4-print-container {
+                width: 100% !important;
+                padding: 0 !important;
+                background: #ffffff !important;
+                color: #000000 !important;
+            }
+
+            .a4-title {
+                text-align: center !important;
+                font-size: 14pt !important;
+                font-weight: bold !important;
+                padding-bottom: 5px !important;
+            }
+
+            .a4-excel-table {
+                width: 100% !important;
+                border-collapse: collapse !important;
+                border: 2px solid #000000 !important;
+                font-size: 8pt !important;
+                line-height: 1.2 !important;
+                table-layout: fixed !important;
+            }
+
+            .a4-excel-table th, 
+            .a4-excel-table td {
+                border: 1px solid #000000 !important;
+                padding: 2.5px 1.5px !important;
+                color: #000000 !important;
+                background: #ffffff !important;
+                text-align: center !important;
+                vertical-align: middle !important;
+                word-break: break-all !important;
+                overflow: hidden !important;
+            }
+
+            .a4-excel-table th {
+                background: #e2e8f0 !important;
+                font-weight: bold !important;
+            }
+
+            .a4-dept-cell {
+                font-weight: bold !important;
+                font-size: 7.5pt !important;
+                text-align: center !important;
+                line-height: 1.15 !important;
+            }
+
+            .a4-leader-cell {
+                font-size: 7.5pt !important;
+                line-height: 1.2 !important;
+            }
+
+            .a4-captain-cell {
+                font-size: 7.5pt !important;
+                line-height: 1.2 !important;
+            }
+
+            .a4-member-cell {
+                font-size: 7.5pt !important;
+                line-height: 1.15 !important;
+            }
+
+            .a4-total-row td {
+                font-weight: bold !important;
+                background: #f1f5f9 !important;
+            }
+
+            .a4-notes-cell {
+                text-align: left !important;
+                padding-left: 6px !important;
+                font-size: 7.8pt !important;
+            }
+        }
+        
+        /* View 1: Cards View */
+        .departments-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+            gap: 20px;
+        }
+
+        .dept-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            padding: 20px;
+            backdrop-filter: blur(8px);
+            box-shadow: var(--shadow);
+            transition: all 0.25s ease;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .dept-card:hover {
+            border-color: rgba(99, 102, 241, 0.4);
+            transform: translateY(-2px);
+            box-shadow: 0 15px 30px -5px rgba(0,0,0,0.6);
+        }
+
+        .dept-card.drag-over-card {
+            border-color: var(--accent-blue) !important;
+            box-shadow: 0 0 30px rgba(56, 189, 248, 0.45) !important;
+            background: rgba(30, 58, 138, 0.35) !important;
+            outline: 2px solid var(--accent-blue);
+        }
+
+        .dept-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 14px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .dept-title-group {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .dept-name {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .dept-phones {
+            font-size: 0.8rem;
+            color: var(--accent-blue);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .dept-stats-badge {
+            text-align: right;
+            background: rgba(15, 23, 42, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 6px 12px;
+            border-radius: var(--radius-sm);
+        }
+
+        .dept-count-main {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #38bdf8;
+        }
+
+        .dept-count-detail {
+            font-size: 0.72rem;
+            color: var(--text-muted);
+            margin-top: 3px;
+        }
+
+        .member-section-label {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-muted);
+            margin: 10px 0 6px 0;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .member-section-label::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .member-chips-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 10px;
+        }
+
+        .member-chip {
+            background: rgba(15, 23, 42, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: var(--radius-sm);
+            padding: 6px 10px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.85rem;
+            transition: all 0.15s;
+            position: relative;
+            cursor: grab;
+            user-select: none;
+        }
+
+        .member-chip:hover {
+            background: rgba(30, 41, 59, 0.95);
+            border-color: var(--accent-blue);
+            transform: scale(1.02);
+        }
+
+        .member-chip:active {
+            cursor: grabbing;
+        }
+
+        .member-chip.dragging {
+            opacity: 0.35 !important;
+            transform: scale(0.92) !important;
+            border: 2px dashed var(--accent-blue) !important;
+        }
+
+        .member-chip.lead-chip {
+            border-color: rgba(245, 158, 11, 0.4);
+            background: rgba(245, 158, 11, 0.1);
+        }
+
+        .member-chip.sublead-chip {
+            border-color: rgba(56, 189, 248, 0.4);
+            background: rgba(56, 189, 248, 0.08);
+        }
+
+        .member-chip.has-note {
+            border-left: 3px solid var(--accent-gold);
+        }
+
+        .member-chip.special-transfer {
+            border-left: 3px solid var(--accent-green);
+        }
+
+        .member-title {
+            font-size: 0.75rem;
+            font-weight: 600;
+            padding: 2px 6px;
+            border-radius: 4px;
+            background: rgba(255, 255, 255, 0.1);
+            color: #cbd5e1;
+            cursor: pointer;
+        }
+
+        .title-chief { background: var(--badge-chief); color: white; }
+        .title-officer { background: var(--badge-officer); color: white; }
+        .title-sublead { background: var(--badge-sub); color: white; }
+        .title-member { background: var(--badge-member); color: white; }
+        .title-staff { background: var(--badge-staff); color: white; }
+
+        .member-name {
+            font-weight: 600;
+            color: #ffffff;
+            cursor: pointer;
+        }
+
+        .member-note-tag {
+            font-size: 0.68rem;
+            color: var(--accent-gold);
+            background: rgba(245, 158, 11, 0.15);
+            padding: 1px 5px;
+            border-radius: 4px;
+            max-width: 140px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .chip-edit-icon {
+            opacity: 0;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            transition: opacity 0.15s;
+        }
+
+        .member-chip:hover .chip-edit-icon {
+            opacity: 1;
+        }
+
+        .dept-footer-actions {
+            margin-top: auto;
+            padding-top: 12px;
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+            display: flex;
+            justify-content: flex-end;
+            gap: 8px;
+        }
+
+        .inline-input {
+            background: #020617;
+            border: 1px solid var(--accent-blue);
+            color: #38bdf8;
+            font-size: 0.85rem;
+            font-weight: 600;
+            padding: 2px 6px;
+            border-radius: 4px;
+            outline: none;
+            width: 80px;
+        }
+
+        /* View 2: Table View */
+        .table-view-container {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            padding: 20px;
+            box-shadow: var(--shadow);
+            overflow-x: auto;
+        }
+
+        .official-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.85rem;
+            text-align: center;
+        }
+
+        .official-table th, .official-table td {
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            padding: 8px 6px;
+            vertical-align: middle;
+        }
+
+        .official-table thead th {
+            background: rgba(15, 23, 42, 0.95);
+            color: #38bdf8;
+            font-weight: 700;
+            position: sticky;
+            top: 0;
+            z-index: 2;
+        }
+
+        .official-table tbody tr:nth-child(even) {
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .official-table tbody tr:hover {
+            background: rgba(56, 189, 248, 0.05);
+        }
+
+        .official-table .dept-col {
+            font-weight: 700;
+            text-align: left;
+            padding-left: 12px;
+            background: rgba(15, 23, 42, 0.7);
+            color: #fff;
+            white-space: nowrap;
+        }
+
+        .official-table .num-col {
+            font-weight: 600;
+            color: #f59e0b;
+            min-width: 45px;
+        }
+
+        .table-member-cell {
+            display: inline-flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin: 2px;
+            padding: 3px 6px;
+            border-radius: 4px;
+            background: rgba(15, 23, 42, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all 0.15s;
+        }
+
+        .table-member-cell:hover {
+            border-color: var(--accent-blue);
+            background: rgba(30, 41, 59, 0.9);
+        }
+
+        .table-member-title {
+            font-size: 0.68rem;
+            color: var(--text-muted);
+        }
+
+        .table-member-name {
+            font-weight: 600;
+            color: #fff;
+        }
+
+        .table-member-note {
+            font-size: 0.65rem;
+            color: var(--accent-gold);
+        }
+
+        /* View 3: Transfers */
+        .transfer-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+            gap: 20px;
+        }
+
+        .transfer-panel {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            padding: 20px;
+            box-shadow: var(--shadow);
+        }
+
+        .transfer-panel-title {
+            font-size: 1.15rem;
+            font-weight: 700;
+            margin-bottom: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .transfer-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .transfer-item {
+            background: rgba(15, 23, 42, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: var(--radius-sm);
+            padding: 10px 14px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 0.88rem;
+        }
+
+        /* View 4: Analytics */
+        .analytics-container {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 20px;
+        }
+
+        @media (max-width: 992px) {
+            .analytics-container { grid-template-columns: 1fr; }
+        }
+
+        .chart-box {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            padding: 24px;
+            box-shadow: var(--shadow);
+        }
+
+        .bar-chart-row {
+            display: flex;
+            align-items: center;
+            margin-bottom: 12px;
+            gap: 12px;
+            font-size: 0.85rem;
+        }
+
+        .bar-label {
+            width: 100px;
+            font-weight: 600;
+            text-align: right;
+            white-space: nowrap;
+        }
+
+        .bar-track {
+            flex: 1;
+            height: 22px;
+            background: rgba(15, 23, 42, 0.8);
+            border-radius: 6px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #38bdf8, #ef4444);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            padding-right: 8px;
+            color: #0b1120;
+            font-weight: 700;
+            font-size: 0.75rem;
+            transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .bar-num {
+            width: 50px;
+            font-weight: 700;
+            color: var(--accent-blue);
+        }
+
+        /* Modal Styles */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.75);
+            backdrop-filter: blur(6px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            padding: 20px;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: #111827;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: var(--radius-lg);
+            width: 100%;
+            max-width: 520px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
+            overflow: hidden;
+            animation: modalIn 0.2s ease-out;
+        }
+
+        @keyframes modalIn {
+            from { transform: scale(0.95); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        .modal-header {
+            padding: 18px 24px;
+            background: rgba(255, 255, 255, 0.03);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-title {
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .modal-close {
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            font-size: 1.4rem;
+            cursor: pointer;
+            line-height: 1;
+        }
+
+        .modal-close:hover { color: #fff; }
+
+        .modal-body {
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .form-label {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #cbd5e1;
+        }
+
+        .form-input, .form-select {
+            background: rgba(15, 23, 42, 0.9);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            padding: 10px 14px;
+            border-radius: var(--radius-sm);
+            color: white;
+            font-size: 0.95rem;
+            outline: none;
+        }
+
+        .form-input:focus, .form-select:focus {
+            border-color: var(--accent-blue);
+            box-shadow: 0 0 8px rgba(56, 189, 248, 0.3);
+        }
+
+        .quick-title-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-top: 4px;
+        }
+
+        .tag-btn {
+            background: rgba(255, 255, 255, 0.07);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            color: #cbd5e1;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            cursor: pointer;
+        }
+
+        .tag-btn:hover {
+            background: var(--accent-blue);
+            color: #0b1120;
+            font-weight: 700;
+        }
+
+        .modal-footer {
+            padding: 16px 24px;
+            background: rgba(255, 255, 255, 0.02);
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .toast-msg {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: #1e293b;
+            border-left: 4px solid var(--accent-green);
+            color: white;
+            padding: 12px 20px;
+            border-radius: var(--radius-sm);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+            z-index: 2000;
+            display: none;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.9rem;
+            animation: toastIn 0.3s ease;
+        }
+
+        @keyframes toastIn {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .save-snapshot-item {
+            background: rgba(15, 23, 42, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 10px 14px;
+            border-radius: 6px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+            font-size: 0.85rem;
+        }
+
         /* A4 Excel Table Styles (Screen & Print) */
         #a4PrintWrapper {
             display: none;
@@ -2125,26 +2917,24 @@
             }
         }
 
-        // Dynamic Generator for A4 Excel Table (1150116五大人員編制_華麗版.xlsx 官方格式)
+        // Dynamic Generator for A4 Excel Table (Matches C:\Users\TNCFD\Desktop\一氧化碳座談會\1150116五大人員編制_華麗版.xlsx 格式)
         function generateA4PrintTableHtml(data) {
             const depts = data.departments || [];
             
-            let totalBefore = 0;
-            let totalAfter = 0;
+            let totalPolice = 0;
             let totalDraftees = 0;
             let totalAssistants = 0;
             let grandTotal = 0;
 
             depts.forEach(d => {
-                totalBefore += (parseInt(d.policeBefore) || 0);
-                totalAfter += (parseInt(d.policeAfter) || 0);
+                const police = (d.policeAfter !== undefined && d.policeAfter !== '') ? parseInt(d.policeAfter) : (parseInt(d.policeBefore) || 0);
+                totalPolice += police;
                 totalDraftees += (parseInt(d.draftees) || 0);
                 totalAssistants += (parseInt(d.assistants) || 0);
             });
-            grandTotal = totalAfter + totalDraftees + totalAssistants;
+            grandTotal = totalPolice + totalDraftees + totalAssistants;
 
-            const dateStr = data.effectiveDate || '1150116';
-            const dateShort = dateStr.slice(-4);
+            const dateStr = data.effectiveDate || '1151016';
 
             let tableHtml = `
             <div class="a4-print-container">
@@ -2153,18 +2943,16 @@
                     <thead>
                         <tr>
                             <th style="width:11%;">單位</th>
-                            <th style="width:4.5%;">警消<br>${dateShort}前</th>
-                            <th style="width:4.5%;">警消<br>${dateShort}後</th>
-                            <th style="width:3.2%;">役男</th>
-                            <th style="width:4.2%;">事務<br>助理</th>
-                            <th style="width:4.2%;">合計</th>
-                            <th class="a4-spacer-col"></th>
-                            <th style="width:5.5%;">大隊長</th>
-                            <th style="width:6.5%;">副大隊長</th>
-                            <th style="width:6.5%;">組長：</th>
-                            <th style="width:5.5%;">組長：</th>
-                            <th style="width:5%;">組員</th>
-                            <th style="width:6.5%;">小隊長</th>
+                            <th style="width:4.8%;">警消</th>
+                            <th style="width:3.8%;">役男</th>
+                            <th style="width:4.8%;">事務<br>助理</th>
+                            <th style="width:4.8%;">合計</th>
+                            <th style="width:5.8%;">大隊長</th>
+                            <th style="width:6.8%;">副大隊長</th>
+                            <th style="width:6.8%;">組長：</th>
+                            <th style="width:6.8%;">組長：</th>
+                            <th style="width:5.2%;">組員</th>
+                            <th style="width:6.8%;">小隊長</th>
                             <th style="width:4.8%;">隊員</th>
                             <th style="width:4.8%;">隊員</th>
                             <th style="width:4.8%;">隊員</th>
@@ -2178,34 +2966,35 @@
                     <tbody>
             `;
 
+            function formatMem(m) {
+                if (!m) return '';
+                let txt = m.name || '';
+                if (m.note) {
+                    if (m.note.includes('待退') || m.note.includes('異動') || m.note.match(/\d+[\.\/]\d+/)) {
+                        txt = `【${txt}】 ${m.note.replace('待退/異動:', '').trim()}`;
+                    } else if (m.note.includes('支援')) {
+                        txt = `${txt}(支援)`;
+                    } else if (m.title && /事務助理|助理/.test(m.title)) {
+                        txt = `(事務助理)<br>${txt}`;
+                    }
+                } else if (m.title && /事務助理|助理/.test(m.title)) {
+                    txt = `(事務助理)<br>${txt}`;
+                }
+                return txt;
+            }
+
             depts.forEach(dept => {
                 const id = dept.id;
-                const phonesStr = (dept.phones && dept.phones.length > 0) ? dept.phones.join(' ') : '';
-                const deptDisplay = `${dept.name.replace('救災救護', '')} ${phonesStr}`.trim();
-                const pBefore = dept.policeBefore !== undefined ? dept.policeBefore : '';
-                const pAfter = dept.policeAfter !== undefined ? dept.policeAfter : '';
+                const phonesList = (dept.phones && dept.phones.length > 0) ? dept.phones : [];
+                const deptName = dept.name.replace('救災救護', '');
+                const deptDisplay = phonesList.length > 0 ? `${deptName}<br>${phonesList.join('<br>')}` : deptName;
+
+                const police = (dept.policeAfter !== undefined && dept.policeAfter !== '') ? dept.policeAfter : (dept.policeBefore || '');
                 const draftees = dept.draftees ? dept.draftees : '';
                 const assistants = dept.assistants ? dept.assistants : '';
-                const deptTotal = (parseInt(dept.policeAfter) || 0) + (parseInt(dept.draftees) || 0) + (parseInt(dept.assistants) || 0);
+                const deptTotal = (parseInt(police) || 0) + (parseInt(dept.draftees) || 0) + (parseInt(dept.assistants) || 0);
 
                 const members = dept.members || [];
-
-                function formatMem(m) {
-                    if (!m) return '';
-                    let txt = m.name || '';
-                    if (m.note) {
-                        if (m.note.includes('待退') || m.note.includes('異動') || m.note.match(/\d+[\.\/]\d+/)) {
-                            txt = `【${txt}】 ${m.note.replace('待退/異動:', '').trim()}`;
-                        } else if (m.note.includes('支援')) {
-                            txt = `${txt}(支援)`;
-                        } else if (m.title && /事務助理|助理/.test(m.title)) {
-                            txt = `(事務助理) ${txt}`;
-                        }
-                    } else if (m.title && /事務助理|助理/.test(m.title)) {
-                        txt = `(事務助理) ${txt}`;
-                    }
-                    return txt;
-                }
 
                 if (id === 'hq') {
                     const leader = members.find(m => /大隊長/.test(m.title) && !/副/.test(m.title));
@@ -2218,55 +3007,53 @@
                     tableHtml += `
                         <tr>
                             <td class="a4-dept-cell">${deptDisplay}</td>
-                            <td>${pBefore}</td>
-                            <td>${pAfter}</td>
+                            <td>${police}</td>
                             <td>${draftees}</td>
                             <td>${assistants}</td>
                             <td><strong>${deptTotal}</strong></td>
-                            <td class="a4-spacer-col"></td>
                             <td>${leader ? leader.name : ''}</td>
-                            <td class="a4-leader-cell">${deputies.map(m => m.name).join(' ')}</td>
+                            <td class="a4-leader-cell">${deputies.map(m => m.name).join('<br>')}</td>
                             <td>${chiefs[0] ? chiefs[0].name : ''}</td>
                             <td>${chiefs[1] ? chiefs[1].name : ''}</td>
                             <td>${officer ? officer.name : ''}</td>
-                            <td class="a4-captain-cell">${subCaptains.map(m => m.name).join(' ')}</td>
+                            <td class="a4-captain-cell">${subCaptains.map(m => m.name).join('<br>')}</td>
                     `;
                     for (let i = 0; i < 8; i++) {
                         tableHtml += `<td class="a4-member-cell">${formatMem(regular[i])}</td>`;
                     }
                     tableHtml += `</tr>`;
                 } else if (id === 'guiren_mid') {
-                    const leader = members.find(m => /中隊長/.test(m.title));
+                    const leader = members.find(m => /中隊長/.test(m.title) && !/副/.test(m.title));
+                    const deputy = members.find(m => /副中隊長/.test(m.title));
                     const officer = members.find(m => /組員/.test(m.title));
+
                     tableHtml += `
                         <tr>
                             <td class="a4-dept-cell">${deptDisplay}</td>
-                            <td>${pBefore}</td>
-                            <td>${pAfter}</td>
+                            <td>${police}</td>
                             <td>${draftees}</td>
                             <td>${assistants}</td>
                             <td><strong>${deptTotal}</strong></td>
-                            <td class="a4-spacer-col"></td>
                             <td></td>
-                            <td class="a4-leader-cell">${leader ? `${leader.title} ${leader.name}` : ''}</td>
-                            <td>${officer ? `${officer.title} ${officer.name}` : ''}</td>
-                            <td></td><td></td><td></td>
+                            <td class="a4-leader-cell">${leader ? `中隊長<br>${leader.name}` : ''}</td>
+                            <td class="a4-leader-cell">${deputy ? `副中隊長<br>${deputy.name}` : ''}</td>
+                            <td>${officer ? `組員<br>${officer.name}` : ''}</td>
+                            <td></td><td></td>
                             <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
                         </tr>
                     `;
                 } else if (id === 'safety_inspection') {
                     const officer = members.find(m => /組員/.test(m.title));
                     const others = members.filter(m => !/組員/.test(m.title));
+
                     tableHtml += `
                         <tr>
                             <td class="a4-dept-cell">${deptDisplay}</td>
-                            <td>${pBefore}</td>
-                            <td>${pAfter}</td>
+                            <td>${police}</td>
                             <td>${draftees}</td>
                             <td>${assistants}</td>
                             <td><strong>${deptTotal}</strong></td>
-                            <td class="a4-spacer-col"></td>
-                            <td>${officer ? `組員 ${officer.name}` : ''}</td>
+                            <td class="a4-leader-cell">${officer ? `組員<br>${officer.name}` : ''}</td>
                     `;
                     for (let i = 0; i < 13; i++) {
                         tableHtml += `<td class="a4-member-cell">${formatMem(others[i])}</td>`;
@@ -2275,18 +3062,17 @@
                 } else if (id === 'daqiao_paramedic' || id === 'guiren_paramedic') {
                     const captain = members.find(m => /小隊長/.test(m.title));
                     const others = members.filter(m => !/小隊長/.test(m.title));
+
                     tableHtml += `
                         <tr>
                             <td class="a4-dept-cell">${deptDisplay}</td>
-                            <td>${pBefore}</td>
-                            <td>${pAfter}</td>
+                            <td>${police}</td>
                             <td>${draftees}</td>
                             <td>${assistants}</td>
                             <td><strong>${deptTotal}</strong></td>
-                            <td class="a4-spacer-col"></td>
                             <td></td>
                             <td></td>
-                            <td class="a4-captain-cell">${captain ? `小隊長 ${captain.name}` : ''}</td>
+                            <td class="a4-captain-cell">${captain ? `小隊長<br>${captain.name}` : ''}</td>
                     `;
                     for (let i = 0; i < 11; i++) {
                         tableHtml += `<td class="a4-member-cell">${formatMem(others[i])}</td>`;
@@ -2306,17 +3092,15 @@
                         leaderText = `${cleanTitle}<br>${leader.name}`;
                     }
 
-                    const captainsText = captains.map(c => c.name).join(' ');
+                    const captainsText = captains.map(c => c.name).join('<br>');
 
                     tableHtml += `
                         <tr>
                             <td rowspan="2" class="a4-dept-cell">${deptDisplay}</td>
-                            <td rowspan="2">${pBefore}</td>
-                            <td rowspan="2">${pAfter}</td>
+                            <td rowspan="2">${police}</td>
                             <td rowspan="2">${draftees}</td>
                             <td rowspan="2">${assistants}</td>
                             <td rowspan="2"><strong>${deptTotal}</strong></td>
-                            <td rowspan="2" class="a4-spacer-col"></td>
                             <td rowspan="2"></td>
                             <td rowspan="2" class="a4-leader-cell">${leaderText}</td>
                             <td rowspan="2" class="a4-captain-cell">${captainsText}</td>
@@ -2335,14 +3119,12 @@
             tableHtml += `
                     <tr class="a4-total-row">
                         <td>合計</td>
-                        <td>${totalBefore}</td>
-                        <td>${totalAfter}</td>
+                        <td>${totalPolice}</td>
                         <td>${totalDraftees}</td>
                         <td>${totalAssistants}</td>
                         <td>${grandTotal}</td>
-                        <td class="a4-spacer-col"></td>
                         <td colspan="14" class="a4-notes-cell">
-                            <strong>備註：</strong>${data.notes || '司機1人、歸仁萬副中支援永康，歸仁蔡霖支援關廟'}
+                            <strong>備註：</strong>${data.notes || '司機1人，歸仁蔡霖支援關廟至關廟分隊補人'}
                         </td>
                     </tr>
                 </tbody>
